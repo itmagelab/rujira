@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.authors = ["Andrey Semenov"]
   spec.email = ["i@itmage.ru"]
 
-  spec.summary = "Bot for jira"
-  spec.description = "A bot for working with Jira"
-  spec.homepage = "https://0ae.ru"
+  spec.summary = "API for Atlassian jira in ruby"
+  spec.description = "The library is developed for the purposes of the organization, new features can be added as MR. Welcome!"
+  spec.homepage = "https://github.com/itmagelabs/rujira"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
   spec.metadata["homepage_uri"] = spec.homepage
