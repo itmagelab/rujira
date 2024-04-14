@@ -6,10 +6,6 @@ module Rujira
     def initialize
       @token = Configuration.token
       @options = {
-        request: {
-          open_timeout: 5,
-          timeout: 5
-        },
         url: Configuration.url
       }
     end
