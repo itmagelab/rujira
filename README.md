@@ -7,7 +7,6 @@
 ## Usage in the code
 
     Rujira::Api::Project.get 'ITMG'
-    Rujira::Api::Issue.get 'ITMG-1'
     Rujira::Api::Issue.create fields: {
       project: { key: 'ITMG' },
       assignee: { name: 'wilful' },
@@ -16,10 +15,12 @@
       issuetype: { name: 'Task' },
       labels: ['bot']
     }
+    Rujira::Api::Issue.get 'ITMG-1'
     Rujira::Api::Search.get jql: 'project = ITMG and status IN ("To Do", "In Progress") ORDER BY issuekey',
         maxResults: 10,
         startAt: 0,
         fields: ['id', 'key']
+    Rujira::Api::Issue.del 'ITMG-1'
 
 ## Testing
 
