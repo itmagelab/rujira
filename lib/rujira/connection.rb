@@ -4,12 +4,18 @@ module Rujira
   # TODO
   class Connection
     def initialize
-      @url = Configuration.url
       @token = Configuration.token
+      @options = {
+        request: {
+          open_timeout: 5,
+          timeout: 5
+        },
+        url: Configuration.url
+      }
     end
 
     def run
-      Faraday.new(url: @url) do |builder|
+      Faraday.new(@options) do |builder|
         builder.request :authorization, 'Bearer', -> { @token }
         builder.request :json
         builder.response :json
