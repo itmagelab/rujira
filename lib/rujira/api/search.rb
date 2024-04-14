@@ -3,12 +3,14 @@
 module Rujira
   module Api
     # TODO
-    class Search
+    class Search < Item
       def self.get(**data)
-        Entity.build do
+        entity = Entity.build do
           path 'rest/api/2/search'
           data data
-        end.post.body
+          method :POST
+        end
+        new(entity.commit)
       end
     end
   end

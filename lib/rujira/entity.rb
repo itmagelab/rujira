@@ -3,6 +3,10 @@
 module Rujira
   # TODO
   class Entity
+    def initialize
+      @method = :GET
+    end
+
     def self.build(&block)
       entity = new
       return entity unless block_given?
@@ -10,6 +14,10 @@ module Rujira
       entity.instance_eval(&block)
 
       entity
+    end
+
+    def method(method)
+      @method = method
     end
 
     def path(path = nil)
@@ -35,6 +43,15 @@ module Rujira
     def post
       client.post path do |req|
         req.body = data.to_json
+      end
+    end
+
+    def commit
+      case @method
+      when :GET
+        get.body
+      when :POST
+        post.body
       end
     end
 

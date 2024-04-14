@@ -3,18 +3,21 @@
 module Rujira
   module Api
     # TODO
-    class Issue
+    class Issue < Item
       def self.get(id)
-        Entity.build do
+        entity = Entity.build do
           path "rest/api/2/issue/#{id}"
-        end.get.body
+        end
+        new(entity.commit)
       end
 
       def self.create(**data)
-        Entity.build do
+        entity = Entity.build do
           path 'rest/api/2/issue'
-          data data
-        end.post.body
+          method :POST
+          data data if data
+        end
+        new(entity.commit)
       end
     end
   end

@@ -3,11 +3,12 @@
 module Rujira
   module Api
     # TODO
-    class Project
+    class Project < Item
       def self.get(id)
-        Entity.build do
+        entity = Entity.build do
           path "rest/api/2/project/#{id}"
-        end.get.body
+        end
+        new(entity.commit)
       end
     end
   end
