@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-# https://tomdebruijn.com/posts/ruby-write-your-own-domain-specific-language/
-# https://docs.atlassian.com/software/jira/docs/api/REST/8.17.1/
-
 require 'faraday'
 require 'json'
 require_relative 'rujira/version'
