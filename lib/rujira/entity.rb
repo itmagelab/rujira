@@ -49,22 +49,35 @@ module Rujira
 
     private
 
+    def request
+      yield
+    rescue Faraday::Error => e
+      raise "Status #{e.response[:status]}: #{e.response[:body]}"
+    end
+
     def get
-      client.get path
+      request do
+        client.get path
+      end
     end
 
     def delete
-      client.delete path
+      request do
+        client.delete path
+      end
     end
 
     def post
-      client.post path do |req|
-        req.body = data.to_json
+      request do
+        client.post path do |req|
+          req.body = data.to_json
+        end
       end
     end
 
     def client
-      Rujira::Connection.new
+      conn = Rujira::Connection.new
+      conn.run
     end
   end
 end
