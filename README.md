@@ -16,6 +16,10 @@
       issuetype: { name: 'Task' },
       labels: ['bot']
     }
+    Rujira::Api::Search.get jql: 'project = ITMG and status IN ("To Do", "In Progress") ORDER BY issuekey',
+        maxResults: 10,
+        startAt: 0,
+        fields: ['id', 'key']
 
 ## Testing
 
