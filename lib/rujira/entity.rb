@@ -36,8 +36,25 @@ module Rujira
       raise ArgumentError, "No argument to 'data' was given."
     end
 
+    def commit
+      case @method
+      when :GET
+        get.body
+      when :POST
+        post.body
+      when :DELETE
+        delete.body
+      end
+    end
+
+    private
+
     def get
       client.get path
+    end
+
+    def delete
+      client.delete path
     end
 
     def post
@@ -45,17 +62,6 @@ module Rujira
         req.body = data.to_json
       end
     end
-
-    def commit
-      case @method
-      when :GET
-        get.body
-      when :POST
-        post.body
-      end
-    end
-
-    private
 
     def client
       Rujira::Connection.new
