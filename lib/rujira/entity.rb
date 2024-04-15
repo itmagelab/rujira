@@ -41,6 +41,8 @@ module Rujira
       case @method
       when :GET
         get.body
+      when :PUT
+        put.body
       when :POST
         post.body
       when :DELETE
@@ -71,6 +73,14 @@ module Rujira
     def post
       request do
         client.post path do |req|
+          req.body = data.to_json
+        end
+      end
+    end
+
+    def put
+      request do
+        client.put path do |req|
           req.body = data.to_json
         end
       end

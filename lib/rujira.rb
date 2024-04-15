@@ -10,6 +10,7 @@ require_relative 'rujira/api/item'
 require_relative 'rujira/api/search'
 require_relative 'rujira/api/issue'
 require_relative 'rujira/api/project'
+require_relative 'rujira/api/comment'
 
 module Rujira
   class Error < StandardError; end

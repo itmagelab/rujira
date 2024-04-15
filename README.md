@@ -21,6 +21,10 @@
         startAt: 0,
         fields: ['id', 'key']
     Rujira::Api::Issue.comment 'ITMG-21', body: 'Adding a new comment'
+    Rujira::Api::Issue.edit 'ITMG-21', update: {
+        summary: [{set: 'Bug in business logic'}],
+        labels:[{add: 'rujira'},{remove: 'bot'}]
+    }
     Rujira::Api::Issue.del 'ITMG-1'
 
 ## Testing

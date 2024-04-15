@@ -29,13 +29,22 @@ module Rujira
         new(entity.commit)
       end
 
+      def self.edit(id_or_key, **data)
+        entity = Entity.build do
+          path "issue/#{id_or_key}"
+          method :PUT
+          data data
+        end
+        new(entity.commit)
+      end
+
       def self.comment(id_or_key, **data)
         entity = Entity.build do
           path "issue/#{id_or_key}/comment"
           method :POST
           data data if data
         end
-        new(entity.commit)
+        Comment.new(entity.commit)
       end
     end
   end
