@@ -7,7 +7,7 @@ module Rujira
     class Search < Item
       def self.get(**data)
         entity = Entity.build do
-          path 'rest/api/2/search'
+          path 'search'
           data data
           method :POST
         end

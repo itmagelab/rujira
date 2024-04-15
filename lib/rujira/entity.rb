@@ -5,6 +5,7 @@ module Rujira
   class Entity
     def initialize
       @method = :GET
+      @rest_api = 'rest/api/2'
     end
 
     def self.build(&block)
@@ -21,7 +22,7 @@ module Rujira
     end
 
     def path(path = nil)
-      @path ||= path
+      @path ||= "#{@rest_api}/#{path}"
 
       return @path if @path
 

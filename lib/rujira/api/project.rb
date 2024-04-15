@@ -7,7 +7,7 @@ module Rujira
     class Project < Item
       def self.get(id_or_key)
         entity = Entity.build do
-          path "rest/api/2/project/#{id_or_key}"
+          path "project/#{id_or_key}"
         end
         new(entity.commit)
       end

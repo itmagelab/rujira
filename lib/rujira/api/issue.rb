@@ -7,14 +7,14 @@ module Rujira
     class Issue < Item
       def self.get(id_or_key)
         entity = Entity.build do
-          path "rest/api/2/issue/#{id_or_key}"
+          path "issue/#{id_or_key}"
         end
         new(entity.commit)
       end
 
       def self.del(id_or_key)
         entity = Entity.build do
-          path "rest/api/2/issue/#{id_or_key}"
+          path "issue/#{id_or_key}"
           method :DELETE
         end
         entity.commit
@@ -22,7 +22,16 @@ module Rujira
 
       def self.create(**data)
         entity = Entity.build do
-          path 'rest/api/2/issue'
+          path 'issue'
+          method :POST
+          data data if data
+        end
+        new(entity.commit)
+      end
+
+      def self.comment(id_or_key, **data)
+        entity = Entity.build do
+          path "issue/#{id_or_key}/comment"
           method :POST
           data data if data
         end
