@@ -12,6 +12,7 @@ require_relative 'rujira/api/issue'
 require_relative 'rujira/api/project'
 require_relative 'rujira/api/comment'
 require_relative 'rujira/api/myself'
+require_relative 'rujira/api/server_info'
 
 module Rujira
   class Error < StandardError; end

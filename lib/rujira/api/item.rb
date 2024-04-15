@@ -4,7 +4,7 @@ module Rujira
   module Api
     # TODO
     class Item
-      attr_accessor :data
+      attr_reader :data
 
       def initialize(data = nil)
         @data = data
