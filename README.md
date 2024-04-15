@@ -31,6 +31,11 @@
     }
     Rujira::Api::Issue.del 'ITMG-1'
 
+## Rake tasks
+
+    require 'rujira/tasks/jira'
+    rake jira::whoami
+
 ## Testing
 
 ### Run the instance of jira
