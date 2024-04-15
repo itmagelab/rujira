@@ -46,6 +46,15 @@ module Rujira
         end
         Comment.new(entity.commit)
       end
+
+      def self.watchers(id_or_key, data)
+        entity = Entity.build do
+          path "issue/#{id_or_key}/watchers"
+          method :POST
+          data data
+        end
+        new(entity.commit)
+      end
     end
   end
 end
