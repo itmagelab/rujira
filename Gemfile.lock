@@ -12,7 +12,10 @@ GEM
       net-http
     net-http (0.4.1)
       uri
+    power_assert (2.0.3)
     rake (13.2.1)
+    test-unit (3.6.2)
+      power_assert
     uri (0.13.0)
 
 PLATFORMS
@@ -23,6 +26,7 @@ DEPENDENCIES
   faraday (~> 2.9)
   rake (~> 13.0)
   rujira!
+  test-unit (~> 3.6)
 
 BUNDLED WITH
    2.5.7
