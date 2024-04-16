@@ -18,6 +18,7 @@ module Rujira
         whoami
         url
         server_info
+        api
       end
 
       def whoami
@@ -52,6 +53,30 @@ module Rujira
         namespace :jira do
           task name do
             puts Rujira::Api::ServerInfo.get.data.to_json
+          end
+        end
+      end
+
+      def api
+        name = 'jira:task:search'
+        desc 'Example Jira command'
+
+        Rake::Task[name].clear if Rake::Task.task_defined?(name)
+        namespace :jira do
+          namespace :task do
+            task :search do
+              options = {}
+              o = OptionParser.new
+              o.banner = "Usage: rake jira:task:search -- '[options]'"
+              o.on('-q JQL', '--jql JQL') do |jql|
+                options[:jql] = jql
+              end
+              args = o.order!(ARGV) {}
+              o.parse!(args)
+
+              result = Rujira::Api::Search.get jql: options[:jql]
+              result.each { |i| puts JSON.pretty_generate(i.data) }
+            end
           end
         end
       end
