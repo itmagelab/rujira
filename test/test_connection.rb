@@ -5,6 +5,7 @@ require_relative '../lib/rujira'
 
 class ConnectionTest < Test::Unit::TestCase
   def test_connection
+    ENV['RUJIRA_TOKEN'] = 'secret_token'
     Rujira::Connection.new.run
   end
 
