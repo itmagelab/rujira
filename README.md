@@ -42,3 +42,7 @@
 
     docker compose up -d
     open http://localhost:8080
+
+### Example with Curl
+
+    curl -H "Authorization: Bearer <JIRA_ACCESS_TOKEN>" 'http://localhost:8080/rest/api/2/search?expand=summary'

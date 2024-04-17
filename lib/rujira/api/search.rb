@@ -11,7 +11,11 @@ module Rujira
           data data
           method :POST
         end
-        entity.commit['issues'].map do |issue|
+        new(entity.commit)
+      end
+
+      def list
+        data['issues'].map do |issue|
           Issue.new(issue)
         end
       end

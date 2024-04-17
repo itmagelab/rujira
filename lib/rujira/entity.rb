@@ -5,6 +5,7 @@ module Rujira
   class Entity
     def initialize
       @method = :GET
+      @params = {}
       @rest_api = 'rest/api/2'
     end
 
@@ -15,6 +16,10 @@ module Rujira
       entity.instance_eval(&block)
 
       entity
+    end
+
+    def params(params)
+      @params = params
     end
 
     def method(method)
@@ -73,6 +78,7 @@ module Rujira
     def post
       request do
         client.post path do |req|
+          req.params = @params
           req.body = data.to_json
         end
       end
