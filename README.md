@@ -36,6 +36,10 @@
 
     require 'rujira/tasks/jira'
     rake jira::whoami
+    rake jira:create -- '--project=ITMG' \
+        '--summary=The short summary information' \
+        '--description=The base description of task' \
+        '--issuetype=Task'
     rake jira:search -- '-q project = ITMG'
 
 ## Testing

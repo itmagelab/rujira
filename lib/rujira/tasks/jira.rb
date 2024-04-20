@@ -11,7 +11,9 @@ module Rujira
       include ::Rake::DSL if defined?(::Rake::DSL)
 
       def initialize
-        @options = {}
+        @options = {
+          issuetype: 'Task'
+        }
         @parser = OptionParser.new
         define
       end
@@ -20,6 +22,10 @@ module Rujira
         yield
         args = @parser.order!(ARGV) {}
         @parser.parse!(args)
+      end
+
+      def options(name)
+        @options[name]
       end
 
       # rubocop:disable Metrics/AbcSize
@@ -34,12 +40,30 @@ module Rujira
         generate 'server_info' do
           puts Rujira::Api::ServerInfo.get.data.to_json
         end
+        generate 'create' do
+          parser do
+            @parser.banner = "Usage: rake jira:task:create -- '[options]'"
+            @parser.on('-p PROJECT', '--project=PROJECT') { |project| @options[:project] = project.strip }
+            @parser.on('-s SUMMARY', '--summary=SUMMARY') { |summary| @options[:summary] = summary.strip }
+            @parser.on('-d DESCRIPTION', '--description=DESCRIPTION') do |description|
+              @options[:description] = description.strip
+            end
+            @parser.on('-i ISSUETYPE', '--issuetype=ISSUETYPE') { |issuetype| @options[:issuetype] = issuetype.strip }
+          end
+
+          result = Rujira::Api::Issue.create fields: {
+            project: { key: @options[:project] },
+            summary: @options[:summary],
+            issuetype: { name: @options[:issuetype] },
+            description: @options[:description]
+          }
+          url = Rujira::Configuration.url
+          puts "// A new task been posted, check it out at #{url}/browse/#{result.data['key']}"
+        end
         generate 'search' do
           parser do
             @parser.banner = "Usage: rake jira:task:search -- '[options]'"
-            @parser.on('-q JQL', '--jql JQL') do |jql|
-              @options[:jql] = jql
-            end
+            @parser.on('-q JQL', '--jql=JQL') { |jql| @options[:jql] = jql }
           end
 
           result = Rujira::Api::Search.get jql: @options[:jql]
