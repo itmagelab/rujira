@@ -17,10 +17,11 @@
     }
     Rujira::Api::Issue.watchers 'ITMG-1', 'wilful'
     Rujira::Api::Issue.get 'ITMG-1'
-    Rujira::Api::Search.get jql: 'project = ITMG and status IN ("To Do", "In Progress") ORDER BY issuekey',
+    result = Rujira::Api::Search.get jql: 'project = ITMG and status IN ("To Do", "In Progress") ORDER BY issuekey',
       maxResults: 10,
       startAt: 0,
       fields: ['id', 'key']
+    result.iter
     Rujira::Api::Issue.comment 'ITMG-1', body: 'Adding a new comment'
     Rujira::Api::Issue.edit 'ITMG-1', update: {
       labels:[{add: 'rujira'},{remove: 'bot'}],
@@ -35,6 +36,7 @@
 
     require 'rujira/tasks/jira'
     rake jira::whoami
+    rake jira:search -- '-q project = ITMG'
 
 ## Testing
 

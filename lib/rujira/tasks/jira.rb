@@ -11,7 +11,15 @@ module Rujira
       include ::Rake::DSL if defined?(::Rake::DSL)
 
       def initialize
+        @options = {}
+        @parser = OptionParser.new
         define
+      end
+
+      def parser
+        yield
+        args = @parser.order!(ARGV) {}
+        @parser.parse!(args)
       end
 
       # rubocop:disable Metrics/AbcSize
@@ -27,16 +35,14 @@ module Rujira
           puts Rujira::Api::ServerInfo.get.data.to_json
         end
         generate 'search' do
-          options = {}
-          o = OptionParser.new
-          o.banner = "Usage: rake jira:task:search -- '[options]'"
-          o.on('-q JQL', '--jql JQL') do |jql|
-            options[:jql] = jql
+          parser do
+            @parser.banner = "Usage: rake jira:task:search -- '[options]'"
+            @parser.on('-q JQL', '--jql JQL') do |jql|
+              @options[:jql] = jql
+            end
           end
-          args = o.order!(ARGV) {}
-          o.parse!(args)
 
-          result = Rujira::Api::Search.get jql: options[:jql]
+          result = Rujira::Api::Search.get jql: @options[:jql]
           result.iter.each { |i| puts JSON.pretty_generate(i.data) }
         end
       end
