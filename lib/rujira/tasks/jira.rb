@@ -14,6 +14,8 @@ module Rujira
         define
       end
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def define
         generate 'whoami' do
           puts Rujira::Api::Myself.get.name
@@ -35,9 +37,11 @@ module Rujira
           o.parse!(args)
 
           result = Rujira::Api::Search.get jql: options[:jql]
-          result.each { |i| puts JSON.pretty_generate(i.data) }
+          result.iter.each { |i| puts JSON.pretty_generate(i.data) }
         end
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def generate(name, &block)
         fullname = "jira:#{name}"

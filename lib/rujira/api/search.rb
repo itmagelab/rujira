@@ -14,7 +14,7 @@ module Rujira
         new(entity.commit)
       end
 
-      def list
+      def iter
         data['issues'].map do |issue|
           Issue.new(issue)
         end

@@ -16,3 +16,7 @@ Rake::TestTask.new do |t|
 end
 
 Rujira::Tasks::Jira.new
+
+task :version do
+  puts Rujira::VERSION
+end
