@@ -5,11 +5,11 @@ module Rujira
     # TODO
     # https://docs.atlassian.com/software/jira/docs/api/REST/8.17.1/#api/2/search
     class Search < Item
-      def self.get(**data)
+      def self.get(&block)
         entity = Entity.build do
           path 'search'
-          data data
           method :POST
+          instance_eval(&block) if block_given?
         end
         new(entity.commit)
       end

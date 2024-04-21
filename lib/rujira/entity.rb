@@ -65,13 +65,17 @@ module Rujira
 
     def get
       request do
-        client.get path
+        client.get path do |req|
+          req.params = @params
+        end
       end
     end
 
     def delete
       request do
-        client.delete path
+        client.delete path do |req|
+          req.params = @params
+        end
       end
     end
 
@@ -87,6 +91,7 @@ module Rujira
     def put
       request do
         client.put path do |req|
+          req.params = @params
           req.body = data.to_json
         end
       end
