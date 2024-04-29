@@ -5,53 +5,55 @@ module Rujira
     # TODO
     # https://docs.atlassian.com/software/jira/docs/api/REST/8.17.1/#api/2/issue
     class Issue < Item
-      def self.get(id_or_key)
+      def self.create(&block)
         entity = Entity.build do
-          path "issue/#{id_or_key}"
+          path 'issue'
+          method :POST
+          instance_eval(&block) if block_given?
         end
         new(entity.commit)
       end
 
-      def self.del(id_or_key)
+      def self.get(id_or_key, &block)
+        entity = Entity.build do
+          path "issue/#{id_or_key}"
+          instance_eval(&block) if block_given?
+        end
+        new(entity.commit)
+      end
+
+      def self.del(id_or_key, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}"
           method :DELETE
+          instance_eval(&block) if block_given?
         end
         entity.commit
       end
 
-      def self.create(**data)
-        entity = Entity.build do
-          path 'issue'
-          method :POST
-          data data if data
-        end
-        new(entity.commit)
-      end
-
-      def self.edit(id_or_key, **data)
+      def self.edit(id_or_key, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}"
           method :PUT
-          data data
+          instance_eval(&block) if block_given?
         end
         new(entity.commit)
       end
 
-      def self.comment(id_or_key, **data)
+      def self.comment(id_or_key, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}/comment"
           method :POST
-          data data if data
+          instance_eval(&block) if block_given?
         end
         Comment.new(entity.commit)
       end
 
-      def self.watchers(id_or_key, data)
+      def self.watchers(id_or_key, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}/watchers"
           method :POST
-          data data
+          instance_eval(&block) if block_given?
         end
         new(entity.commit)
       end
