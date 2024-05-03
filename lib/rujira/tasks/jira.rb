@@ -72,8 +72,8 @@ module Rujira
         generate 'attach' do
           parser do
             @parser.banner = "Usage: rake jira:task:attach -- '[options]'"
-            @parser.on('-f FILE', '--file=FILE') { |jql| @options[:file] = jql }
-            @parser.on('-i ID', '--issue=ID') { |jql| @options[:id] = jql }
+            @parser.on('-f FILE', '--file=FILE') { |file| @options[:file] = file }
+            @parser.on('-i ID', '--issue=ID') { |id| @options[:id] = id }
           end
 
           result = Rujira::Api::Issue.attachments @options[:id], @options[:file]

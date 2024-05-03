@@ -50,6 +50,7 @@
         '--description=The base description of task' \
         '--issuetype=Task'
     rake jira:search -- '-q project = ITMG'
+    rake jira:attach -- '--file=upload.png' '--issue=ITMG-1'
 
 ## Testing
 
