@@ -8,8 +8,11 @@ GEM
   specs:
     faraday (2.9.0)
       faraday-net_http (>= 2.0, < 3.2)
+    faraday-multipart (1.0.4)
+      multipart-post (~> 2)
     faraday-net_http (3.1.0)
       net-http
+    multipart-post (2.4.0)
     net-http (0.4.1)
       uri
     power_assert (2.0.3)
@@ -24,6 +27,7 @@ PLATFORMS
 
 DEPENDENCIES
   faraday (~> 2.9)
+  faraday-multipart (~> 1.0)
   rake (~> 13.0)
   rujira!
   test-unit (~> 3.6)

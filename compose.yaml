@@ -5,6 +5,7 @@ services:
     restart: always
     image: atlassian/jira-software
     environment: {}
+      # JVM_SUPPORT_RECOMMENDED_ARGS: "-Datlassian.recovery.password=<PASSWORD>"
     ports:
       - 8080:8080
     volumes:

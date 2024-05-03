@@ -69,6 +69,16 @@ module Rujira
           result = Rujira::Api::Search.get jql: @options[:jql]
           result.iter.each { |i| puts JSON.pretty_generate(i.data) }
         end
+        generate 'attach' do
+          parser do
+            @parser.banner = "Usage: rake jira:task:attach -- '[options]'"
+            @parser.on('-f FILE', '--file=FILE') { |jql| @options[:file] = jql }
+            @parser.on('-i ID', '--issue=ID') { |jql| @options[:id] = jql }
+          end
+
+          result = Rujira::Api::Issue.attachments @options[:id], @options[:file]
+          JSON.pretty_generate(result)
+        end
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
