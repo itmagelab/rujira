@@ -26,7 +26,9 @@
              fields: ['id', 'key']
     end
     result.iter
-    Rujira::Api::Issue.comment 'ITMG-1', body: 'Adding a new comment'
+    Rujira::Api::Issue.comment 'ITMG-1' do
+        data body: 'Adding a new comment'
+    end
     Rujira::Api::Issue.edit 'ITMG-1' do
         data update: {
              labels:[{add: 'rujira'},{remove: 'bot'}],
@@ -36,6 +38,7 @@
             summary: 'This is a shorthand for a set operation on the summary field'
         }
     end
+    Rujira::Api::Issue.attachments 'ITMG-1', 'upload.png'
     Rujira::Api::Issue.del 'ITMG-1'
 
 ## Rake tasks
@@ -58,3 +61,5 @@
 ### Example with Curl
 
     curl -H "Authorization: Bearer <JIRA_ACCESS_TOKEN>" 'http://localhost:8080/rest/api/2/search?expand=summary'
+    curl -D- -F "file=@upload.png" -X POST -H "X-Atlassian-Token: nocheck" \
+        -H "Authorization: Bearer <JIRA_ACCESS_TOKEN>" 'http://localhost:8080/rest/api/2/issue/ITMG-70/attachments'

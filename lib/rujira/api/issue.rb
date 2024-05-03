@@ -57,6 +57,18 @@ module Rujira
         end
         new(entity.commit)
       end
+
+      def self.attachments(id_or_key, path, &block)
+        entity = Entity.build do
+          path "issue/#{id_or_key}/attachments"
+          method :POST
+          headers 'Content-Type': 'multipart/form-data', 'X-Atlassian-Token': 'nocheck',
+                  'Transfer-Encoding': 'chunked', 'Content-Length': File.size(path).to_s
+          data file: Faraday::Multipart::FilePart.new(path, 'multipart/form-data')
+          instance_eval(&block) if block_given?
+        end
+        Attachments.new(entity.commit)
+      end
     end
   end
 end

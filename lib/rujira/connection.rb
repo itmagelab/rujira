@@ -13,6 +13,7 @@ module Rujira
     def run
       Faraday.new(@options) do |builder|
         builder.request :authorization, 'Bearer', -> { @token }
+        builder.request :multipart, flat_encode: true
         builder.request :json
         builder.response :json
         builder.response :raise_error

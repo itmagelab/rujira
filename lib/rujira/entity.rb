@@ -6,6 +6,7 @@ module Rujira
     def initialize
       @method = :GET
       @params = {}
+      @headers = {}
       @rest_api = 'rest/api/2'
     end
 
@@ -20,6 +21,10 @@ module Rujira
 
     def params(params)
       @params = params
+    end
+
+    def headers(headers)
+      @headers = headers
     end
 
     def method(method)
@@ -82,8 +87,9 @@ module Rujira
     def post
       request do
         client.post path do |req|
+          req.headers = @headers
           req.params = @params
-          req.body = data.to_json
+          req.body = data
         end
       end
     end
@@ -92,7 +98,7 @@ module Rujira
       request do
         client.put path do |req|
           req.params = @params
-          req.body = data.to_json
+          req.body = data
         end
       end
     end
