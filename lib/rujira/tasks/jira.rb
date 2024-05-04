@@ -77,7 +77,7 @@ module Rujira
         end
         generate 'delete' do
           parser do
-            @parser.banner = "Usage: rake jira:task:attach -- '[options]'"
+            @parser.banner = "Usage: rake jira:task:delete -- '[options]'"
             @parser.on('-i ID', '--issue=ID') { |id| @options[:id] = id }
           end
 
