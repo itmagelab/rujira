@@ -51,12 +51,15 @@ module Rujira
             @parser.on('-i ISSUETYPE', '--issuetype=ISSUETYPE') { |issuetype| @options[:issuetype] = issuetype.strip }
           end
 
-          result = Rujira::Api::Issue.create fields: {
-            project: { key: @options[:project] },
-            summary: @options[:summary],
-            issuetype: { name: @options[:issuetype] },
-            description: @options[:description]
-          }
+          options = @options
+          result = Rujira::Api::Issue.create do
+            data fields: {
+              project: { key: options[:project] },
+              summary: options[:summary],
+              issuetype: { name: options[:issuetype] },
+              description: options[:description]
+            }
+          end
           url = Rujira::Configuration.url
           puts "// A new task been posted, check it out at #{url}/browse/#{result.data['key']}"
         end
@@ -66,7 +69,10 @@ module Rujira
             @parser.on('-q JQL', '--jql=JQL') { |jql| @options[:jql] = jql }
           end
 
-          result = Rujira::Api::Search.get jql: @options[:jql]
+          options = @options
+          result = Rujira::Api::Search.get do
+            data jql: options[:jql]
+          end
           result.iter.each { |i| puts JSON.pretty_generate(i.data) }
         end
         generate 'attach' do
