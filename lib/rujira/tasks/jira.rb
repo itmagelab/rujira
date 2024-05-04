@@ -75,6 +75,14 @@ module Rujira
           end
           result.iter.each { |i| puts JSON.pretty_generate(i.data) }
         end
+        generate 'delete' do
+          parser do
+            @parser.banner = "Usage: rake jira:task:attach -- '[options]'"
+            @parser.on('-i ID', '--issue=ID') { |id| @options[:id] = id }
+          end
+
+          Rujira::Api::Issue.del @options[:id]
+        end
         generate 'attach' do
           parser do
             @parser.banner = "Usage: rake jira:task:attach -- '[options]'"
@@ -83,7 +91,7 @@ module Rujira
           end
 
           result = Rujira::Api::Issue.attachments @options[:id], @options[:file]
-          JSON.pretty_generate(result)
+          puts JSON.pretty_generate(result.data)
         end
       end
       # rubocop:enable Metrics/AbcSize
