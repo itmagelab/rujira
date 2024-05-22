@@ -1,7 +1,9 @@
 PATH
   remote: .
   specs:
-    rujira (0.1.7)
+    rujira (0.1.8)
+      faraday (~> 2.9)
+      faraday-multipart (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
