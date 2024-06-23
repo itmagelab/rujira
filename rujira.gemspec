@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["i@itmage.ru"]
 
   spec.summary = "API for Atlassian jira in ruby"
-  spec.description = "The library is developed for the purposes of the organization, new features can be added as MR. Welcome!"
+  spec.description = "The library is under development"
   spec.homepage = "https://github.com/itmagelabs/rujira"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.0.0"
