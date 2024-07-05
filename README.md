@@ -62,5 +62,6 @@
 ### Example with Curl
 
     curl -H "Authorization: Bearer <JIRA_ACCESS_TOKEN>" 'http://localhost:8080/rest/api/2/search?expand=summary'
+    curl -vv -X POST --data '"some"' -H "Authorization: Bearer <JIRA_ACCESS_TOKEN>" -H "Content-Type: application/json" 'http://localhost:8080/rest/api/2/issue/ITMG-70/watchers'
     curl -D- -F "file=@upload.png" -X POST -H "X-Atlassian-Token: nocheck" \
         -H "Authorization: Bearer <JIRA_ACCESS_TOKEN>" 'http://localhost:8080/rest/api/2/issue/ITMG-70/attachments'

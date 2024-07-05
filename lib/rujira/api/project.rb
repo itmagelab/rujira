@@ -12,6 +12,14 @@ module Rujira
         end
         new(entity.commit)
       end
+
+      def self.securitylevel(id_or_key, &block)
+        entity = Entity.build do
+          path "project/#{id_or_key}/securitylevel"
+          instance_eval(&block) if block_given?
+        end
+        new(entity.commit)
+      end
     end
   end
 end

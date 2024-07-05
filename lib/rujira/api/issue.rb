@@ -49,10 +49,11 @@ module Rujira
         Comment.new(entity.commit)
       end
 
-      def self.watchers(id_or_key, &block)
+      def self.watchers(id_or_key, name, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}/watchers"
           method :POST
+          data name.to_json
           instance_eval(&block) if block_given?
         end
         new(entity.commit)
