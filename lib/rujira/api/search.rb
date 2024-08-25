@@ -3,7 +3,7 @@
 module Rujira
   module Api
     # TODO
-    # https://docs.atlassian.com/software/jira/docs/api/REST/8.17.1/#api/2/search
+    # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/search
     class Search < Item
       def self.get(&block)
         entity = Entity.build do
