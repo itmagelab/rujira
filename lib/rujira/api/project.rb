@@ -5,6 +5,15 @@ module Rujira
     # TODO
     # https://docs.atlassian.com/software/jira/docs/api/REST/8.17.1/#api/2/project
     class Project < Item
+      def self.create(&block)
+        entity = Entity.build do
+          path 'project'
+          method :POST
+          instance_eval(&block) if block_given?
+        end
+        new(entity.commit)
+      end
+
       def self.get(id_or_key, &block)
         entity = Entity.build do
           path "project/#{id_or_key}"

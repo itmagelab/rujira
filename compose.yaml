@@ -1,5 +1,4 @@
 ---
-version: '3'
 services:
   jira:
     restart: always
@@ -9,7 +8,18 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - 'data:/var/atlassian/application-data/jira'
+      - 'jira-data:/var/atlassian/application-data/jira'
+
+  db:
+    image: postgres
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: jira
+    volumes:
+      - 'db-data:/var/lib/postgresql/data'
 
 volumes:
-  data:
+  jira-data:
+  db-data:
