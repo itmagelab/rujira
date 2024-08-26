@@ -15,7 +15,8 @@ module Rujira
           issuetype: 'Task'
         }
         @parser = OptionParser.new
-        define
+
+        apply
       end
 
       def parser
@@ -31,20 +32,23 @@ module Rujira
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/BlockLength
-      def define
+      def apply
         namespace :jira do
           desc 'Test connection by getting username'
           task :whoami do
             puts Rujira::Api::Myself.get.name
           end
+
           desc 'Test connection by getting url'
           task :url do
             puts Rujira::Configuration.url
           end
+
           desc 'Test connection by getting server information'
           task :server_info do
             puts Rujira::Api::ServerInfo.get.data.to_json
           end
+
           namespace :task do
             desc 'Create a task'
             task :create do
@@ -72,6 +76,7 @@ module Rujira
               url = Rujira::Configuration.url
               puts "// A new task been posted, check it out at #{url}/browse/#{result.data['key']}"
             end
+
             desc 'Search task by fields'
             task :search do
               parser do
@@ -85,6 +90,7 @@ module Rujira
               end
               result.iter.each { |i| puts JSON.pretty_generate(i.data) }
             end
+
             desc 'Delete task'
             task :delete do
               parser do
@@ -94,6 +100,7 @@ module Rujira
 
               Rujira::Api::Issue.del @options[:id]
             end
+
             desc 'Example usage attaching in task'
             task :attach do
               parser do

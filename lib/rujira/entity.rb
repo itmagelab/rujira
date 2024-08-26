@@ -104,8 +104,7 @@ module Rujira
     end
 
     def client
-      conn = Rujira::Connection.new
-      conn.run
+      Rujira::Connection.new.conn
     end
   end
 end
