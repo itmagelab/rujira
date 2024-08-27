@@ -49,6 +49,8 @@
 ## Rake tasks
 
     require 'rujira/tasks/jira'
+    Rujira::Tasks::Jira.new
+
     rake jira::whoami
     rake jira:create -- '--project=ITMG' \
         '--summary=The short summary information' \

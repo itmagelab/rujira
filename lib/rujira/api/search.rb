@@ -8,7 +8,7 @@ module Rujira
       def self.get(&block)
         entity = Entity.build do
           path 'search'
-          method :POST
+          method :post
           instance_eval(&block) if block_given?
         end
         new(entity.commit)

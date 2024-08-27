@@ -8,7 +8,7 @@ module Rujira
       def self.create(&block)
         entity = Entity.build do
           path 'issue'
-          method :POST
+          method :post
           instance_eval(&block) if block_given?
         end
         new(entity.commit)
@@ -25,7 +25,7 @@ module Rujira
       def self.del(id_or_key, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}"
-          method :DELETE
+          method :delete
           instance_eval(&block) if block_given?
         end
         entity.commit
@@ -34,7 +34,7 @@ module Rujira
       def self.edit(id_or_key, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}"
-          method :PUT
+          method :put
           instance_eval(&block) if block_given?
         end
         new(entity.commit)
@@ -43,7 +43,7 @@ module Rujira
       def self.comment(id_or_key, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}/comment"
-          method :POST
+          method :post
           instance_eval(&block) if block_given?
         end
         Comment.new(entity.commit)
@@ -52,7 +52,7 @@ module Rujira
       def self.watchers(id_or_key, name, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}/watchers"
-          method :POST
+          method :post
           data name.to_json
           instance_eval(&block) if block_given?
         end
@@ -62,7 +62,7 @@ module Rujira
       def self.attachments(id_or_key, path, &block)
         entity = Entity.build do
           path "issue/#{id_or_key}/attachments"
-          method :POST
+          method :post
           headers 'Content-Type': 'multipart/form-data', 'X-Atlassian-Token': 'nocheck',
                   'Transfer-Encoding': 'chunked', 'Content-Length': File.size(path).to_s
           data file: Faraday::Multipart::FilePart.new(path, 'multipart/form-data')

@@ -4,7 +4,7 @@ module Rujira
   # TODO
   class Entity
     def initialize
-      @method = :GET
+      @method = :get
       @params = {}
       @headers = {}
       @rest_api = 'rest/api/2'
@@ -48,16 +48,7 @@ module Rujira
     end
 
     def commit
-      case @method
-      when :GET
-        get.body
-      when :PUT
-        put.body
-      when :POST
-        post.body
-      when :DELETE
-        delete.body
-      end
+      send(@method.downcase).body
     end
 
     private
