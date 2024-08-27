@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rujira (0.1.10)
+    rujira (0.1.11)
       faraday (~> 2.9)
       faraday-multipart (~> 1.0)
 
@@ -35,4 +35,4 @@ DEPENDENCIES
   test-unit (~> 3.6)
 
 BUNDLED WITH
-   2.5.7
+   2.5.10

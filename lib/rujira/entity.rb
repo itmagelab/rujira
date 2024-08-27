@@ -32,19 +32,19 @@ module Rujira
     end
 
     def path(path = nil)
-      @path ||= "#{@rest_api}/#{path}"
+      raise PathArgumentError if path.nil?
+
+      @path = "#{@rest_api}/#{path}"
 
       return @path if @path
-
-      raise ArgumentError, "No argument to 'path' was given."
     end
 
     def data(data = nil)
-      @data ||= data
+      raise DataArgumentError if data.nil?
+
+      @data = data
 
       return @data if @data
-
-      raise ArgumentError, "No argument to 'data' was given."
     end
 
     def commit
@@ -61,7 +61,7 @@ module Rujira
 
     def get
       request do
-        client.get path do |req|
+        client.get @path do |req|
           req.params = @params
         end
       end
@@ -69,7 +69,7 @@ module Rujira
 
     def delete
       request do
-        client.delete path do |req|
+        client.delete @path do |req|
           req.params = @params
         end
       end
@@ -77,19 +77,19 @@ module Rujira
 
     def post
       request do
-        client.post path do |req|
+        client.post @path do |req|
           req.headers = @headers
           req.params = @params
-          req.body = data
+          req.body = @data
         end
       end
     end
 
     def put
       request do
-        client.put path do |req|
+        client.put @path do |req|
           req.params = @params
-          req.body = data
+          req.body = @data
         end
       end
     end
