@@ -14,6 +14,15 @@ module Rujira
         new(entity.commit)
       end
 
+      def self.edit(id_or_key, &block)
+        entity = Entity.build do
+          path "project/#{id_or_key}"
+          method :put
+          instance_eval(&block) if block_given?
+        end
+        new(entity.commit)
+      end
+
       def self.get(id_or_key, &block)
         entity = Entity.build do
           path "project/#{id_or_key}"
