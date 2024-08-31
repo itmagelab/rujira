@@ -44,7 +44,12 @@
         }
     end
     Rujira::Api::Issue.attachments 'ITMG-1', 'upload.png'
-    Rujira::Api::Issue.del 'ITMG-1'
+    result.iter.each do |issue|
+      Rujira::Api::Issue.del issue.data['id'] do
+        params deleteSubtasks: true
+      end
+    end
+    Rujira::Api::Issue.del 'ITMG-1' # Returns 404
 
 ## Rake tasks
 
