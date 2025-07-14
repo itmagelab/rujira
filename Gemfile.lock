@@ -8,20 +8,24 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    faraday (2.9.0)
-      faraday-net_http (>= 2.0, < 3.2)
-    faraday-multipart (1.0.4)
-      multipart-post (~> 2)
-    faraday-net_http (3.1.0)
-      net-http
-    multipart-post (2.4.0)
-    net-http (0.4.1)
+    faraday (2.13.2)
+      faraday-net_http (>= 2.0, < 3.5)
+      json
+      logger
+    faraday-multipart (1.1.1)
+      multipart-post (~> 2.0)
+    faraday-net_http (3.4.1)
+      net-http (>= 0.5.0)
+    json (2.12.2)
+    logger (1.7.0)
+    multipart-post (2.4.1)
+    net-http (0.6.0)
       uri
-    power_assert (2.0.3)
-    rake (13.2.1)
-    test-unit (3.6.2)
+    power_assert (2.0.5)
+    rake (13.3.0)
+    test-unit (3.7.0)
       power_assert
-    uri (0.13.0)
+    uri (1.0.3)
 
 PLATFORMS
   arm64-darwin-21
