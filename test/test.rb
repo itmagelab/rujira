@@ -12,12 +12,16 @@ class UnitTest < Test::Unit::TestCase
   end
 
   def test_bearer
+    return unless ENV.key?('TEST_RUNNING')
+
     Rujira::Api::Myself.get do
       bearer 'SECRET_TOKEN'
     end.name
   end
 
   def test_readme
+    return unless ENV.key?('TEST_RUNNING')
+
     project = random_name
     name = Rujira::Api::Myself.get.name
     Rujira::Api::Project.create do
