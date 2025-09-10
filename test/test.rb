@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require 'test/unit'
+require 'dotenv'
 require_relative '../lib/rujira'
 
 class UnitTest < Test::Unit::TestCase
+  Dotenv.load
+
   def random_name
     Array.new(5) { ('A'..'Z').to_a.sample }.join
   end
