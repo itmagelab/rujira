@@ -4,12 +4,12 @@ module Rujira
   module Api
     # TODO
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/serverInfo
-    class ServerInfo < Item
+    class ServerInfo < Common
       def self.get
-        entity = Entity.build do
+        rq = self.rq.builder do
           path 'serverInfo'
         end
-        new(entity.commit)
+        new(rq.commit)
       end
     end
   end

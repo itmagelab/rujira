@@ -49,11 +49,11 @@ module Rujira
             puts Rujira::Api::ServerInfo.get.data.to_json
           end
 
-          namespace :task do
-            desc 'Create a task'
+          namespace :issue do
+            desc 'Create a issue'
             task :create do
               parser do
-                @parser.banner = "Usage: rake jira:task:create -- '[options]'"
+                @parser.banner = "Usage: rake jira:issue:create -- '[options]'"
                 @parser.on('-p PROJECT', '--project=PROJECT') { |project| @options[:project] = project.strip }
                 @parser.on('-s SUMMARY', '--summary=SUMMARY') { |summary| @options[:summary] = summary.strip }
                 @parser.on('-d DESCRIPTION', '--description=DESCRIPTION') do |description|
@@ -74,13 +74,13 @@ module Rujira
                 }
               end
               url = Rujira::Configuration.url
-              puts "// A new task been posted, check it out at #{url}/browse/#{result.data['key']}"
+              puts "// A new issue been posted, check it out at #{url}/browse/#{result.data['key']}"
             end
 
-            desc 'Search task by fields'
+            desc 'Search issue by fields'
             task :search do
               parser do
-                @parser.banner = "Usage: rake jira:task:search -- '[options]'"
+                @parser.banner = "Usage: rake jira:issue:search -- '[options]'"
                 @parser.on('-q JQL', '--jql=JQL') { |jql| @options[:jql] = jql }
               end
 
@@ -91,20 +91,20 @@ module Rujira
               result.iter.each { |i| puts JSON.pretty_generate(i.data) }
             end
 
-            desc 'Delete task'
+            desc 'Delete issue'
             task :delete do
               parser do
-                @parser.banner = "Usage: rake jira:task:delete -- '[options]'"
+                @parser.banner = "Usage: rake jira:issue:delete -- '[options]'"
                 @parser.on('-i ID', '--issue=ID') { |id| @options[:id] = id }
               end
 
               Rujira::Api::Issue.del @options[:id]
             end
 
-            desc 'Example usage attaching in task'
+            desc 'Example usage attaching in issue'
             task :attach do
               parser do
-                @parser.banner = "Usage: rake jira:task:attach -- '[options]'"
+                @parser.banner = "Usage: rake jira:issue:attach -- '[options]'"
                 @parser.on('-f FILE', '--file=FILE') { |file| @options[:file] = file }
                 @parser.on('-i ID', '--issue=ID') { |id| @options[:id] = id }
               end

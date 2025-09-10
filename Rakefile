@@ -2,6 +2,8 @@
 
 require 'bundler/gem_tasks'
 require 'rake/testtask'
+require 'dotenv'
+Dotenv.load
 
 $LOAD_PATH.unshift File.expand_path('lib', __dir__)
 require 'rujira'

@@ -49,20 +49,19 @@
         params deleteSubtasks: true
       end
     end
-    Rujira::Api::Issue.del 'ITMG-1' # Returns 404
 
 ## Rake tasks
 
     require 'rujira/tasks/jira'
     Rujira::Tasks::Jira.new
 
-    rake jira::whoami
-    rake jira:create -- '--project=ITMG' \
+    rake jira:issue:whoami
+    rake jira:issue:create -- '--project=ITMG' \
         '--summary=The short summary information' \
         '--description=The base description of task' \
         '--issuetype=Task'
-    rake jira:search -- '-q project = ITMG'
-    rake jira:attach -- '--file=upload.png' '--issue=ITMG-1'
+    rake jira:issue:search -- '-q project = ITMG'
+    rake jira:issue:attach -- '--file=upload.png' '--issue=ITMG-1'
 
 ## Testing
 
