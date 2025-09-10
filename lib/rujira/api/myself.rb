@@ -4,12 +4,12 @@ module Rujira
   module Api
     # TODO
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/myself
-    class Myself < Item
+    class Myself < Common
       def self.get
-        entity = Entity.build do
+        rq = self.rq.builder do
           path 'myself'
         end
-        new(entity.commit)
+        new(rq.run)
       end
 
       def name
