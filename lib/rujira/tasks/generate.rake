@@ -121,3 +121,5 @@ module Rujira
     end
   end
 end
+
+Rujira::Tasks::Jira.new
