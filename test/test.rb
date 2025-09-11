@@ -68,11 +68,16 @@ class UnitTest < Test::Unit::TestCase
               autoStartStop: true
     end
 
-    Rujira::Api::Sprint.update sprint['id'] do
+    update = Rujira::Api::Sprint.update sprint['id'] do
       payload name: 'Bot Sprint New'
     end
 
-    Rujira::Api::Sprint.get_issue sprint['id']
+    assert_equal 'Bot Sprint', sprint['name']
+    assert_equal 'Bot Sprint New', update['name']
+
+    issues = Rujira::Api::Sprint.get_issue sprint['id']
+
+    assert_not_empty issues['issues']
 
     Rujira::Api::Issue.watchers "#{project}-1", name
     Rujira::Api::Issue.get "#{project}-1"
