@@ -20,13 +20,15 @@ module Rujira
         end.run
       end
 
-      def self.del(id_or_key, &block)
+      def self.delete(id_or_key, &block)
         new.builder do
           path "issue/#{id_or_key}"
           method :delete
           instance_eval(&block) if block_given?
         end.run
       end
+
+      singleton_class.alias_method :del, :delete
 
       def self.edit(id_or_key, &block)
         new.builder do

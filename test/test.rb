@@ -69,11 +69,11 @@ class UnitTest < Test::Unit::TestCase
     end
 
     update = Rujira::Api::Sprint.update sprint['id'] do
-      payload name: 'Bot Sprint New'
+      payload name: "Bot Sprint #{project}"
     end
 
     assert_equal 'Bot Sprint', sprint['name']
-    assert_equal 'Bot Sprint New', update['name']
+    assert_equal "Bot Sprint #{project}", update['name']
 
     issues = Rujira::Api::Sprint.get_issue sprint['id']
 
@@ -100,13 +100,16 @@ class UnitTest < Test::Unit::TestCase
               }
     end
 
+    sprints = Rujira::Api::Board.sprint 1
+    sprints['values'].each do |sprint|
+      Rujira::Api::Sprint.delete sprint['id']
+    end
     search['issues'].each do |issue|
-      Rujira::Api::Issue.del issue['id'] do
+      Rujira::Api::Issue.delete issue['id'] do
         params deleteSubtasks: true
       end
     end
     Rujira::Api::Project.delete project.to_s
-    Rujira::Api::Sprint.delete sprint['id']
 
     Rujira::Api::Dashboard.list
     Rujira::Api::Dashboard.get 10_000
