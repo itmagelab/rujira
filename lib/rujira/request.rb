@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'async/http/faraday'
-
 module Rujira
   # TODO
   class Request # rubocop:disable Metrics/ClassLength
@@ -136,7 +134,6 @@ module Rujira
 
     def client
       Faraday.new(@options) do |builder|
-        builder.adapter :async_http
         builder.request :authorization, *@authorization if @authorization
         builder.request :multipart, flat_encode: true
         builder.request :json

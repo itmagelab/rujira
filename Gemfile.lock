@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rujira (0.1.11)
+    rujira (0.1.15)
       faraday (~> 2.9)
       faraday-multipart (~> 1.0)
 
@@ -9,7 +9,7 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.4.3)
-    async (2.31.0)
+    async (2.32.0)
       console (~> 1.29)
       fiber-annotation
       io-event (~> 1.11)
@@ -105,7 +105,7 @@ PLATFORMS
 DEPENDENCIES
   async-http-faraday (~> 0.22.1)
   dotenv (~> 3.1)
-  faraday (~> 2.9)
+  faraday (~> 2.13.4)
   faraday-multipart (~> 1.0)
   rake (~> 13.0)
   rubocop (~> 1.80)
