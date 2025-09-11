@@ -9,7 +9,7 @@ module Rujira
         rq = self.rq.builder do
           path 'serverInfo'
         end
-        new(rq.commit)
+        new(rq.run)
       end
     end
   end

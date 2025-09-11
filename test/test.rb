@@ -12,17 +12,18 @@ class UnitTest < Test::Unit::TestCase
   end
 
   def test_bearer
-    return unless ENV.key?('TEST_RUNNING')
+    return unless Rujira.env_var? 'RUJIRA_MAKE_MOCK'
 
     Rujira::Api::Myself.get do
       bearer 'SECRET_TOKEN'
     end.name
   end
 
-  def test_readme
-    return unless ENV.key?('TEST_RUNNING')
+  def test_readme # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
+    return unless Rujira.env_var? 'RUJIRA_MAKE_MOCK'
 
     project = random_name
+    Rujira::Api::ServerInfo.get
     name = Rujira::Api::Myself.get.name
     Rujira::Api::Project.create do
       data key: project.to_s,

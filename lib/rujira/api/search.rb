@@ -11,7 +11,7 @@ module Rujira
           method :post
           instance_eval(&block) if block_given?
         end
-        new((rq.commit))
+        new(rq.run)
       end
 
       def iter

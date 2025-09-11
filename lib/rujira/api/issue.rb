@@ -11,7 +11,7 @@ module Rujira
           method :post
           instance_eval(&block) if block_given?
         end
-        new(rq.commit)
+        new(rq.run)
       end
 
       def self.get(id_or_key, &block)
@@ -19,7 +19,7 @@ module Rujira
           path "issue/#{id_or_key}"
           instance_eval(&block) if block_given?
         end
-        new(rq.commit)
+        new(rq.run)
       end
 
       def self.del(id_or_key, &block)
@@ -28,7 +28,7 @@ module Rujira
           method :delete
           instance_eval(&block) if block_given?
         end
-        rq.commit
+        rq.run
       end
 
       def self.edit(id_or_key, &block)
@@ -37,7 +37,7 @@ module Rujira
           method :put
           instance_eval(&block) if block_given?
         end
-        new(rq.commit)
+        new(rq.run)
       end
 
       def self.comment(id_or_key, &block)
@@ -46,7 +46,7 @@ module Rujira
           method :post
           instance_eval(&block) if block_given?
         end
-        Comment.new(rq.commit)
+        Comment.new(rq.run)
       end
 
       def self.watchers(id_or_key, name, &block)
@@ -56,7 +56,7 @@ module Rujira
           data name.to_json
           instance_eval(&block) if block_given?
         end
-        new(rq.commit)
+        new(rq.run)
       end
 
       def self.attachments(id_or_key, path, &block)
@@ -68,7 +68,7 @@ module Rujira
           data file: Faraday::Multipart::FilePart.new(path, 'multipart/form-data')
           instance_eval(&block) if block_given?
         end
-        Attachments.new(rq.commit)
+        Attachments.new(rq.run)
       end
     end
   end

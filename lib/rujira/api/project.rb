@@ -11,7 +11,7 @@ module Rujira
           method :post
           instance_eval(&block) if block_given?
         end
-        new(rq.commit)
+        new(rq.run)
       end
 
       def self.edit(id_or_key, &block)
@@ -20,7 +20,7 @@ module Rujira
           method :put
           instance_eval(&block) if block_given?
         end
-        new(rq.commit)
+        new(rq.run)
       end
 
       def self.get(id_or_key, &block)
@@ -28,7 +28,7 @@ module Rujira
           path "project/#{id_or_key}"
           instance_eval(&block) if block_given?
         end
-        new(rq.commit)
+        new(rq.run)
       end
 
       def self.securitylevel(id_or_key, &block)
@@ -36,7 +36,7 @@ module Rujira
           path "project/#{id_or_key}/securitylevel"
           instance_eval(&block) if block_given?
         end
-        new(rq.commit)
+        new(rq.run)
       end
     end
   end

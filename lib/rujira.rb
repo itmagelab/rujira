@@ -18,4 +18,8 @@ require_relative 'rujira/api/server_info'
 
 module Rujira
   class Error < StandardError; end
+
+  def self.env_var?(var)
+    %w[true 1 yes].include?(ENV[var]&.downcase)
+  end
 end
