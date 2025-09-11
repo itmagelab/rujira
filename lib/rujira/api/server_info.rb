@@ -6,10 +6,9 @@ module Rujira
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/serverInfo
     class ServerInfo < Common
       def self.get
-        rq = self.rq.builder do
+        new.builder do
           path 'serverInfo'
-        end
-        new(rq.run)
+        end.run
       end
     end
   end

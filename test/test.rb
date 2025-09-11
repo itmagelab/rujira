@@ -16,7 +16,7 @@ class UnitTest < Test::Unit::TestCase
 
     Rujira::Api::Myself.get do
       bearer 'SECRET_TOKEN'
-    end.name
+    end
   end
 
   def test_readme # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
@@ -24,7 +24,7 @@ class UnitTest < Test::Unit::TestCase
 
     project = random_name
     Rujira::Api::ServerInfo.get
-    name = Rujira::Api::Myself.get.name
+    name = Rujira::Api::Myself.get['name']
     Rujira::Api::Project.create do
       data key: project.to_s,
            name: project.to_s,
@@ -61,8 +61,8 @@ class UnitTest < Test::Unit::TestCase
              summary: 'This is a shorthand for a set operation on the summary field'
            }
     end
-    result.iter.each do |issue|
-      Rujira::Api::Issue.del issue.data['id'] do
+    result['issues'].each do |issue|
+      Rujira::Api::Issue.del issue['id'] do
         params deleteSubtasks: true
       end
     end

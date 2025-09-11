@@ -7,7 +7,8 @@
 ## Usage in the code
 
     project = random_name
-    name = Rujira::Api::Myself.get.name
+    Rujira::Api::ServerInfo.get
+    name = Rujira::Api::Myself.get['name']
     Rujira::Api::Project.create do
       data key: project.to_s,
            name: project.to_s,
@@ -44,8 +45,8 @@
              summary: 'This is a shorthand for a set operation on the summary field'
            }
     end
-    result.iter.each do |issue|
-      Rujira::Api::Issue.del issue.data['id'] do
+    result['issues'].each do |issue|
+      Rujira::Api::Issue.del issue['id'] do
         params deleteSubtasks: true
       end
     end

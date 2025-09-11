@@ -6,14 +6,19 @@ module Rujira
     class Common
       attr_reader :data
 
-      def initialize(data = nil)
-        @data = data
+      def initialize
+        @request = Request.new
       end
 
-      def self.rq
-        Request.new.builder do
+      def builder(&block)
+        @request = @request.builder do
           bearer Configuration.token
+          instance_eval(&block) if block_given?
         end
+      end
+
+      def run
+        @request.run
       end
 
       def self.method_missing(method, *_args)

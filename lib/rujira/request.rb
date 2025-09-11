@@ -15,7 +15,7 @@ module Rujira
       @params = {}
       @headers = {}
       @payload = nil
-      @base_uri = 'rest/api/2'
+      @rest_base_path = 'rest/api/2'
       @authorization = nil
       @path = nil
     end
@@ -52,7 +52,7 @@ module Rujira
     def path(path)
       raise PathArgumentError if path.nil?
 
-      @path = "#{@base_uri}/#{path}"
+      @path = "#{@rest_base_path}/#{path}"
 
       @path if @path
     end
