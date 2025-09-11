@@ -34,7 +34,7 @@ class UnitTest < Test::Unit::TestCase
       payload key: project.to_s,
               name: project.to_s,
               projectTypeKey: 'software',
-              lead: 'root'
+              lead: name
     end
     Rujira::Api::Project.get project.to_s
     Rujira::Api::Issue.create do

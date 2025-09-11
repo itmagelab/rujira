@@ -28,6 +28,13 @@ module Rujira
         end.run
       end
 
+      def self.list(&block)
+        new.builder do
+          path 'project'
+          instance_eval(&block) if block_given?
+        end.run
+      end
+
       def self.delete(id_or_key)
         new.builder do
           method :delete

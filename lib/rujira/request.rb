@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+
 module Rujira
   # TODO
   class Request # rubocop:disable Metrics/ClassLength
