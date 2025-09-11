@@ -27,6 +27,10 @@ module Rujira
 
     alias build builder
 
+    def rest_base(path)
+      @rest_base_path = path
+    end
+
     def params(params)
       @params = params
     end

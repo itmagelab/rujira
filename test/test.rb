@@ -12,15 +12,20 @@ class UnitTest < Test::Unit::TestCase
   end
 
   def test_bearer
-    return unless Rujira.env_var? 'RUJIRA_MAKE_MOCK'
+    return unless Rujira.env_var? 'RUJIRA_TEST'
 
     Rujira::Api::Myself.get do
       bearer 'SECRET_TOKEN'
     end
   end
 
-  def test_readme # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
-    return unless Rujira.env_var? 'RUJIRA_MAKE_MOCK'
+  def test_issue_flow
+    return unless Rujira.env_var? 'RUJIRA_TEST'
+
+    require 'date'
+
+    now = Date.today
+    before = now + 30
 
     project = random_name
     Rujira::Api::ServerInfo.get
@@ -41,9 +46,37 @@ class UnitTest < Test::Unit::TestCase
       }
       params updateHistory: true
     end
+
+    Rujira::Api::Board.list
+    Rujira::Api::Board.get 1
+
+    sprint = Rujira::Api::Sprint.create do
+      payload name: 'Bot Sprint',
+              originBoardId: 1,
+              goal: 'Finish core features for release 1.0',
+              autoStartStop: false
+    end
+    Rujira::Api::Sprint.issue sprint['id'], ["#{project}-1"]
+
+    Rujira::Api::Sprint.replace sprint['id'] do
+      payload state: 'future',
+              name: 'Bot Sprint',
+              originBoardId: 1,
+              goal: 'Finish core features for release 1.0',
+              startDate: now,
+              endDate: before,
+              autoStartStop: true
+    end
+
+    Rujira::Api::Sprint.update sprint['id'] do
+      payload name: 'Bot Sprint New'
+    end
+
+    Rujira::Api::Sprint.get_issue sprint['id']
+
     Rujira::Api::Issue.watchers "#{project}-1", name
     Rujira::Api::Issue.get "#{project}-1"
-    result = Rujira::Api::Search.get do
+    search = Rujira::Api::Search.get do
       payload jql: "project = #{project} and status IN (\"To Do\", \"In Progress\") ORDER BY issuekey",
               maxResults: 10,
               startAt: 0,
@@ -61,10 +94,16 @@ class UnitTest < Test::Unit::TestCase
                 summary: 'This is a shorthand for a set operation on the summary field'
               }
     end
-    result['issues'].each do |issue|
+
+    search['issues'].each do |issue|
       Rujira::Api::Issue.del issue['id'] do
         params deleteSubtasks: true
       end
     end
+    Rujira::Api::Project.delete project.to_s
+    Rujira::Api::Sprint.delete sprint['id']
+
+    Rujira::Api::Dashboard.list
+    Rujira::Api::Dashboard.get 10_000
   end
 end
