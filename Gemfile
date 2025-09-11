@@ -1,21 +1,18 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
 # Specify your gem's dependencies in rujira.gemspec
 gemspec
 
-gem "rake", "~> 13.0"
+gem 'rake', '~> 13.0'
 
+gem 'faraday', '~> 2.13.4'
 
-gem "faraday", "~> 2.9"
+gem 'test-unit', '~> 3.6'
 
-gem "test-unit", "~> 3.6"
+gem 'faraday-multipart', '~> 1.0'
 
-gem "faraday-multipart", "~> 1.0"
+gem 'dotenv', '~> 3.1'
 
-gem "dotenv", "~> 3.1"
-
-gem "rubocop", "~> 1.80"
-
-gem "async-http-faraday", "~> 0.22.1"
+gem 'rubocop', '~> 1.80'

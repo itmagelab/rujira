@@ -28,6 +28,13 @@ module Rujira
         end.run
       end
 
+      def self.delete(id_or_key)
+        new.builder do
+          method :delete
+          path "project/#{id_or_key}"
+        end.run
+      end
+
       def self.securitylevel(id_or_key, &block)
         new.builder do
           path "project/#{id_or_key}/securitylevel"

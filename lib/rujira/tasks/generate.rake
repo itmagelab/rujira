@@ -49,6 +49,66 @@ module Rujira
             puts Rujira::Api::ServerInfo.get.data.to_json
           end
 
+          namespace :dashboard do
+            desc 'Get list of dashboards'
+            task :list do
+              result = Rujira::Api::Dashboard.list
+              result['dashboards'].each { |i| puts JSON.pretty_generate(i) }
+            end
+
+            desc 'Get a dashboard'
+            task :get do
+              parser do
+                @parser.banner = "Usage: rake jira:dashboard:get -- '[options]'"
+                @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
+              end
+
+              puts Api::Dashboard.get @options[:id]
+            end
+          end
+
+          namespace :board do
+            desc 'Get list of boards'
+            task :list do
+              result = Rujira::Api::Board.list
+              result['values'].each { |i| puts JSON.pretty_generate(i) }
+            end
+
+            desc 'Get a board'
+            task :get do
+              parser do
+                @parser.banner = "Usage: rake jira:board:get -- '[options]'"
+                @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
+              end
+
+              puts Rujira::Api::Board.get @options[:id]
+            end
+
+            desc 'Get a boards sprint'
+            task :sprint do
+              parser do
+                @parser.banner = "Usage: rake jira:board:sprint -- '[options]'"
+                @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
+              end
+
+              puts Rujira::Api::Board.sprint @options[:id]
+            end
+          end
+
+          namespace :sprint do
+            namespace :properties do
+              desc 'Get sprint properties'
+              task :list do
+                parser do
+                  @parser.banner = "Usage: rake jira:board:sprint:properties -- '[options]'"
+                  @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
+                end
+
+                puts Rujira::Api::Sprint.properties @options[:id]
+              end
+            end
+          end
+
           namespace :issue do
             desc 'Create a issue'
             task :create do

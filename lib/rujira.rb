@@ -17,6 +17,9 @@ require_relative 'rujira/api/comment'
 require_relative 'rujira/api/attachments'
 require_relative 'rujira/api/myself'
 require_relative 'rujira/api/server_info'
+require_relative 'rujira/api/dashboard'
+require_relative 'rujira/api/board'
+require_relative 'rujira/api/sprint'
 
 # TODO
 module Rujira
