@@ -9,7 +9,9 @@ module Rujira
       @token = Configuration.token
       @debug = Configuration.debug
       @options = {
-        url: Configuration.url
+        url: Configuration.url,
+        headers: @headers,
+        params: @params
       }
       @method = :get
       @params = {}
@@ -100,41 +102,37 @@ module Rujira
 
     def get
       request do
-        client.get @path do |req|
-          req.headers = @headers
-          req.params = @params
-          req.body = @payload
-        end
+        client.get(@path)
       end
     end
 
     def delete
       request do
-        client.delete @path do |req|
-          req.headers = @headers
-          req.params = @params
-          req.body = @payload
-        end
+        client.delete(@path)
+      end
+    end
+
+    def head
+      request do
+        client.head(@path)
       end
     end
 
     def post
       request do
-        client.post @path do |req|
-          req.headers = @headers
-          req.params = @params
-          req.body = @payload
-        end
+        client.post(@path, @payload)
       end
     end
 
     def put
       request do
-        client.put @path do |req|
-          req.headers = @headers
-          req.params = @params
-          req.body = @payload
-        end
+        client.put(@path, @payload)
+      end
+    end
+
+    def patch
+      request do
+        client.patch(@path, @payload)
       end
     end
 
