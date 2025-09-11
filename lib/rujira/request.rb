@@ -4,8 +4,8 @@ require 'async/http/faraday'
 
 module Rujira
   # TODO
-  class Request
-    def initialize
+  class Request # rubocop:disable Metrics/ClassLength
+    def initialize # rubocop:disable Metrics/MethodLength
       @token = Configuration.token
       @debug = Configuration.debug
       @options = {
@@ -15,7 +15,7 @@ module Rujira
       @params = {}
       @headers = {}
       @payload = nil
-      @base_uri = 'rest/api/2'
+      @rest_base_path = 'rest/api/2'
       @authorization = nil
       @path = nil
     end
@@ -52,7 +52,7 @@ module Rujira
     def path(path)
       raise PathArgumentError if path.nil?
 
-      @path = "#{@base_uri}/#{path}"
+      @path = "#{@rest_base_path}/#{path}"
 
       @path if @path
     end
@@ -66,12 +66,27 @@ module Rujira
     alias data payload
 
     def run
-      send(@method.downcase).body
+      rs = send(@method.downcase)
+      cache rs if Rujira.env_var? 'RUJIRA_MAKE_MOCK'
+
+      rs.body
     end
 
     alias commit run
 
     private
+
+    def cache(res)
+      path = res.to_hash[:url].path
+      cache_path = File.join('.cache', path)
+      if path.end_with?('/')
+        cache_path = File.join(cache_path, 'index.json')
+      else
+        cache_path += '.json' unless File.extname(cache_path) != ''
+      end
+      FileUtils.mkdir_p(File.dirname(cache_path))
+      File.write(cache_path, res.body)
+    end
 
     def request
       yield

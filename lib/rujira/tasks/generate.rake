@@ -36,7 +36,7 @@ module Rujira
         namespace :jira do
           desc 'Test connection by getting username'
           task :whoami do
-            puts Rujira::Api::Myself.get.name
+            puts Rujira::Api::Myself.get
           end
 
           desc 'Test connection by getting url'
@@ -121,3 +121,5 @@ module Rujira
     end
   end
 end
+
+Rujira::Tasks::Jira.new

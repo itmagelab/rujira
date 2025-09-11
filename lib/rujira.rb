@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+Dir[File.join(__dir__, 'rujira', 'tasks', '*.rake')].each { |r| load r } if defined?(Rake)
+
 require 'faraday'
 require 'faraday/multipart'
 require 'json'
@@ -16,6 +18,11 @@ require_relative 'rujira/api/attachments'
 require_relative 'rujira/api/myself'
 require_relative 'rujira/api/server_info'
 
+# TODO
 module Rujira
   class Error < StandardError; end
+
+  def self.env_var?(var)
+    %w[true 1 yes].include?(ENV[var]&.downcase)
+  end
 end

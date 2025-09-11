@@ -6,18 +6,11 @@ module Rujira
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/search
     class Search < Common
       def self.get(&block)
-        rq = self.rq.builder do
+        new.builder do
           path 'search'
           method :post
           instance_eval(&block) if block_given?
-        end
-        new((rq.commit))
-      end
-
-      def iter
-        data['issues'].map do |issue|
-          Issue.new(issue)
-        end
+        end.run
       end
     end
   end

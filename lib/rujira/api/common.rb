@@ -4,16 +4,26 @@ module Rujira
   module Api
     # TODO
     class Common
-      attr_reader :data
-
-      def initialize(data = nil)
-        @data = data
+      def initialize
+        @request = Request.new
       end
 
-      def self.rq
-        Request.new.builder do
+      # Sets up the request builder for @request.
+      # Automatically applies the bearer token from Configuration.token.
+      # If a block is given, it is evaluated in the context of the builder,
+      # allowing additional customization of the request (e.g., headers, params).
+      #
+      # @yield [builder] Optional block to configure the request builder.
+      # @return [Object] The configured request builder stored in @request.
+      def builder(&block)
+        @request = @request.builder do
           bearer Configuration.token
+          instance_eval(&block) if block_given?
         end
+      end
+
+      def run
+        @request.run
       end
 
       def self.method_missing(method, *_args)
