@@ -81,7 +81,6 @@ module Rujira
 
     def get
       request do
-        pp @path
         client.get @path do |req|
           req.headers = @headers
           req.params = @params
