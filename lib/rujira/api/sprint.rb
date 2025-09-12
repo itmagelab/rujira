@@ -5,75 +5,83 @@ module Rujira
     # TODO
     # https://docs.atlassian.com/jira-software/REST/9.17.0/#agile/1.0/sprint
     class Sprint < Common
-      def initialize
+      def initialize(client)
         super
-        @request.builder do
+        builder do
           rest_base 'rest/agile/1.0'
         end
       end
 
-      def self.create(&block)
-        new.builder do
+      def create(&block)
+        builder do
           path 'sprint'
           headers 'Content-Type': 'application/json', Accept: 'application/json'
           method :post
           instance_eval(&block) if block_given?
-        end.run
+        end
+        run
       end
 
-      def self.update(id, &block)
+      def update(id, &block)
         raise ArgumentError, 'block is required' unless block
 
-        new.builder do
+        builder do
           path "sprint/#{id}"
           headers 'Content-Type': 'application/json', Accept: 'application/json'
           method :post
           instance_eval(&block) if block_given?
-        end.run
+        end
+        run
       end
 
-      def self.replace(id, &block)
+      def replace(id, &block)
         raise ArgumentError, 'block is required' unless block
 
-        new.builder do
+        builder do
           path "sprint/#{id}"
           headers 'Content-Type': 'application/json', Accept: 'application/json'
           method :put
           instance_eval(&block) if block_given?
-        end.run
+        end
+        run
       end
 
-      def self.get(id)
-        new.builder do
+      def get(id)
+        builder do
           path "sprint/#{id}"
-        end.run
+        end
+        run
       end
 
-      def self.get_issue(id)
-        new.builder do
+      def get_issue(id)
+        builder do
           path "sprint/#{id}/issue"
-        end.run
+        end
+        run
       end
 
-      def self.delete(id)
-        new.builder do
+      def delete(id)
+        builder do
           method :delete
           path "sprint/#{id}"
-        end.run
+        end
+        run
       end
 
-      def self.properties(id)
-        new.builder do
+      def properties(id)
+        builder do
           path "sprint/#{id}/properties"
-        end.run
+        end
+        run
       end
 
-      def self.issue(id, issues)
-        new.builder do
+      def issue(id, issues)
+        builder do
           method :post
           path "sprint/#{id}/issue"
           payload issues: issues
-        end.run
+        end
+        run
       end
     end
   end

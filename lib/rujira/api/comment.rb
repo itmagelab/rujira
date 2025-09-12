@@ -5,12 +5,13 @@ module Rujira
     # TODO
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/comment/%7BcommentId%7D/properties
     class Comment < Common
-      def self.create(id_or_key, &block)
-        new.builder do
+      def create(id_or_key, &block)
+        builder do
           path "issue/#{id_or_key}/comment"
           method :post
           instance_eval(&block) if block_given?
-        end.run
+        end
+        run
       end
     end
   end

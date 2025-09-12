@@ -5,22 +5,23 @@ require_relative '../lib/rujira'
 
 Dotenv.load
 
+client = Rujira::Client.new('http://localhost:8080')
 project_name = 'EXAMPLE2'
-name = Rujira::Api::Myself.get['name']
+name = client.Myself.get['name']
 
 begin
-  project = Rujira::Api::Project.create do
+  project = client.Project.create do
     payload key: project_name.to_s,
             name: project_name.to_s,
             projectTypeKey: 'software',
             lead: name
   end
 rescue StandardError
-  projects = Rujira::Api::Project.list
+  projects = client.Project.list
   project = projects.find { |p| p['name'] == project_name }
 end
 
-Rujira::Api::Issue.create do
+client.Issue.create do
   payload fields: {
     project: { key: project['key'] },
     summary: 'BOT: added a new feature.',
@@ -33,7 +34,7 @@ end
 now = Date.today
 before = now + 30
 
-sprint = Rujira::Api::Sprint.create do
+sprint = client.Sprint.create do
   payload name: 'Bot Example Sprint',
           originBoardId: 1,
           goal: 'Finish core features for release 1.0',
@@ -42,8 +43,8 @@ sprint = Rujira::Api::Sprint.create do
           autoStartStop: true
 end
 
-Rujira::Api::Sprint.update sprint['id'] do
+client.Sprint.update sprint['id'] do
   payload state: 'active'
 end
 
-Rujira::Api::Sprint.issue sprint['id'], ["#{project_name}-1"]
+client.Sprint.issue sprint['id'], ["#{project_name}-1"]

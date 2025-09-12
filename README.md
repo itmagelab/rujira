@@ -41,17 +41,25 @@ RUJIRA_URL='http://localhost:8080'
 ### Example of usage
 
 ```ruby
+require 'date'
+
+now = Date.today
+before = now + 30
+
 project = random_name
-Rujira::Api::ServerInfo.get
-name = Rujira::Api::Myself.get['name']
-Rujira::Api::Project.create do
+client = Rujira::Client.new('http://localhost:8080', debug: true)
+
+client.ServerInfo.get
+name = client.Myself.get['name']
+
+client.Project.create do
   payload key: project.to_s,
           name: project.to_s,
           projectTypeKey: 'software',
-          lead: 'root'
+          lead: name
 end
-Rujira::Api::Project.get project.to_s
-Rujira::Api::Issue.create do
+client.Project.get project.to_s
+client.Issue.create do
   payload fields: {
     project: { key: project.to_s },
     summary: 'BOT: added a new feature.',
@@ -60,18 +68,52 @@ Rujira::Api::Issue.create do
   }
   params updateHistory: true
 end
-Rujira::Api::Issue.watchers "#{project}-1", name
-Rujira::Api::Issue.get "#{project}-1"
-result = Rujira::Api::Search.get do
+
+client.Board.list
+client.Board.get 1
+
+sprint = client.Sprint.create do
+  payload name: 'Bot Sprint',
+          originBoardId: 1,
+          goal: 'Finish core features for release 1.0',
+          autoStartStop: false
+end
+client.Sprint.issue sprint['id'], ["#{project}-1"]
+
+client.Sprint.replace sprint['id'] do
+  payload state: 'future',
+          name: 'Bot Sprint',
+          originBoardId: 1,
+          goal: 'Finish core features for release 1.0',
+          startDate: now,
+          endDate: before,
+          autoStartStop: true
+end
+
+update = client.Sprint.update sprint['id'] do
+  payload name: "Bot Sprint #{project}"
+end
+
+assert_equal 'Bot Sprint', sprint['name']
+assert_equal "Bot Sprint #{project}", update['name']
+
+issues = client.Sprint.get_issue sprint['id']
+
+assert_not_empty issues['issues']
+
+client.Issue.get "#{project}-1"
+
+client.Issue.watchers "#{project}-1", name
+search = client.Search.get do
   payload jql: "project = #{project} and status IN (\"To Do\", \"In Progress\") ORDER BY issuekey",
           maxResults: 10,
           startAt: 0,
           fields: %w[id key]
 end
-Rujira::Api::Issue.comment "#{project}-1" do
+client.Issue.comment "#{project}-1" do
   payload body: 'Adding a new comment'
 end
-Rujira::Api::Issue.edit "#{project}-1" do
+client.Issue.edit "#{project}-1" do
   payload update: {
             labels: [{ add: 'bot' }, { remove: 'some' }]
           },
@@ -80,11 +122,20 @@ Rujira::Api::Issue.edit "#{project}-1" do
             summary: 'This is a shorthand for a set operation on the summary field'
           }
 end
-result['issues'].each do |issue|
-  Rujira::Api::Issue.del issue['id'] do
+
+sprints = client.Board.sprint 1
+sprints['values'].each do |sprint|
+  client.Sprint.delete sprint['id']
+end
+search['issues'].each do |issue|
+  client.Issue.delete issue['id'] do
     params deleteSubtasks: true
   end
 end
+client.Project.delete project.to_s
+
+client.Dashboard.list
+client.Dashboard.get 10_000
 ```
 
 * The `builder` method automatically applies the authorization token.

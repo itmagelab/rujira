@@ -4,24 +4,24 @@ require 'rake'
 require 'rake/tasklib'
 require 'json'
 
+# TODO
 module Rujira
   module Tasks
     # TODO
-    class Jira
-      include ::Rake::DSL if defined?(::Rake::DSL)
-
+    class Jira # rubocop:disable Metrics/ClassLength
+      include Rake::DSL if defined?(Rake::DSL)
       def initialize
         @options = {
           issuetype: 'Task'
         }
-        @parser = OptionParser.new
+        @parser ||= OptionParser.new
 
         apply
       end
 
       def parser
         yield
-        args = @parser.order!(ARGV) {}
+        args = @parser.order!(ARGV)
         @parser.parse!(args)
       end
 
@@ -29,30 +29,26 @@ module Rujira
         @options[name]
       end
 
-      # rubocop:disable Metrics/AbcSize
-      # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/BlockLength
-      def apply
-        namespace :jira do
+      def client
+        @client ||= Rujira::Client.new('http://localhost:8080', debug: true)
+      end
+
+      def apply # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+        namespace :jira do # rubocop:disable Metrics/BlockLength
           desc 'Test connection by getting username'
           task :whoami do
-            puts Rujira::Api::Myself.get
-          end
-
-          desc 'Test connection by getting url'
-          task :url do
-            puts Rujira::Configuration.url
+            puts client.Myself.get
           end
 
           desc 'Test connection by getting server information'
           task :server_info do
-            puts Rujira::Api::ServerInfo.get.data.to_json
+            puts client.ServerInfo.get
           end
 
           namespace :dashboard do
             desc 'Get list of dashboards'
             task :list do
-              result = Rujira::Api::Dashboard.list
+              result = client.Dashboard.list
               result['dashboards'].each { |i| puts JSON.pretty_generate(i) }
             end
 
@@ -70,7 +66,7 @@ module Rujira
           namespace :board do
             desc 'Get list of boards'
             task :list do
-              result = Rujira::Api::Board.list
+              result = client.Board.list
               result['values'].each { |i| puts JSON.pretty_generate(i) }
             end
 
@@ -81,7 +77,7 @@ module Rujira
                 @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
               end
 
-              puts Rujira::Api::Board.get @options[:id]
+              puts client.Board.get @options[:id]
             end
 
             desc 'Get a boards sprint'
@@ -91,7 +87,7 @@ module Rujira
                 @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
               end
 
-              puts Rujira::Api::Board.sprint @options[:id]
+              puts client.Board.sprint @options[:id]
             end
           end
 
@@ -104,12 +100,12 @@ module Rujira
                   @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
                 end
 
-                puts Rujira::Api::Sprint.properties @options[:id]
+                puts client.Sprint.properties @options[:id]
               end
             end
           end
 
-          namespace :issue do
+          namespace :issue do # rubocop:disable Metrics/BlockLength
             desc 'Create a issue'
             task :create do
               parser do
@@ -125,8 +121,8 @@ module Rujira
               end
 
               options = @options
-              result = Rujira::Api::Issue.create do
-                data fields: {
+              result = client.Issue.create do
+                payload fields: {
                   project: { key: options[:project] },
                   summary: options[:summary],
                   issuetype: { name: options[:issuetype] },
@@ -145,10 +141,10 @@ module Rujira
               end
 
               options = @options
-              result = Rujira::Api::Search.get do
+              result = client.Search.get do
                 data jql: options[:jql]
               end
-              result.iter.each { |i| puts JSON.pretty_generate(i.data) }
+              result['issues'].each { |i| puts JSON.pretty_generate(i) }
             end
 
             desc 'Delete issue'
@@ -158,7 +154,7 @@ module Rujira
                 @parser.on('-i ID', '--issue=ID') { |id| @options[:id] = id }
               end
 
-              Rujira::Api::Issue.del @options[:id]
+              client.Issue.del @options[:id]
             end
 
             desc 'Example usage attaching in issue'
@@ -169,17 +165,12 @@ module Rujira
                 @parser.on('-i ID', '--issue=ID') { |id| @options[:id] = id }
               end
 
-              result = Rujira::Api::Issue.attachments @options[:id], @options[:file]
-              puts JSON.pretty_generate(result.data)
+              result = client.Issue.attachments @options[:id], @options[:file]
+              puts JSON.pretty_generate(result)
             end
           end
         end
       end
-      # rubocop:enable Metrics/BlockLength
-      # rubocop:enable Metrics/AbcSize
-      # rubocop:enable Metrics/MethodLength
     end
   end
 end
-
-Rujira::Tasks::Jira.new

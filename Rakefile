@@ -6,7 +6,9 @@ require 'dotenv'
 
 $LOAD_PATH.unshift File.expand_path('lib', __dir__)
 
-require 'rujira'
+require_relative 'lib/rujira'
+
+Rujira::Tasks::Jira.new
 
 Dotenv.load
 

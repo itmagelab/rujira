@@ -4,8 +4,13 @@ module Rujira
   module Api
     # TODO
     class Common
-      def initialize
-        @request = Request.new
+      def initialize(client)
+        @client = client
+        @client.request.builder do
+          bearer Configuration.token
+          method :get
+          rest_base 'rest/api/2'
+        end
       end
 
       # Sets up the request builder for @request.
@@ -15,26 +20,9 @@ module Rujira
       #
       # @yield [builder] Optional block to configure the request builder.
       # @return [Object] The configured request builder stored in @request.
-      def builder(&block)
-        @request = @request.builder do
-          bearer Configuration.token
-          instance_eval(&block) if block_given?
-        end
-      end
+      def builder(&block) = @client.request.builder(&block)
 
-      def run
-        @request.run
-      end
-
-      def self.method_missing(method, *_args)
-        method = [method.to_sym]
-        raise "The method #{method} does not exist.
-               The following methods are available: #{methods(false)}"
-      end
-
-      def self.respond_to_missing?(method, include_private = false)
-        methods.include?(method) || super
-      end
+      def run = @client.dispatch
     end
   end
 end
