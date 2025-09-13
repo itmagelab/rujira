@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module Rujira
-  # TODO
+  # TODO: add docs
+  # Some description
   module Configuration
     def self.token
       return ENV['RUJIRA_TOKEN'] if ENV.include?('RUJIRA_TOKEN')

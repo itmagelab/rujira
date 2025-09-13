@@ -2,7 +2,8 @@
 
 module Rujira
   module Api
-    # TODO
+    # TODO: add docs
+    # Some description
     class Common
       def initialize(client)
         # Store the passed client object in an instance variable for later use

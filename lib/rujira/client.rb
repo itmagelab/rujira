@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module Rujira
-  # TODO
+  # TODO: add docs
+  # Some description
   class Client
     attr_accessor :request
 

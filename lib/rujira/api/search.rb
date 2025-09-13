@@ -2,7 +2,8 @@
 
 module Rujira
   module Api
-    # TODO
+    # TODO: add docs
+    # Some description
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/search
     class Search < Common
       def get(&block)

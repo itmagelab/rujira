@@ -3,7 +3,8 @@
 require 'fileutils'
 
 module Rujira
-  # TODO
+  # TODO: add docs
+  # Some description
   class Request
     attr_reader :authorization, :options
 

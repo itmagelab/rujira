@@ -22,7 +22,8 @@ require_relative 'rujira/api/dashboard'
 require_relative 'rujira/api/board'
 require_relative 'rujira/api/sprint'
 
-# TODO
+# TODO: add docs
+# Some description
 module Rujira
   class Error < StandardError; end
 

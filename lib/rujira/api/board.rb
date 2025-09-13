@@ -2,7 +2,8 @@
 
 module Rujira
   module Api
-    # TODO
+    # TODO: add docs
+    # Some description
     # https://docs.atlassian.com/jira-software/REST/9.17.0/#agile/1.0/board
     class Board < Common
       def initialize(client)
