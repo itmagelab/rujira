@@ -408,20 +408,26 @@ module Rujira
         run
       end
 
-      # Uploads an attachment to an issue.
+      # Uploads a file as an attachment to the specified Jira issue.
       #
-      # @param [String] id_or_key The issue ID or key.
-      # @param [String] path The local file path of the attachment.
-      # @yield [builder] Optional block to configure the request.
-      # @return [Object] The API response containing the uploaded attachment.
+      # @param [String] id_or_key The issue ID or key to which the file will be attached.
+      # @param [String] path The local file path of the attachment to upload.
+      # @yield [builder] Optional block to customize the request builder.
+      # @return [Object] The API response after executing the request.
       #
-      # @example Upload an attachment
-      #   client.Issue.attachments("TEST-123", "/tmp/file.txt")
-      #
-      def attachments(id_or_key, path, &block)
+      def create_attachments(id_or_key, path, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
-        @client.Attachments.create id_or_key, path, &block
+        client = @client
+        builder do
+          path "issue/#{id_or_key}/attachments"
+          method :post
+          headers 'X-Atlassian-Token': 'no-check'
+          payload file: client.file(path)
+          instance_eval(&block) if block_given?
+        end
+        run
       end
+      alias attachments create_attachments
     end
   end
 end
