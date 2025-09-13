@@ -26,6 +26,54 @@ module Rujira
         end
         run
       end
+
+      # Retrieves a specific attachment by ID.
+      #
+      # @param [String] id The attachment ID.
+      # @return [Object] The API response containing attachment details.
+      #
+      # @example Get an attachment
+      #   client.attachments.get("10001")
+      #
+      def get(id)
+        abort 'Attachment ID is required' if id.to_s.strip.empty?
+        builder do
+          path "attachment/#{id}"
+        end
+        run
+      end
+
+      # Deletes a specific attachment by ID.
+      #
+      # @param [String] id The attachment ID.
+      # @return [Object] The API response after deletion.
+      #
+      # @example Delete an attachment
+      #   client.attachments.delete("10001")
+      #
+      def delete(id)
+        abort 'Attachment ID is required' if id.to_s.strip.empty?
+        builder do
+          method :delete
+          path "attachment/#{id}"
+        end
+        run
+      end
+
+      # Retrieves metadata for attachments.
+      #
+      # @yield [builder] Optional block to configure the request.
+      # @return [Object] The API response containing attachment metadata.
+      #
+      # @example Get attachment metadata
+      #   client.attachments.meta
+      #
+      def meta
+        builder do
+          path 'attachment/meta'
+        end
+        run
+      end
     end
   end
 end
