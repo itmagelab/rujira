@@ -15,15 +15,6 @@ class UnitTest < Test::Unit::TestCase
     %w[true 1 yes].include?(ENV[var]&.downcase)
   end
 
-  def test_bearer
-    return unless env_var? 'RUJIRA_TEST'
-
-    client = Rujira::Client.new('http://localhost:8080')
-    client.Myself.get do
-      bearer 'SECRET_TOKEN'
-    end
-  end
-
   def test_issue_flow # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     return unless env_var? 'RUJIRA_TEST'
 
@@ -100,6 +91,7 @@ class UnitTest < Test::Unit::TestCase
     client.Issue.comment "#{project}-1" do
       payload body: 'Adding a new comment'
     end
+    client.Issue.attachments "#{project}-1", '/tmp/test.file'
     client.Issue.edit "#{project}-1" do
       payload update: {
                 labels: [{ add: 'bot' }, { remove: 'some' }]

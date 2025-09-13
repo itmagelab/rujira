@@ -7,12 +7,12 @@ module Rujira
     class Attachments < Common
       def create(id_or_key, path, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        client = @client
         builder do
           path "issue/#{id_or_key}/attachments"
           method :post
-          headers 'Content-Type': 'multipart/form-data', 'X-Atlassian-Token': 'nocheck',
-                  'Transfer-Encoding': 'chunked', 'Content-Length': File.size(path).to_s
-          payload file: Faraday::Multipart::FilePart.new(path, 'multipart/form-data')
+          headers 'X-Atlassian-Token': 'no-check'
+          payload file: client.file(path)
           instance_eval(&block) if block_given?
         end
         run

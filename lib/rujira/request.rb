@@ -7,7 +7,7 @@ module Rujira
   class Request
     attr_reader :authorization, :options
 
-    def initialize # rubocop:disable Metrics/MethodLength
+    def initialize
       @token = Configuration.token
       @debug = Configuration.debug
       @method = :get
@@ -17,11 +17,6 @@ module Rujira
       @rest_base_path = 'rest/api/2'
       @authorization = nil
       @path = nil
-      @options = {
-        url: Configuration.url,
-        headers: @headers,
-        params: @params
-      }
     end
 
     def builder(&block)
@@ -37,13 +32,13 @@ module Rujira
       @rest_base_path = path
     end
 
-    def params(params)
+    def params(params = nil)
       return @params if params.nil?
 
       @params = params
     end
 
-    def headers(headers)
+    def headers(headers = nil)
       return @headers if headers.nil?
 
       @headers = headers

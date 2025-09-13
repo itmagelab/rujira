@@ -9,9 +9,6 @@ module Rujira
       @uri = URI(url)
       @debug = ENV.fetch('RUJIRA_DEBUG', debug.to_s) == 'true'
       @request = Request.new
-      @options = @request.options.merge({
-                                          url: @uri
-                                        })
     end
 
     def method_missing(method_name, ...)
@@ -19,6 +16,15 @@ module Rujira
       resource_class.new(self, ...)
     rescue NameError
       super
+    end
+
+    def options
+      {
+        url: Configuration.url,
+        headers: @request.headers,
+        params: @request.params
+
+      }
     end
 
     def respond_to_missing?(method_name, include_private = false)
@@ -43,7 +49,7 @@ module Rujira
     end
 
     def connection
-      Faraday.new(@options) do |builder|
+      Faraday.new(options) do |builder|
         builder.request :authorization, *@request.authorization if @request.authorization
         builder.request :multipart, flat_encode: true
         builder.request :json
@@ -51,6 +57,10 @@ module Rujira
         builder.response :raise_error
         builder.response :logger if @debug
       end
+    end
+
+    def file(path)
+      Faraday::Multipart::FilePart.new(path, 'multipart/form-data')
     end
 
     def generate_mocks(res)
