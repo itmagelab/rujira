@@ -81,7 +81,9 @@ class UnitTest < Test::Unit::TestCase
 
     client.Issue.get "#{project}-1"
 
-    client.Issue.watchers "#{project}-1", name
+    client.Issue.watcher "#{project}-1", name
+    client.Issue.get_watchers "#{project}-1"
+    client.Issue.remove_watchers "#{project}-1", 'root'
     search = client.Search.get do
       payload jql: "project = #{project} and status IN (\"To Do\", \"In Progress\") ORDER BY issuekey",
               maxResults: 10,
@@ -137,6 +139,6 @@ class UnitTest < Test::Unit::TestCase
               favourite: true,
               editable: false
     end
-    pp client.Filter.favourite
+    client.Filter.favourite
   end
 end
