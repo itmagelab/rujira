@@ -1,3 +1,12 @@
+## [0.3.2] - 2025-09-13
+
+### 🚜 Refactor
+
+- Remove configuration
+
+### 📚 Documentation
+
+- Updated inline description
 ## [0.3.1] - 2025-09-13
 
 ### 🚜 Refactor
@@ -70,14 +79,3 @@
 ### Reafactor
 
 - Full
-## [0.1.10] - 2024-07-05
-
-### ITMG
-
-- Adding watchers and security level getter
-## [0.1.9] - 2024-06-23
-
-### ITMG
-
-- Description fixes
-- Release 0.1.8
