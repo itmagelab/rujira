@@ -21,7 +21,7 @@ module Rujira
 
     def options
       {
-        url: Configuration.url,
+        url: @uri,
         headers: @request.headers,
         params: @request.params
 

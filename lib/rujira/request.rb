@@ -9,8 +9,7 @@ module Rujira
     attr_reader :authorization, :options
 
     def initialize
-      @token = Configuration.token
-      @debug = Configuration.debug
+      @token = ENV['RUJIRA_TOKEN'] if ENV.include?('RUJIRA_TOKEN')
       @method = :get
       @params = {}
       @headers = {}

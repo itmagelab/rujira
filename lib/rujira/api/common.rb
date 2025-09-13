@@ -12,7 +12,7 @@ module Rujira
         # Configure requests using the client's builder DSL
         @client.request.builder do
           # Set the Bearer token for authorization
-          bearer Configuration.token
+          bearer @token
 
           # Specify the default HTTP method for requests
           method :get
