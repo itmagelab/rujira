@@ -129,9 +129,14 @@ class UnitTest < Test::Unit::TestCase
     client.Avatar.get 'project'
     client.Configuration.get
     client.CustomFields.get
-    client.Field.create do
-      payload name: 'My Field', type: 'com.atlassian.jira.plugin.system.customfieldtypes:textfield'
+    client.Field.list
+    client.Filter.create do
+      payload name: "My Filter #{project}",
+              description: 'My test filter',
+              jql: 'type = Bug and resolution is empty',
+              favourite: true,
+              editable: false
     end
-    pp client.Field.list
+    pp client.Filter.favourite
   end
 end
