@@ -2,9 +2,14 @@
 
 module Rujira
   module Api
-    # TODO: add docs
-    # Some description
+    # Base class for Jira API resources.
+    # Provides common request setup, authorization, and request execution.
+    #
     class Common
+      # Initializes a new API resource.
+      #
+      # @param [Object] client The HTTP client instance used to build and dispatch requests.
+      #
       def initialize(client)
         # Store the passed client object in an instance variable for later use
         @client = client
@@ -31,8 +36,9 @@ module Rujira
       # @return [Object] The configured request builder stored in @request.
       def builder(&block) = @client.request.builder(&block)
 
-      # Delegate execution to the client's dispatch method
-      # This triggers the configured request to be sent
+      # Executes the configured request.
+      #
+      # @return [Object] The API response after dispatching the request.
       def run = @client.dispatch
     end
   end
