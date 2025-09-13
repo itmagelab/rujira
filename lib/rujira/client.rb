@@ -7,7 +7,7 @@ module Rujira
 
     def initialize(url, debug: false)
       @uri = URI(url)
-      @debug = debug
+      @debug = ENV.fetch('RUJIRA_DEBUG', debug.to_s) == 'true'
       @request = Request.new
       @options = @request.options.merge({
                                           url: @uri

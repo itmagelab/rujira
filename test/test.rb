@@ -33,7 +33,7 @@ class UnitTest < Test::Unit::TestCase
     before = now + 30
 
     project = random_name
-    client = Rujira::Client.new('http://localhost:8080', debug: true)
+    client = Rujira::Client.new('http://localhost:8080')
 
     client.ServerInfo.get
     name = client.Myself.get['name']
