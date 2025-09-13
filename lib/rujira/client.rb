@@ -35,7 +35,6 @@ module Rujira
         args << @request.payload if %i[post put patch].include?(@request.method)
 
         response = connection.public_send(@request.method, *args)
-        cache response if @debug
 
         response.success? ? response.body : (raise "Request failed with status #{response.status}")
       rescue StandardError => e
