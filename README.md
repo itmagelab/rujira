@@ -47,7 +47,8 @@ now = Date.today
 before = now + 30
 
 project = random_name
-client = Rujira::Client.new('http://localhost:8080', debug: true)
+url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
+client = Rujira::Client.new(url, debug: true)
 
 client.ServerInfo.get
 name = client.Myself.get['name']
