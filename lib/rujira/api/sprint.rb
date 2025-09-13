@@ -23,6 +23,7 @@ module Rujira
       end
 
       def update(id, &block)
+        abort 'Sprint ID is required' if id.nil?
         raise ArgumentError, 'block is required' unless block
 
         builder do
@@ -35,6 +36,7 @@ module Rujira
       end
 
       def replace(id, &block)
+        abort 'Sprint ID is required' if id.nil?
         raise ArgumentError, 'block is required' unless block
 
         builder do
@@ -47,6 +49,7 @@ module Rujira
       end
 
       def get(id)
+        abort 'Sprint ID is required' if id.nil?
         builder do
           path "sprint/#{id}"
         end
@@ -54,6 +57,7 @@ module Rujira
       end
 
       def get_issue(id)
+        abort 'Sprint ID is required' if id.nil?
         builder do
           path "sprint/#{id}/issue"
         end
@@ -61,6 +65,7 @@ module Rujira
       end
 
       def delete(id)
+        abort 'Sprint ID is required' if id.nil?
         builder do
           method :delete
           path "sprint/#{id}"
@@ -69,6 +74,7 @@ module Rujira
       end
 
       def properties(id)
+        abort 'Sprint ID is required' if id.nil?
         builder do
           path "sprint/#{id}/properties"
         end
@@ -76,6 +82,7 @@ module Rujira
       end
 
       def issue(id, issues)
+        abort 'Sprint ID is required' if id.nil?
         builder do
           method :post
           path "sprint/#{id}/issue"
