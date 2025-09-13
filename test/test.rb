@@ -118,5 +118,11 @@ class UnitTest < Test::Unit::TestCase
 
     client.Permissions.list
     client.Permissions.my
+    client.ApplicationProperties.list
+    client.ApplicationProperties.set 'jira.search.views.default.max' do
+      payload id: 'jira.search.views.default.max',
+              value: 1000
+    end
+    client.ApplicationProperties.advanced_settings
   end
 end
