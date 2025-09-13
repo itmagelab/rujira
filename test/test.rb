@@ -4,7 +4,7 @@ require 'test/unit'
 require 'dotenv'
 require_relative '../lib/rujira'
 
-class UnitTest < Test::Unit::TestCase
+class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
   Dotenv.load
 
   def random_name

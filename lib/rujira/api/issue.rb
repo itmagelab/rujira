@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
+require_relative 'issue/watchers'
+
 module Rujira
   module Api
     # Provides access to Jira issues via the REST API.
     # API reference:
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/issue
     #
-    class Issue < Common
+    class Issue < Common # rubocop:disable Metrics/ClassLength
+      include Watchers
+
       # Creates a new issue.
       #
       # @yield [builder] Optional block to configure the request payload.
@@ -549,29 +553,6 @@ module Rujira
         run
       end
 
-      # Removes a watcher from a given issue.
-      #
-      # @param [String] id_or_key The issue ID or key.
-      # @param [String] username The username of the watcher to remove.
-      # @yield [builder] Optional block to configure additional request parameters.
-      # @return [Object] The API response after removing the watcher.
-      #
-      # @example Remove a watcher from an issue
-      #   client.Issue.remove_watchers("TEST-123", "john.doe") do
-      #     # Optional: add headers or query parameters
-      #   end
-      def remove_watchers(id_or_key, username, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
-        abort 'USERNAME is required' if username.to_s.strip.empty?
-        builder do
-          method :delete
-          path "issue/#{id_or_key}/watchers"
-          params username: username
-          instance_eval(&block) if block_given?
-        end
-        run
-      end
-
       # Adds a comment to an issue.
       #
       # @param [String] id_or_key The issue ID or key.
@@ -601,66 +582,6 @@ module Rujira
       def attachments(id_or_key, path, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         @client.Attachments.create id_or_key, path, &block
-      end
-
-      # Retrieves the list of watchers for a given issue.
-      #
-      # @param [String] id_or_key The issue ID or key.
-      # @yield [builder] Optional block to configure additional request parameters.
-      # @return [Object] The API response containing the list of watchers.
-      #
-      # @example Get watchers of an issue
-      #   client.Issue.get_watchers("TEST-123") do
-      #     # Optional: add query parameters or headers
-      #   end
-      def get_watchers(id_or_key, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
-        builder do
-          path "issue/#{id_or_key}/watchers"
-          instance_eval(&block) if block_given?
-        end
-        run
-      end
-
-      # Adds watchers to a given issue.
-      #
-      # @param [String] id_or_key The issue ID or key.
-      # @yield [builder] Block to configure the payload for adding watchers.
-      # @return [Object] The API response after adding watchers.
-      #
-      # @example Add watchers to an issue
-      #   client.Issue.add_watchers("TEST-123") do
-      #     payload ["john.doe", "jane.smith"]
-      #   end
-      def add_watchers(id_or_key, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
-        builder do
-          method :post
-          path "issue/#{id_or_key}/watchers"
-          instance_eval(&block) if block_given?
-        end
-        run
-      end
-
-      # Adds a watcher to an issue.
-      #
-      # @param [String] id_or_key The issue ID or key.
-      # @param [String] name The username to add as a watcher.
-      # @yield [builder] Optional block to configure the request.
-      # @return [Object] The API response after adding the watcher.
-      #
-      # @example Add a watcher
-      #   client.Issue.watchers("TEST-123", "johndoe")
-      #
-      def watcher(id_or_key, name, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
-        builder do
-          path "issue/#{id_or_key}/watchers"
-          method :post
-          payload name.to_json
-          instance_eval(&block) if block_given?
-        end
-        run
       end
     end
   end
