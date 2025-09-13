@@ -124,5 +124,7 @@ class UnitTest < Test::Unit::TestCase
               value: 1000
     end
     client.ApplicationProperties.advanced_settings
+    client.ApplicationRole.list
+    client.ApplicationRole.get 'jira-software'
   end
 end
