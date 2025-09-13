@@ -1,3 +1,11 @@
+## [0.3.3] - 2025-09-13
+
+### 📚 Documentation
+
+- Added comments from ai #4
+- Added comments from ai #3
+- Added comments from ai #2
+- Added comments from ai
 ## [0.3.2] - 2025-09-13
 
 ### 🚜 Refactor
@@ -69,12 +77,6 @@
 ### Hotfix
 
 - Remove debug line
-
-### ITMG
-
-- Work with missing methods
-- Rewrite tasks for gem
-- Added project create entrypoint
 
 ### Reafactor
 
