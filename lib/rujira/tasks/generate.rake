@@ -15,7 +15,8 @@ module Rujira
       end
 
       def client
-        @client ||= Rujira::Client.new('http://localhost:8080', debug: false)
+        url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
+        @client ||= Rujira::Client.new(url, debug: false)
       end
 
       def fetch_options(params, name)
