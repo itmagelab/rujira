@@ -1,3 +1,16 @@
+## [0.3.1] - 2025-09-13
+
+### 🚜 Refactor
+
+- Fix for headers setter
+- Cleanup data method
+- Abort if id is nil #2
+- Abort if id is nil
+
+### 📚 Documentation
+
+- Use ENV for URL getting
+- Added some docs
 ## [0.3.0] - 2025-09-13
 
 ### 🚀 Features
@@ -68,27 +81,3 @@
 
 - Description fixes
 - Release 0.1.8
-## [0.1.8] - 2024-05-22
-
-### ITMG
-
-- Added dependencies to gemspec
-- Release 0.1.7
-## [0.1.7] - 2024-05-04
-
-### ITMG
-
-- Deleting from rake task
-- Fixes for attachments
-- Fixes for attachments
-
-### ITMG
-
-- Release 0.1.7
-- Fix delete task
-- Fix for tasks
-## [0.1.6] - 2024-05-03
-
-### ITMG
-
-- Attachments
