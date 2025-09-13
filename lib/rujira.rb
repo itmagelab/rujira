@@ -22,6 +22,7 @@ require_relative 'rujira/api/server_info'
 require_relative 'rujira/api/dashboard'
 require_relative 'rujira/api/board'
 require_relative 'rujira/api/sprint'
+require_relative 'rujira/api/permissions'
 
 # Main Rujira module.
 # Serves as the namespace for the Jira SDK.

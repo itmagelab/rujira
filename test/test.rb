@@ -115,5 +115,8 @@ class UnitTest < Test::Unit::TestCase
 
     client.Dashboard.list
     client.Dashboard.get 10_000
+
+    client.Permissions.list
+    client.Permissions.my
   end
 end
