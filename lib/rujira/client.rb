@@ -23,6 +23,7 @@ module Rujira
     def initialize(url, debug: false)
       @uri = URI(url)
       @debug = ENV.fetch('RUJIRA_DEBUG', debug.to_s) == 'true'
+      @raise_error = false
       @request = Request.new
     end
 
@@ -80,7 +81,12 @@ module Rujira
 
         response = connection.public_send(@request.method, *args)
 
-        response.success? ? response.body : (raise "Request failed with status #{response.status}")
+        if response.success?
+          response.body
+        else
+          (raise "Request failed with status #{response.status} " \
+                 "and body #{response.body}")
+        end
       rescue StandardError => e
         raise "Error: #{e.class} - #{e.message}"
       end
@@ -96,7 +102,7 @@ module Rujira
         builder.request :multipart, flat_encode: true
         builder.request :json
         builder.response :json
-        builder.response :raise_error
+        builder.response :raise_error if @raise_error
         builder.response :logger if @debug
       end
     end

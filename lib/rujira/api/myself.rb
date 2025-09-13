@@ -22,6 +22,42 @@ module Rujira
         end
         run
       end
+
+      # Updates the current user's profile.
+      #
+      # @yield [builder] Block to configure the payload or additional request parameters.
+      # @return [Object] The API response after updating the user profile.
+      #
+      # @example Update user profile
+      #   client.Myself.update do
+      #     payload({ displayName: "New Name", emailAddress: "new@example.com" })
+      #   end
+      def update(&block)
+        builder do
+          method :put
+          path 'myself'
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Changes the current user's password.
+      #
+      # @yield [builder] Block to configure the payload for the password change.
+      # @return [Object] The API response after changing the password.
+      #
+      # @example Change user password
+      #   client.Myself.password do
+      #     payload({ password: "newpassword123" })
+      #   end
+      def password(&block)
+        builder do
+          method :put
+          path 'myself'
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
     end
   end
 end

@@ -30,6 +30,11 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     client.ServerInfo.get
     name = client.Myself.get['name']
 
+    client.Myself.update do
+      payload password: 'toor',
+              displayName: 'Very Important'
+    end
+
     client.Project.create do
       payload key: project.to_s,
               name: project.to_s,
