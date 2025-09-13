@@ -15,7 +15,7 @@ module Rujira
       end
 
       def edit(id_or_key, &block)
-        abort 'Project ID or KEY is required' if id_or_key.nil?
+        abort 'Project ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "project/#{id_or_key}"
           method :put
@@ -25,7 +25,7 @@ module Rujira
       end
 
       def get(id_or_key, &block)
-        abort 'Project ID or KEY is required' if id_or_key.nil?
+        abort 'Project ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "project/#{id_or_key}"
           instance_eval(&block) if block_given?
@@ -42,7 +42,7 @@ module Rujira
       end
 
       def delete(id_or_key)
-        abort 'Project ID or KEY is required' if id_or_key.nil?
+        abort 'Project ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           method :delete
           path "project/#{id_or_key}"
@@ -51,7 +51,7 @@ module Rujira
       end
 
       def securitylevel(id_or_key, &block)
-        abort 'Project ID or KEY is required' if id_or_key.nil?
+        abort 'Project ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "project/#{id_or_key}/securitylevel"
           instance_eval(&block) if block_given?

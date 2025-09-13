@@ -6,7 +6,7 @@ module Rujira
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/myself
     class Dashboard < Common
       def get(id)
-        abort 'Dashboard ID is required' if id.nil?
+        abort 'Dashboard ID is required' if id.to_s.strip.empty?
         builder do
           path "dashboard/#{id}"
         end

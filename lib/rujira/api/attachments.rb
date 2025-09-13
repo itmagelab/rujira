@@ -6,7 +6,7 @@ module Rujira
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/issue/%7BissueIdOrKey%7D/attachments
     class Attachments < Common
       def create(id_or_key, path, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.nil?
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}/attachments"
           method :post

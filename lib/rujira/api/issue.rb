@@ -15,7 +15,7 @@ module Rujira
       end
 
       def get(id_or_key, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.nil?
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}"
           instance_eval(&block) if block_given?
@@ -24,7 +24,7 @@ module Rujira
       end
 
       def delete(id_or_key, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.nil?
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}"
           method :delete
@@ -36,7 +36,7 @@ module Rujira
       alias del delete
 
       def edit(id_or_key, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.nil?
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}"
           method :put
@@ -46,12 +46,12 @@ module Rujira
       end
 
       def comment(id_or_key, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.nil?
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         @client.Comment.create id_or_key, &block
       end
 
       def watchers(id_or_key, name, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.nil?
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}/watchers"
           method :post
@@ -62,7 +62,7 @@ module Rujira
       end
 
       def attachments(id_or_key, path, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.nil?
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         @client.Attachments.create id_or_key, path, &block
       end
     end

@@ -13,7 +13,7 @@ module Rujira
       end
 
       def get(id)
-        abort 'Board ID is required' if id.nil?
+        abort 'Board ID is required' if id.to_s.strip.empty?
         builder do
           path "board/#{id}"
         end
@@ -28,7 +28,7 @@ module Rujira
       end
 
       def sprint(id)
-        abort 'Board ID is required' if id.nil?
+        abort 'Board ID is required' if id.to_s.strip.empty?
         builder do
           path "board/#{id}/sprint"
         end
