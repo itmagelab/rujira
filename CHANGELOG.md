@@ -1,8 +1,27 @@
-## [0.3.4] - 2025-09-13
+## [0.4.0] - 2025-09-13
+
+### 🚀 Features
+
+- Extend Issue #2
+- Extend Issue
+- Added Filter
+- Extend Avatar, Configuration, CustomFields, Field
+- Extend Attachments
+- Added ApplicationRole
+- Added ApplicationProperties
+- Added permissions api
 
 ### 🐛 Bug Fixes
 
 - Fix for tasks
+
+### 🚜 Refactor
+
+- Dont raising for faraday
+- Cleanup attachments
+- Split issue #3
+- Split issue #2
+- Split issue
 ## [0.3.3] - 2025-09-13
 
 ### 📚 Documentation
@@ -59,30 +78,8 @@
 - Update README
 ## [0.1.15] - 2025-09-11
 
-### 🚀 Features
-
-- Added dotenv
-- Update a gems
-- Example of generation url
-
-### 🐛 Bug Fixes
-
-- No test in CI
-
 ### 🚜 Refactor
 
 - Docs
 - BUILDER
 - RAKE TASKS
-
-### 📚 Documentation
-
-- Fix a readme
-
-### Hotfix
-
-- Remove debug line
-
-### Reafactor
-
-- Full
