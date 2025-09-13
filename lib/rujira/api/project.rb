@@ -5,48 +5,54 @@ module Rujira
     # TODO
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/project
     class Project < Common
-      def self.create(&block)
-        new.builder do
+      def create(&block)
+        builder do
           path 'project'
           method :post
           instance_eval(&block) if block_given?
-        end.run
+        end
+        run
       end
 
-      def self.edit(id_or_key, &block)
-        new.builder do
+      def edit(id_or_key, &block)
+        builder do
           path "project/#{id_or_key}"
           method :put
           instance_eval(&block) if block_given?
-        end.run
+        end
+        run
       end
 
-      def self.get(id_or_key, &block)
-        new.builder do
+      def get(id_or_key, &block)
+        builder do
           path "project/#{id_or_key}"
           instance_eval(&block) if block_given?
-        end.run
+        end
+        run
       end
 
-      def self.list(&block)
-        new.builder do
+      def list(&block)
+        builder do
           path 'project'
           instance_eval(&block) if block_given?
-        end.run
+        end
+        run
       end
 
-      def self.delete(id_or_key)
-        new.builder do
+      def delete(id_or_key)
+        builder do
           method :delete
           path "project/#{id_or_key}"
-        end.run
+        end
+        run
       end
 
-      def self.securitylevel(id_or_key, &block)
-        new.builder do
+      def securitylevel(id_or_key, &block)
+        builder do
           path "project/#{id_or_key}/securitylevel"
           instance_eval(&block) if block_given?
-        end.run
+        end
+        run
       end
     end
   end

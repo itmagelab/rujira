@@ -1,3 +1,18 @@
+## [0.3.0] - 2025-09-13
+
+### 🚀 Features
+
+- Added client supports
+
+### 🚜 Refactor
+
+- Updates tasks
+- Use params
+- Added examples
+
+### Reafactor
+
+- How to search sprints
 ## [0.2.0] - 2025-09-11
 
 ### 🚀 Features
@@ -77,15 +92,3 @@
 ### ITMG
 
 - Attachments
-- Block code usage
-- Bump version
-## [0.1.5] - 2024-04-20
-
-### ITMG
-
-- Bump version
-- Clean bin/
-- Fixes for creating
-- Changed parser
-- Version task and fix list result of search
-- Extend rake with jira tasks

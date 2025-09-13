@@ -5,10 +5,11 @@ module Rujira
     # TODO
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/myself
     class Myself < Common
-      def self.get
-        new.builder do
+      def get
+        builder do
           path 'myself'
-        end.run
+        end
+        run
       end
     end
   end

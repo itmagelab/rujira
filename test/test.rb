@@ -11,16 +11,21 @@ class UnitTest < Test::Unit::TestCase
     Array.new(5) { ('A'..'Z').to_a.sample }.join
   end
 
-  def test_bearer
-    return unless Rujira.env_var? 'RUJIRA_TEST'
+  def env_var?(var)
+    %w[true 1 yes].include?(ENV[var]&.downcase)
+  end
 
-    Rujira::Api::Myself.get do
+  def test_bearer
+    return unless env_var? 'RUJIRA_TEST'
+
+    client = Rujira::Client.new('http://localhost:8080')
+    client.Myself.get do
       bearer 'SECRET_TOKEN'
     end
   end
 
-  def test_issue_flow
-    return unless Rujira.env_var? 'RUJIRA_TEST'
+  def test_issue_flow # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+    return unless env_var? 'RUJIRA_TEST'
 
     require 'date'
 
@@ -28,16 +33,19 @@ class UnitTest < Test::Unit::TestCase
     before = now + 30
 
     project = random_name
-    Rujira::Api::ServerInfo.get
-    name = Rujira::Api::Myself.get['name']
-    Rujira::Api::Project.create do
+    client = Rujira::Client.new('http://localhost:8080', debug: true)
+
+    client.ServerInfo.get
+    name = client.Myself.get['name']
+
+    client.Project.create do
       payload key: project.to_s,
               name: project.to_s,
               projectTypeKey: 'software',
               lead: name
     end
-    Rujira::Api::Project.get project.to_s
-    Rujira::Api::Issue.create do
+    client.Project.get project.to_s
+    client.Issue.create do
       payload fields: {
         project: { key: project.to_s },
         summary: 'BOT: added a new feature.',
@@ -47,18 +55,18 @@ class UnitTest < Test::Unit::TestCase
       params updateHistory: true
     end
 
-    Rujira::Api::Board.list
-    Rujira::Api::Board.get 1
+    client.Board.list
+    client.Board.get 1
 
-    sprint = Rujira::Api::Sprint.create do
+    sprint = client.Sprint.create do
       payload name: 'Bot Sprint',
               originBoardId: 1,
               goal: 'Finish core features for release 1.0',
               autoStartStop: false
     end
-    Rujira::Api::Sprint.issue sprint['id'], ["#{project}-1"]
+    client.Sprint.issue sprint['id'], ["#{project}-1"]
 
-    Rujira::Api::Sprint.replace sprint['id'] do
+    client.Sprint.replace sprint['id'] do
       payload state: 'future',
               name: 'Bot Sprint',
               originBoardId: 1,
@@ -68,29 +76,30 @@ class UnitTest < Test::Unit::TestCase
               autoStartStop: true
     end
 
-    update = Rujira::Api::Sprint.update sprint['id'] do
+    update = client.Sprint.update sprint['id'] do
       payload name: "Bot Sprint #{project}"
     end
 
     assert_equal 'Bot Sprint', sprint['name']
     assert_equal "Bot Sprint #{project}", update['name']
 
-    issues = Rujira::Api::Sprint.get_issue sprint['id']
+    issues = client.Sprint.get_issue sprint['id']
 
     assert_not_empty issues['issues']
 
-    Rujira::Api::Issue.watchers "#{project}-1", name
-    Rujira::Api::Issue.get "#{project}-1"
-    search = Rujira::Api::Search.get do
+    client.Issue.get "#{project}-1"
+
+    client.Issue.watchers "#{project}-1", name
+    search = client.Search.get do
       payload jql: "project = #{project} and status IN (\"To Do\", \"In Progress\") ORDER BY issuekey",
               maxResults: 10,
               startAt: 0,
               fields: %w[id key]
     end
-    Rujira::Api::Issue.comment "#{project}-1" do
+    client.Issue.comment "#{project}-1" do
       payload body: 'Adding a new comment'
     end
-    Rujira::Api::Issue.edit "#{project}-1" do
+    client.Issue.edit "#{project}-1" do
       payload update: {
                 labels: [{ add: 'bot' }, { remove: 'some' }]
               },
@@ -100,18 +109,18 @@ class UnitTest < Test::Unit::TestCase
               }
     end
 
-    sprints = Rujira::Api::Board.sprint 1
+    sprints = client.Board.sprint 1
     sprints['values'].each do |sprint|
-      Rujira::Api::Sprint.delete sprint['id']
+      client.Sprint.delete sprint['id']
     end
     search['issues'].each do |issue|
-      Rujira::Api::Issue.delete issue['id'] do
+      client.Issue.delete issue['id'] do
         params deleteSubtasks: true
       end
     end
-    Rujira::Api::Project.delete project.to_s
+    client.Project.delete project.to_s
 
-    Rujira::Api::Dashboard.list
-    Rujira::Api::Dashboard.get 10_000
+    client.Dashboard.list
+    client.Dashboard.get 10_000
   end
 end

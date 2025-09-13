@@ -5,29 +5,32 @@ module Rujira
     # TODO
     # https://docs.atlassian.com/jira-software/REST/9.17.0/#agile/1.0/board
     class Board < Common
-      def initialize
+      def initialize(client)
         super
-        @request.builder do
+        builder do
           rest_base 'rest/agile/1.0'
         end
       end
 
-      def self.get(id)
-        new.builder do
+      def get(id)
+        builder do
           path "board/#{id}"
-        end.run
+        end
+        run
       end
 
-      def self.list
-        new.builder do
+      def list
+        builder do
           path 'board'
-        end.run
+        end
+        run
       end
 
-      def self.sprint(id)
-        new.builder do
+      def sprint(id)
+        builder do
           path "board/#{id}/sprint"
-        end.run
+        end
+        run
       end
     end
   end

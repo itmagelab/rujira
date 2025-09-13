@@ -5,16 +5,19 @@ module Rujira
     # TODO
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/myself
     class Dashboard < Common
-      def self.get(id)
-        new.builder do
+      def get(id)
+        abort 'Dashboard ID is required' if id.nil?
+        builder do
           path "dashboard/#{id}"
-        end.run
+        end
+        run
       end
 
-      def self.list
-        new.builder do
+      def list
+        builder do
           path 'dashboard'
-        end.run
+        end
+        run
       end
     end
   end
