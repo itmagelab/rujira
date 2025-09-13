@@ -31,6 +31,28 @@ module Rujira
         run
       end
 
+      # Creates multiple issues in bulk.
+      #
+      # @yield [builder] Block to configure the payload for bulk creation.
+      # @return [Object] The API response after creating issues.
+      #
+      # @example Create issues in bulk
+      #   client.Issue.create_bulk do
+      #     payload issues: [
+      #       { fields: { project: { key: "TEST" }, summary: "Issue 1", issuetype: { name: "Task" } } },
+      #       { fields: { project: { key: "TEST" }, summary: "Issue 2", issuetype: { name: "Bug" } } }
+      #     ]
+      #   end
+      #
+      def create_bulk(&block)
+        builder do
+          path 'issue/bulk'
+          method :post
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
       # Retrieves an issue by its ID or key.
       #
       # @param [String] id_or_key The issue ID or key.
@@ -86,6 +108,504 @@ module Rujira
         builder do
           path "issue/#{id_or_key}"
           method :put
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Archives an issue by its ID or key.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @return [Object] The API response after archiving the issue.
+      #
+      # @example Archive an issue
+      #   client.Issue.archive("TEST-123")
+      #
+      def archive(id_or_key)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/archive"
+          method :put
+        end
+        run
+      end
+
+      # Retrieves the archive information for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @return [Object] The API response containing archive details for the issue.
+      #
+      # @example List archive information for an issue
+      #   client.Issue.list_archive("TEST-123")
+      def list_archive(id_or_key)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/archive"
+        end
+        run
+      end
+
+      # Updates the assignee of an issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Block to configure the payload for assignee update.
+      # @return [Object] The API response after updating the assignee.
+      #
+      # @example Assign an issue to a user
+      #   client.Issue.assignee("TEST-123") do
+      #     payload name: "john.doe"
+      #   end
+      #
+      def assignee(id_or_key)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/assignee"
+          method :put
+        end
+        run
+      end
+
+      # Retrieves comments for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response containing the issue's comments.
+      #
+      # @example Get comments for an issue
+      #   client.Issue.comment("TEST-123") do
+      #     # Optional: add query parameters or headers
+      #     params startAt: 0, maxResults: 50
+      #   end
+      #
+      def list_comment(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/comment"
+          method :get
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Adds a comment to a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Block to configure the payload for the new comment.
+      # @return [Object] The API response after adding the comment.
+      #
+      # @example Add a comment to an issue
+      #   client.Issue.add_comment("TEST-123") do
+      #     payload body: "This is a new comment added via the API."
+      #   end
+      def add_comment(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/comment"
+          method :post
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Updates an existing comment on a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @param [String] id The comment ID.
+      # @yield [builder] Block to configure the payload for updating the comment.
+      # @return [Object] The API response after updating the comment.
+      #
+      # @example Update a comment on an issue
+      #   client.Issue.update_comment("TEST-123", "10001") do
+      #     payload body: "Updated comment content."
+      #   end
+      def update_comment(id_or_key, id, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/comment/#{id}"
+          method :put
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Deletes a comment from a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @param [String] id The comment ID.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response after deleting the comment.
+      #
+      # @example Delete a comment from an issue
+      #   client.Issue.delete_comment("TEST-123", "10001") do
+      #     # Optional: add headers or query parameters if needed
+      #   end
+      def delete_comment(id_or_key, id, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/comment/#{id}"
+          method :delete
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Retrieves a specific comment from a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @param [String] id The comment ID.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response containing the comment details.
+      #
+      # @example Get a specific comment
+      #   client.Issue.get_comment("TEST-123", "10001") do
+      #     # Optional: add headers or query parameters if needed
+      #   end
+      #
+      def get_comment(id_or_key, id, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/comment/#{id}"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Pins a comment on a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @param [String] id The comment ID.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response after pinning the comment.
+      #
+      # @example Pin a comment
+      #   client.Issue.pin_comment("TEST-123", "10001") do
+      #     # Optional: add headers or query parameters if needed
+      #   end
+      #
+      def pin_comment(id_or_key, id, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          method :put
+          path "issue/#{id_or_key}/comment/#{id}/pin"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Retrieves the edit metadata for a given issue.
+      # This provides information about which fields can be edited and their constraints.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response containing edit metadata.
+      #
+      # @example Get edit metadata for an issue
+      #   client.Issue.editmeta("TEST-123") do
+      #     # Optional: add query parameters or headers
+      #     params expand: "projects,issuetypes.fields"
+      #   end
+      def editmeta(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/editmeta"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Sends a notification about a specific issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Block to configure the payload for the notification.
+      # @return [Object] The API response after sending the notification.
+      #
+      # @example Notify users about an issue
+      #   client.Issue.notify("TEST-123") do
+      #     payload {
+      #       subject: "Issue Update",
+      #       textBody: "The issue has been updated.",
+      #       to: [{ type: "user", username: "john.doe" }]
+      #     }
+      #   end
+      def notify(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          method :post
+          path "issue/#{id_or_key}/notify"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Retrieves the pinned comment(s) for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response containing the pinned comment(s).
+      #
+      # @example Get pinned comments for an issue
+      #   client.Issue.get_pinned_comment("TEST-123") do
+      #     # Optional: add query parameters or headers
+      #     params expand: "renderedBody"
+      #   end
+      def get_pinned_comments(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/pinned-comments"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Retrieves remote links for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response containing remote links.
+      #
+      # @example Get remote links for an issue
+      #   client.Issue.remotelink("TEST-123") do
+      #     # Optional: add query parameters or headers
+      #     params expand: "application"
+      #   end
+      def remotelink(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/remotelink"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Creates a remote link for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Block to configure the payload for the remote link.
+      # @return [Object] The API response after creating the remote link.
+      #
+      # @example Create a remote link for an issue
+      #   client.Issue.create_remotelink("TEST-123") do
+      #     payload {
+      #       object: {
+      #         url: "https://example.com/task/123",
+      #         title: "External Task"
+      #       }
+      #     }
+      #   end
+      def create_remotelink(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          method :post
+          path "issue/#{id_or_key}/remotelink"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Deletes remote links for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response after deleting the remote link(s).
+      #
+      # @example Delete remote links for an issue
+      #   client.Issue.delete_remotelink("TEST-123") do
+      #     # Optional: add query parameters or headers if needed
+      #     params globalId: "com.example:task-123"
+      #   end
+      def delete_remotelink(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          method :delete
+          path "issue/#{id_or_key}/remotelink"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Retrieves a specific remote link for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @param [String] link_id The remote link ID.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response containing the remote link details.
+      #
+      # @example Get a specific remote link
+      #   client.Issue.get_remotelink_by_id("TEST-123", "20001") do
+      #     # Optional: add headers or query parameters
+      #   end
+      def get_remotelink_by_id(id_or_key, link_id, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/remotelink/#{link_id}"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Updates a specific remote link for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @param [String] link_id The remote link ID.
+      # @yield [builder] Block to configure the payload for updating the remote link.
+      # @return [Object] The API response after updating the remote link.
+      #
+      # @example Update a specific remote link
+      #   client.Issue.update_remotelink("TEST-123", "20001") do
+      #     payload {
+      #       object: {
+      #         url: "https://example.com/updated-task/123",
+      #         title: "Updated Task"
+      #       }
+      #     }
+      #   end
+      def update_remotelink(id_or_key, link_id, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          method :put
+          path "issue/#{id_or_key}/remotelink/#{link_id}"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Deletes a specific remote link by its ID for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @param [String] link_id The remote link ID.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response after deleting the remote link.
+      #
+      # @example Delete a specific remote link
+      #   client.Issue.delete_remotelink_by_id("TEST-123", "20001") do
+      #     # Optional: add headers or query parameters
+      #   end
+      def delete_remotelink_by_id(id_or_key, link_id, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          method :delete
+          path "issue/#{id_or_key}/remotelink/#{link_id}"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Restores a previously archived issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response after restoring the issue.
+      #
+      # @example Restore an issue
+      #   client.Issue.restore("TEST-123") do
+      #     # Optional: add headers or payload if needed
+      #   end
+      def restore(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          method :put
+          path "issue/#{id_or_key}/restore"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Performs a transition on a given issue (e.g., change status).
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Block to configure the payload for the transition.
+      # @return [Object] The API response after performing the transition.
+      #
+      # @example Transition an issue
+      #   client.Issue.transitions("TEST-123") do
+      #     payload transition: { id: "31" }
+      #   end
+      def transitions(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          method :post
+          path "issue/#{id_or_key}/transitions"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Retrieves available transitions for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response containing available transitions.
+      #
+      # @example Get available transitions
+      #   client.Issue.get_transitions("TEST-123") do
+      #     # Optional: add query parameters or headers
+      #   end
+      def get_transitions(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/transitions"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Retrieves the list of watchers for a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response containing the list of watchers.
+      #
+      # @example Get watchers of an issue
+      #   client.Issue.get_watchers("TEST-123") do
+      #     # Optional: add query parameters or headers
+      #   end
+      def get_watchers(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/watchers"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Adds watchers to a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @yield [builder] Block to configure the payload for adding watchers.
+      # @return [Object] The API response after adding watchers.
+      #
+      # @example Add watchers to an issue
+      #   client.Issue.add_watchers("TEST-123") do
+      #     payload ["john.doe", "jane.smith"]
+      #   end
+      def add_watchers(id_or_key, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          method :post
+          path "issue/#{id_or_key}/watchers"
+          instance_eval(&block) if block_given?
+        end
+        run
+      end
+
+      # Removes a watcher from a given issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @param [String] username The username of the watcher to remove.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response after removing the watcher.
+      #
+      # @example Remove a watcher from an issue
+      #   client.Issue.remove_watchers("TEST-123", "john.doe") do
+      #     # Optional: add headers or query parameters
+      #   end
+      def remove_watchers(id_or_key, username, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        abort 'USERNAME is required' if username.to_s.strip.empty?
+        builder do
+          method :delete
+          path "issue/#{id_or_key}/watchers"
+          params username: username
           instance_eval(&block) if block_given?
         end
         run
