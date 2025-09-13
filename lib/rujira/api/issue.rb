@@ -55,7 +55,7 @@ module Rujira
         builder do
           path "issue/#{id_or_key}/watchers"
           method :post
-          data name.to_json
+          payload name.to_json
           instance_eval(&block) if block_given?
         end
         run

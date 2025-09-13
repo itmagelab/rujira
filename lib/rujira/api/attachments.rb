@@ -12,7 +12,7 @@ module Rujira
           method :post
           headers 'Content-Type': 'multipart/form-data', 'X-Atlassian-Token': 'nocheck',
                   'Transfer-Encoding': 'chunked', 'Content-Length': File.size(path).to_s
-          data file: Faraday::Multipart::FilePart.new(path, 'multipart/form-data')
+          payload file: Faraday::Multipart::FilePart.new(path, 'multipart/form-data')
           instance_eval(&block) if block_given?
         end
         run

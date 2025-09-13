@@ -76,7 +76,5 @@ module Rujira
 
       @payload = payload
     end
-
-    alias data payload
   end
 end
