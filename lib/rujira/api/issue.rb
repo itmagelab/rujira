@@ -38,7 +38,7 @@ module Rujira
       # @return [Object] The API response containing the issue details.
       #
       # @example Get an issue
-      #   client.issue.get("TEST-123")
+      #   client.Issue.get("TEST-123")
       #
       def get(id_or_key, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
@@ -56,7 +56,7 @@ module Rujira
       # @return [Object] The API response after deletion.
       #
       # @example Delete an issue
-      #   client.issue.delete("TEST-123")
+      #   client.Issue.delete("TEST-123")
       #
       def delete(id_or_key, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
@@ -77,7 +77,7 @@ module Rujira
       # @return [Object] The API response after updating the issue.
       #
       # @example Edit an issue
-      #   client.issue.edit("TEST-123") do
+      #   client.Issue.edit("TEST-123") do
       #     payload fields: { summary: "Updated summary" }
       #   end
       #
@@ -98,7 +98,7 @@ module Rujira
       # @return [Object] The API response containing the created comment.
       #
       # @example Add a comment
-      #   client.issue.comment("TEST-123") do
+      #   client.Issue.comment("TEST-123") do
       #     payload body: "This is a comment"
       #   end
       #
@@ -115,7 +115,7 @@ module Rujira
       # @return [Object] The API response after adding the watcher.
       #
       # @example Add a watcher
-      #   client.issue.watchers("TEST-123", "johndoe")
+      #   client.Issue.watchers("TEST-123", "johndoe")
       #
       def watchers(id_or_key, name, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
@@ -136,7 +136,7 @@ module Rujira
       # @return [Object] The API response containing the uploaded attachment.
       #
       # @example Upload an attachment
-      #   client.issue.attachments("TEST-123", "/tmp/file.txt")
+      #   client.Issue.attachments("TEST-123", "/tmp/file.txt")
       #
       def attachments(id_or_key, path, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
