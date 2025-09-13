@@ -25,6 +25,10 @@ require_relative 'rujira/api/sprint'
 require_relative 'rujira/api/permissions'
 require_relative 'rujira/api/application_properties'
 require_relative 'rujira/api/applicationrole'
+require_relative 'rujira/api/avatar'
+require_relative 'rujira/api/configuration'
+require_relative 'rujira/api/custom_fields'
+require_relative 'rujira/api/field'
 
 # Main Rujira module.
 # Serves as the namespace for the Jira SDK.

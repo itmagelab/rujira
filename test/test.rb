@@ -126,5 +126,12 @@ class UnitTest < Test::Unit::TestCase
     client.ApplicationProperties.advanced_settings
     client.ApplicationRole.list
     client.ApplicationRole.get 'jira-software'
+    client.Avatar.get 'project'
+    client.Configuration.get
+    client.CustomFields.get
+    client.Field.create do
+      payload name: 'My Field', type: 'com.atlassian.jira.plugin.system.customfieldtypes:textfield'
+    end
+    pp client.Field.list
   end
 end
