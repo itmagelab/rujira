@@ -5,10 +5,18 @@ module Rujira
     # TODO
     class Common
       def initialize(client)
+        # Store the passed client object in an instance variable for later use
         @client = client
+
+        # Configure requests using the client's builder DSL
         @client.request.builder do
+          # Set the Bearer token for authorization
           bearer Configuration.token
+
+          # Specify the default HTTP method for requests
           method :get
+
+          # Set the base path for Jira REST API
           rest_base 'rest/api/2'
         end
       end
@@ -22,6 +30,8 @@ module Rujira
       # @return [Object] The configured request builder stored in @request.
       def builder(&block) = @client.request.builder(&block)
 
+      # Delegate execution to the client's dispatch method
+      # This triggers the configured request to be sent
       def run = @client.dispatch
     end
   end

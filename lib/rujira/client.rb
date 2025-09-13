@@ -53,7 +53,7 @@ module Rujira
       end
     end
 
-    def cache(res)
+    def generate_mocks(res)
       path = res.to_hash[:url].path
       cache_path = File.join('.cache', path)
       if path.end_with?('/')
