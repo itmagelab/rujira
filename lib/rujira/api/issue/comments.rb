@@ -161,6 +161,42 @@ module Rujira
           end
           run
         end
+
+        # Adds a comment to an issue.
+        #
+        # @param [String] id_or_key The issue ID or key.
+        # @yield [builder] Optional block to configure the comment payload.
+        # @return [Object] The API response containing the created comment.
+        #
+        # @example Add a comment
+        #   client.Issue.comment("TEST-123") do
+        #     payload body: "This is a comment"
+        #   end
+        #
+        def comment(id_or_key, &block)
+          abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+          @client.Comment.create id_or_key, &block
+        end
+
+        # Retrieves the pinned comment(s) for a given issue.
+        #
+        # @param [String] id_or_key The issue ID or key.
+        # @yield [builder] Optional block to configure additional request parameters.
+        # @return [Object] The API response containing the pinned comment(s).
+        #
+        # @example Get pinned comments for an issue
+        #   client.Issue.get_pinned_comment("TEST-123") do
+        #     # Optional: add query parameters or headers
+        #     params expand: "renderedBody"
+        #   end
+        def get_pinned_comments(id_or_key, &block)
+          abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+          builder do
+            path "issue/#{id_or_key}/pinned-comments"
+            instance_eval(&block) if block_given?
+          end
+          run
+        end
       end
     end
   end
