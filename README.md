@@ -148,22 +148,26 @@ client.Dashboard.get 10_000
 The gem includes Rake tasks for easy use from the command line. Examples:
 
 ```bash
-rake jira:issue:attach  # Example usage attaching in issue
-rake jira:issue:create  # Create a issue
-rake jira:issue:delete  # Delete issue
-rake jira:issue:search  # Search issue by fields
-rake jira:server_info   # Test connection by getting server information
-rake jira:url           # Test connection by getting url
-rake jira:whoami        # Test connection by getting username
+rake jira:board:get               # Get a board
+rake jira:board:list              # Get list of boards
+rake jira:board:sprint            # Get a boards sprint
+rake jira:dashboard:get           # Get a dashboard
+rake jira:dashboard:list          # Get list of dashboards
+rake jira:issue:attach            # Example usage attaching in issue
+rake jira:issue:create            # Create a issue
+rake jira:issue:delete            # Delete issue
+rake jira:issue:search            # Search issue by fields
+rake jira:project:list            # Get list of projects
+rake jira:server_info             # Test connection by getting server information
+rake jira:sprint:properties:list  # Get sprint properties
+rake jira:whoami                  # Test connection by getting username
 ```
 
 ```bash
-rake jira:issue:create -- '--project=ITMG' \
-    '--summary=The short summary information' \
-    '--description=The base description of task' \
-    '--issuetype=Task'
-rake jira:issue:search -- '-q project = ITMG'
-rake jira:issue:attach -- '--file=upload.png' '--issue=ITMG-1'
+rake jira:issue:create PROJECT=ITMG SUMMARY='The short summary information' \
+      DESCRIPTION='The base description of task' ISSUETYPE='Task'
+rake jira:issue:search JQL='project = ITMG'
+rake jira:issue:attach FILE='upload.png' ISSUE_ID='ITMG-1'
 ```
 
 ## Development runs

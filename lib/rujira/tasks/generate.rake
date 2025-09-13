@@ -8,41 +8,50 @@ require 'json'
 module Rujira
   module Tasks
     # TODO
-    class Jira # rubocop:disable Metrics/ClassLength
+    class Jira
       include Rake::DSL if defined?(Rake::DSL)
       def initialize
-        @options = {
-          issuetype: 'Task'
-        }
-        @parser ||= OptionParser.new
-
-        apply
-      end
-
-      def parser
-        yield
-        args = @parser.order!(ARGV)
-        @parser.parse!(args)
-      end
-
-      def options(name)
-        @options[name]
+        generate
       end
 
       def client
-        @client ||= Rujira::Client.new('http://localhost:8080', debug: true)
+        @client ||= Rujira::Client.new('http://localhost:8080', debug: false)
       end
 
-      def apply # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-        namespace :jira do # rubocop:disable Metrics/BlockLength
+      def fetch_options(params, name)
+        help = params.map { |k| "#{k}=<VALUE>" }.join(' ')
+        options = params.to_h do |k|
+          [k.downcase.to_sym, ENV.fetch(k, nil)]
+        end
+        missing = options.select { |_, v| v.nil? }.keys
+        unless missing.empty?
+          abort "❌ ERROR: The following required environment variables are missing: #{missing.join(', ').upcase}\n" \
+                "✅ USAGE: rake #{name} #{help}"
+        end
+
+        options
+      end
+
+      def generate # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+        namespace :jira do
           desc 'Test connection by getting username'
           task :whoami do
-            puts client.Myself.get
+            result = client.Myself.get
+            puts JSON.pretty_generate(result)
           end
 
           desc 'Test connection by getting server information'
           task :server_info do
-            puts client.ServerInfo.get
+            result = client.ServerInfo.get
+            puts JSON.pretty_generate(result)
+          end
+
+          namespace :project do
+            desc 'Get list of projects'
+            task :list do
+              result = client.Project.list
+              puts JSON.pretty_generate(result)
+            end
           end
 
           namespace :dashboard do
@@ -53,13 +62,11 @@ module Rujira
             end
 
             desc 'Get a dashboard'
-            task :get do
-              parser do
-                @parser.banner = "Usage: rake jira:dashboard:get -- '[options]'"
-                @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
-              end
+            task :get do |t|
+              options = fetch_options(%w[DASHBOARD_ID], t.name)
 
-              puts Api::Dashboard.get @options[:id]
+              result = client.Dashboard.get options[:dashboard_id]
+              puts JSON.pretty_generate(result)
             end
           end
 
@@ -71,56 +78,40 @@ module Rujira
             end
 
             desc 'Get a board'
-            task :get do
-              parser do
-                @parser.banner = "Usage: rake jira:board:get -- '[options]'"
-                @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
-              end
+            task :get do |t|
+              options = fetch_options(%w[BOARD_ID], t.name)
 
-              puts client.Board.get @options[:id]
+              result = client.Board.get options[:board_id]
+              puts JSON.pretty_generate(result)
             end
 
             desc 'Get a boards sprint'
-            task :sprint do
-              parser do
-                @parser.banner = "Usage: rake jira:board:sprint -- '[options]'"
-                @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
-              end
+            task :sprint do |t|
+              options = fetch_options(%w[BOARD_ID], t.name)
 
-              puts client.Board.sprint @options[:id]
+              result = client.Board.sprint options[:board_id]
+              puts JSON.pretty_generate(result)
             end
           end
 
           namespace :sprint do
             namespace :properties do
               desc 'Get sprint properties'
-              task :list do
-                parser do
-                  @parser.banner = "Usage: rake jira:board:sprint:properties -- '[options]'"
-                  @parser.on('-i ID', '--id=ID') { |id| @options[:id] = id }
-                end
+              task :list do |t|
+                options = fetch_options(%w[BOARD_ID], t.name)
 
-                puts client.Sprint.properties @options[:id]
+                result = client.Sprint.properties options[:board_id]
+                puts JSON.pretty_generate(result)
               end
             end
           end
 
-          namespace :issue do # rubocop:disable Metrics/BlockLength
+          namespace :issue do
             desc 'Create a issue'
-            task :create do
-              parser do
-                @parser.banner = "Usage: rake jira:issue:create -- '[options]'"
-                @parser.on('-p PROJECT', '--project=PROJECT') { |project| @options[:project] = project.strip }
-                @parser.on('-s SUMMARY', '--summary=SUMMARY') { |summary| @options[:summary] = summary.strip }
-                @parser.on('-d DESCRIPTION', '--description=DESCRIPTION') do |description|
-                  @options[:description] = description.strip
-                end
-                @parser.on('-i ISSUETYPE', '--issuetype=ISSUETYPE') do |issuetype|
-                  @options[:issuetype] = issuetype.strip
-                end
-              end
+            task :create do |t|
+              options = fetch_options(%w[PROJECT SUMMARY DESCRIPTION ISSUETYPE], t.name)
+              abort 'ISSUETYPE must start with a capital letter' unless options[:issuetype].match?(/\A[A-Z]/)
 
-              options = @options
               result = client.Issue.create do
                 payload fields: {
                   project: { key: options[:project] },
@@ -129,18 +120,12 @@ module Rujira
                   description: options[:description]
                 }
               end
-              url = Rujira::Configuration.url
-              puts "// A new issue been posted, check it out at #{url}/browse/#{result.data['key']}"
+              puts JSON.pretty_generate(result)
             end
 
             desc 'Search issue by fields'
-            task :search do
-              parser do
-                @parser.banner = "Usage: rake jira:issue:search -- '[options]'"
-                @parser.on('-q JQL', '--jql=JQL') { |jql| @options[:jql] = jql }
-              end
-
-              options = @options
+            task :search do |t|
+              options = fetch_options(%w[JQL], t.name)
               result = client.Search.get do
                 data jql: options[:jql]
               end
@@ -148,24 +133,17 @@ module Rujira
             end
 
             desc 'Delete issue'
-            task :delete do
-              parser do
-                @parser.banner = "Usage: rake jira:issue:delete -- '[options]'"
-                @parser.on('-i ID', '--issue=ID') { |id| @options[:id] = id }
-              end
+            task :delete do |t|
+              options = fetch_options(%w[ISSUE_ID], t.name)
 
-              client.Issue.del @options[:id]
+              client.Issue.del options[:issue_id]
             end
 
             desc 'Example usage attaching in issue'
-            task :attach do
-              parser do
-                @parser.banner = "Usage: rake jira:issue:attach -- '[options]'"
-                @parser.on('-f FILE', '--file=FILE') { |file| @options[:file] = file }
-                @parser.on('-i ID', '--issue=ID') { |id| @options[:id] = id }
-              end
+            task :attach do |t|
+              options = fetch_options(%w[FILE ISSUE_ID], t.name)
 
-              result = client.Issue.attachments @options[:id], @options[:file]
+              result = client.Issue.attachments options[:issue_id], @options[:file]
               puts JSON.pretty_generate(result)
             end
           end
