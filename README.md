@@ -94,13 +94,7 @@ end
 update = client.Sprint.update sprint['id'] do
   payload name: "Bot Sprint #{project}"
 end
-
-assert_equal 'Bot Sprint', sprint['name']
-assert_equal "Bot Sprint #{project}", update['name']
-
 issues = client.Sprint.get_issue sprint['id']
-
-assert_not_empty issues['issues']
 
 client.Issue.get "#{project}-1"
 
