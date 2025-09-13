@@ -25,7 +25,7 @@ module Rujira
       Rujira::Api.const_defined?(method_name.to_s) || super
     end
 
-    def dispatch
+    def dispatch # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
       unless %i[get delete head post put patch].include?(@request.method)
         raise "method #{@request.method} not supported"
       end
