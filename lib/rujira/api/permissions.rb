@@ -22,7 +22,7 @@ module Rujira
           path 'permissions'
           method :get
         end
-        run
+        call
       end
 
       # Retrieves the list of my permissions in Jira.
@@ -38,7 +38,7 @@ module Rujira
           path 'mypermissions'
           method :get
         end
-        run
+        call
       end
     end
   end

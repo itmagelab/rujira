@@ -34,7 +34,7 @@ module Rujira
           method :post
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Creates multiple issues in bulk.
@@ -56,7 +56,7 @@ module Rujira
           method :post
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Retrieves an issue by its ID or key.
@@ -74,7 +74,7 @@ module Rujira
           path "issue/#{id_or_key}"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Deletes an issue by its ID or key.
@@ -93,7 +93,7 @@ module Rujira
           method :delete
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       alias del delete
@@ -116,7 +116,7 @@ module Rujira
           method :put
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Archives an issue by its ID or key.
@@ -133,7 +133,7 @@ module Rujira
           path "issue/#{id_or_key}/archive"
           method :put
         end
-        run
+        call
       end
 
       # Retrieves the archive information for a given issue.
@@ -148,7 +148,7 @@ module Rujira
         builder do
           path "issue/#{id_or_key}/archive"
         end
-        run
+        call
       end
 
       # Updates the assignee of an issue.
@@ -168,7 +168,7 @@ module Rujira
           path "issue/#{id_or_key}/assignee"
           method :put
         end
-        run
+        call
       end
 
       # Retrieves the edit metadata for a given issue.
@@ -189,7 +189,7 @@ module Rujira
           path "issue/#{id_or_key}/editmeta"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Sends a notification about a specific issue.
@@ -213,7 +213,7 @@ module Rujira
           path "issue/#{id_or_key}/notify"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Retrieves remote links for a given issue.
@@ -233,7 +233,7 @@ module Rujira
           path "issue/#{id_or_key}/remotelink"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Creates a remote link for a given issue.
@@ -258,7 +258,7 @@ module Rujira
           path "issue/#{id_or_key}/remotelink"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Deletes remote links for a given issue.
@@ -279,7 +279,7 @@ module Rujira
           path "issue/#{id_or_key}/remotelink"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Retrieves a specific remote link for a given issue.
@@ -299,7 +299,7 @@ module Rujira
           path "issue/#{id_or_key}/remotelink/#{link_id}"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Updates a specific remote link for a given issue.
@@ -325,7 +325,7 @@ module Rujira
           path "issue/#{id_or_key}/remotelink/#{link_id}"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Deletes a specific remote link by its ID for a given issue.
@@ -346,7 +346,7 @@ module Rujira
           path "issue/#{id_or_key}/remotelink/#{link_id}"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Restores a previously archived issue.
@@ -366,7 +366,7 @@ module Rujira
           path "issue/#{id_or_key}/restore"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Performs a transition on a given issue (e.g., change status).
@@ -386,7 +386,7 @@ module Rujira
           path "issue/#{id_or_key}/transitions"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Retrieves available transitions for a given issue.
@@ -405,7 +405,7 @@ module Rujira
           path "issue/#{id_or_key}/transitions"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Uploads a file as an attachment to the specified Jira issue.
@@ -425,7 +425,7 @@ module Rujira
           payload file: client.file(path)
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
       alias attachments create_attachments
     end

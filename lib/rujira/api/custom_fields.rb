@@ -21,7 +21,7 @@ module Rujira
         builder do
           path 'customFields'
         end
-        run
+        call
       end
 
       # Deletes custom fields based on provided parameters.
@@ -40,7 +40,7 @@ module Rujira
           path 'customFields'
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
     end
   end

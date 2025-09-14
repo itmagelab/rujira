@@ -9,8 +9,7 @@ module Rujira
   #   client.issue.get("TEST-123")
   #
   class Client
-    # @return [Rujira::Request] The current request object being configured
-    attr_accessor :request
+    attr_reader :dispatchable
 
     # Initializes a new Jira client.
     #
@@ -20,11 +19,11 @@ module Rujira
     # @example Initialize client
     #   client = Rujira::Client.new("https://jira.example.com", debug: true)
     #
-    def initialize(url, debug: false)
+    def initialize(url, debug: false, dispatchable: true)
+      @dispatchable = dispatchable
       @uri = URI(url)
       @debug = ENV.fetch('RUJIRA_DEBUG', debug.to_s) == 'true'
       @raise_error = false
-      @request = Request.new
     end
 
     # Dynamically instantiates the appropriate API resource class.
@@ -36,23 +35,11 @@ module Rujira
     # @example Access an API resource
     #   client.issue.get("TEST-123")
     #
-    def method_missing(method_name, ...)
+    def method_missing(method_name)
       resource_class = Rujira::Api.const_get(method_name.to_s)
-      resource_class.new(self, ...)
+      resource_class.new(self)
     rescue NameError
       super
-    end
-
-    # Options for Faraday connection.
-    #
-    # @return [Hash] Options including URL, headers, and params
-    #
-    def options
-      {
-        url: @uri,
-        headers: @request.headers,
-        params: @request.params
-      }
     end
 
     # Checks if a resource class exists for method_missing.
@@ -70,16 +57,19 @@ module Rujira
     # @return [Object] The API response body if successful
     # @raise [RuntimeError] If the request fails or method is unsupported
     #
-    def dispatch # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-      unless %i[get delete head post put patch].include?(@request.method)
-        raise "method #{@request.method} not supported"
-      end
+    def dispatch(request) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+      raise "method #{request.method} not supported" unless %i[get delete head post put patch].include?(request.method)
 
       begin
-        args = [@request.path]
-        args << @request.payload if %i[post put patch].include?(@request.method)
+        args = [request.path]
+        args << request.payload if %i[post put patch].include?(request.method)
 
-        response = connection.public_send(@request.method, *args)
+        options = {
+          url: @uri,
+          headers: request.headers,
+          params: request.params
+        }
+        response = connection(options, request.authorization).public_send(request.method, *args)
 
         if response.success?
           response.body
@@ -96,9 +86,9 @@ module Rujira
     #
     # @return [Faraday::Connection] Configured Faraday connection
     #
-    def connection
+    def connection(options, authorization)
       Faraday.new(options) do |builder|
-        builder.request :authorization, *@request.authorization if @request.authorization
+        builder.request :authorization, *authorization if authorization
         builder.request :multipart, flat_encode: true
         builder.request :json
         builder.response :json

@@ -4,7 +4,7 @@ require 'test/unit'
 require 'dotenv'
 require_relative '../lib/rujira'
 
-class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
+class UnitTest < Test::Unit::TestCase
   Dotenv.load
 
   def random_name
@@ -15,7 +15,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     %w[true 1 yes].include?(ENV[var]&.downcase)
   end
 
-  def test_issue_flow # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+  def test_issue_flow
     return unless env_var? 'RUJIRA_TEST'
 
     require 'date'
@@ -145,5 +145,19 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
               editable: false
     end
     client.Filter.favourite
+  end
+
+  def test_issue_flow_no_dispatch
+    return unless env_var? 'RUJIRA_TEST'
+
+    url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
+    client = Rujira::Client.new(url, debug: true, dispatchable: false)
+
+    resources = [
+      client.Board.get(1),
+      client.Dashboard.list
+    ]
+
+    resources.map(&:commit)
   end
 end

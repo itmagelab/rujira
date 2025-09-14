@@ -27,7 +27,7 @@ module Rujira
         builder do
           path "board/#{id}"
         end
-        run
+        call
       end
 
       # Lists all boards visible to the current user.
@@ -38,7 +38,7 @@ module Rujira
         builder do
           path 'board'
         end
-        run
+        call
       end
 
       # Retrieves all sprints for a specific board.
@@ -51,7 +51,7 @@ module Rujira
         builder do
           path "board/#{id}/sprint"
         end
-        run
+        call
       end
     end
   end

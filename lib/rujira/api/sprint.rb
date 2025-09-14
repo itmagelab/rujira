@@ -37,7 +37,7 @@ module Rujira
           method :post
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Updates an existing sprint partially.
@@ -61,7 +61,7 @@ module Rujira
           method :post
           instance_eval(&block)
         end
-        run
+        call
       end
 
       # Replaces an existing sprint.
@@ -85,7 +85,7 @@ module Rujira
           method :put
           instance_eval(&block)
         end
-        run
+        call
       end
 
       # Retrieves details of a specific sprint.
@@ -98,7 +98,7 @@ module Rujira
         builder do
           path "sprint/#{id}"
         end
-        run
+        call
       end
 
       # Retrieves all issues in a sprint.
@@ -111,7 +111,7 @@ module Rujira
         builder do
           path "sprint/#{id}/issue"
         end
-        run
+        call
       end
 
       # Deletes a sprint.
@@ -125,7 +125,7 @@ module Rujira
           method :delete
           path "sprint/#{id}"
         end
-        run
+        call
       end
 
       # Retrieves all properties of a sprint.
@@ -138,7 +138,7 @@ module Rujira
         builder do
           path "sprint/#{id}/properties"
         end
-        run
+        call
       end
 
       # Adds issues to a sprint.
@@ -157,7 +157,7 @@ module Rujira
           path "sprint/#{id}/issue"
           payload issues: issues
         end
-        run
+        call
       end
     end
   end

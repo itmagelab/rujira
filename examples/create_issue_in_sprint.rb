@@ -5,9 +5,11 @@ require_relative '../lib/rujira'
 
 Dotenv.load
 
-client = Rujira::Client.new('http://localhost:8080')
+client = Rujira::Client.new('http://localhost:8080', dispatchable: true)
 
 project_name = 'EXAMPLE2'
+myself = client.Myself.get
+
 name = client.Myself.get['name']
 
 begin

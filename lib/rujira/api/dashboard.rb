@@ -20,7 +20,7 @@ module Rujira
         builder do
           path "dashboard/#{id}"
         end
-        run
+        call
       end
 
       # Lists all dashboards visible to the current user.
@@ -34,7 +34,7 @@ module Rujira
         builder do
           path 'dashboard'
         end
-        run
+        call
       end
     end
   end

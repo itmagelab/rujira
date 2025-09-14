@@ -22,7 +22,7 @@ module Rujira
         builder do
           path 'field'
         end
-        run
+        call
       end
       alias get list
 
@@ -42,7 +42,7 @@ module Rujira
           path 'field'
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
     end
   end

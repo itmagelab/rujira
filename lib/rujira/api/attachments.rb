@@ -20,7 +20,7 @@ module Rujira
         builder do
           path "attachment/#{id}"
         end
-        run
+        call
       end
 
       # Deletes a specific attachment by ID.
@@ -37,7 +37,7 @@ module Rujira
           method :delete
           path "attachment/#{id}"
         end
-        run
+        call
       end
 
       # Retrieves metadata for attachments.
@@ -52,7 +52,7 @@ module Rujira
         builder do
           path 'attachment/meta'
         end
-        run
+        call
       end
     end
   end
