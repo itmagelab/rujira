@@ -33,9 +33,9 @@ gem install rujira
 
 ```ruby
 ❯ cat .env
-RUJIRA_DEBUG=false
 RUJIRA_TOKEN='<TOKEN>'
-RUJIRA_URL='http://localhost:8080'
+RUJIRA_DEBUG=true
+LOG_LEVEL=error
 ```
 
 ### Example of usage

@@ -43,16 +43,4 @@ module Rujira
   #   raise Rujira::Error, "Something went wrong"
   #
   class Error < StandardError; end
-
-  # Checks if an environment variable is truthy.
-  #
-  # @param [String] var The name of the environment variable
-  # @return [Boolean] true if the value is 'true', '1', or 'yes' (case-insensitive), false otherwise
-  #
-  # @example Check if debug mode is enabled
-  #   Rujira.env_var?('RUJIRA_DEBUG')
-  #
-  def self.env_var?(var)
-    %w[true 1 yes].include?(ENV[var]&.downcase)
-  end
 end
