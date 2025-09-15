@@ -26,7 +26,7 @@ module Rujira
           method :post
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
     end
   end

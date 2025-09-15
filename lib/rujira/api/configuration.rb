@@ -20,7 +20,7 @@ module Rujira
         builder do
           path 'configuration'
         end
-        run
+        call
       end
     end
   end

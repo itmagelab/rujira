@@ -54,7 +54,7 @@ module Rujira
             method :get
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
 
         # Adds a comment to a given issue.
@@ -74,7 +74,7 @@ module Rujira
             method :post
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
 
         # Updates an existing comment on a given issue.
@@ -95,7 +95,7 @@ module Rujira
             method :put
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
 
         # Deletes a comment from a given issue.
@@ -116,7 +116,7 @@ module Rujira
             method :delete
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
 
         # Retrieves a specific comment from a given issue.
@@ -137,7 +137,7 @@ module Rujira
             path "issue/#{id_or_key}/comment/#{id}"
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
 
         # Pins a comment on a given issue.
@@ -159,7 +159,7 @@ module Rujira
             path "issue/#{id_or_key}/comment/#{id}/pin"
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
 
         # Adds a comment to an issue.
@@ -195,7 +195,7 @@ module Rujira
             path "issue/#{id_or_key}/pinned-comments"
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
       end
     end

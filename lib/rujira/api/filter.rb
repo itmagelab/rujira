@@ -26,7 +26,7 @@ module Rujira
           path 'filter'
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Updates an existing filter by ID.
@@ -46,7 +46,7 @@ module Rujira
           path "filter/#{id}"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Deletes a filter by ID.
@@ -59,7 +59,7 @@ module Rujira
           method :delete
           path "filter/#{id}"
         end
-        run
+        call
       end
 
       # Retrieves a filter by ID.
@@ -71,7 +71,7 @@ module Rujira
         builder do
           path "filter/#{id}"
         end
-        run
+        call
       end
 
       # Retrieves columns configuration of a filter.
@@ -83,7 +83,7 @@ module Rujira
         builder do
           path "filter/#{id}/columns"
         end
-        run
+        call
       end
 
       # Updates columns configuration of a filter.
@@ -103,7 +103,7 @@ module Rujira
           path "filter/#{id}/columns"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Resets columns of a filter to default.
@@ -116,7 +116,7 @@ module Rujira
           method :delete
           path "filter/#{id}/columns"
         end
-        run
+        call
       end
 
       # Lists permissions of a filter.
@@ -128,7 +128,7 @@ module Rujira
         builder do
           path "filter/#{id}/permission"
         end
-        run
+        call
       end
 
       # Adds a permission to a filter.
@@ -148,7 +148,7 @@ module Rujira
           path "filter/#{id}/permission"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Retrieves a specific permission of a filter.
@@ -161,7 +161,7 @@ module Rujira
         builder do
           path "filter/#{id}/permission/#{permission_id}"
         end
-        run
+        call
       end
 
       # Deletes a specific permission of a filter.
@@ -175,7 +175,7 @@ module Rujira
           method :delete
           path "filter/#{id}/permission/#{permission_id}"
         end
-        run
+        call
       end
 
       # Retrieves the default share scope of filters.
@@ -186,7 +186,7 @@ module Rujira
         builder do
           path 'filter/defaultShareScope'
         end
-        run
+        call
       end
 
       # Updates the default share scope of filters.
@@ -205,7 +205,7 @@ module Rujira
           path 'filter/defaultShareScope'
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Retrieves favorite filters.
@@ -216,7 +216,7 @@ module Rujira
         builder do
           path 'filter/favourite'
         end
-        run
+        call
       end
     end
   end

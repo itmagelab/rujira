@@ -48,7 +48,7 @@ module Rujira
             params username: username
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
 
         # Retrieves the list of watchers for a given issue.
@@ -67,7 +67,7 @@ module Rujira
             path "issue/#{id_or_key}/watchers"
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
 
         # Adds watchers to a given issue.
@@ -87,7 +87,7 @@ module Rujira
             path "issue/#{id_or_key}/watchers"
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
 
         # Adds a watcher to an issue.
@@ -108,7 +108,7 @@ module Rujira
             payload name.to_json
             instance_eval(&block) if block_given?
           end
-          run
+          call
         end
       end
     end

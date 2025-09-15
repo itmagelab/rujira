@@ -21,7 +21,7 @@ module Rujira
         builder do
           path "avatar/#{type}/system"
         end
-        run
+        call
       end
 
       # Uploads a temporary avatar for a given type.
@@ -41,7 +41,7 @@ module Rujira
           path "avatar/#{type}/temporary"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Crops a previously uploaded temporary avatar.
@@ -61,7 +61,7 @@ module Rujira
           path "avatar/#{type}/temporaryCrop"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
     end
   end

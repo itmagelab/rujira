@@ -20,7 +20,7 @@ module Rujira
         builder do
           path 'myself'
         end
-        run
+        call
       end
 
       # Updates the current user's profile.
@@ -38,7 +38,7 @@ module Rujira
           path 'myself'
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Changes the current user's password.
@@ -56,7 +56,7 @@ module Rujira
           path 'myself'
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
     end
   end

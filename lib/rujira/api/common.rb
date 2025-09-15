@@ -13,9 +13,7 @@ module Rujira
       def initialize(client)
         # Store the passed client object in an instance variable for later use
         @client = client
-
-        # Configure requests using the client's builder DSL
-        @client.request.builder do
+        @request = Request.new.builder do
           # Set the Bearer token for authorization
           bearer @token
 
@@ -34,12 +32,20 @@ module Rujira
       #
       # @yield [builder] Optional block to configure the request builder.
       # @return [Object] The configured request builder stored in @request.
-      def builder(&block) = @client.request.builder(&block)
+      def builder(&block) = @request.builder(&block)
 
       # Executes the configured request.
       #
       # @return [Object] The API response after dispatching the request.
-      def run = @client.dispatch
+      def call
+        return @client.dispatch(@request) if @client.dispatchable
+
+        self
+      end
+
+      def commit
+        @client.dispatch(@request)
+      end
     end
   end
 end

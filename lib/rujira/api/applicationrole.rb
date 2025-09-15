@@ -28,7 +28,7 @@ module Rujira
           path 'applicationrole'
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Lists all application roles.
@@ -43,7 +43,7 @@ module Rujira
         builder do
           path 'applicationrole'
         end
-        run
+        call
       end
 
       # Retrieves a specific application role by key.
@@ -58,7 +58,7 @@ module Rujira
         builder do
           path "applicationrole/#{key}"
         end
-        run
+        call
       end
 
       # Updates a specific application role by key.
@@ -78,7 +78,7 @@ module Rujira
           path "applicationrole/#{key}"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
     end
   end

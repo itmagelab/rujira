@@ -29,7 +29,7 @@ module Rujira
           method :post
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Updates an existing project.
@@ -50,7 +50,7 @@ module Rujira
           method :put
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Retrieves a specific project by ID or key.
@@ -68,7 +68,7 @@ module Rujira
           path "project/#{id_or_key}"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Lists all projects visible to the current user.
@@ -84,7 +84,7 @@ module Rujira
           path 'project'
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Deletes a project by ID or key.
@@ -101,7 +101,7 @@ module Rujira
           method :delete
           path "project/#{id_or_key}"
         end
-        run
+        call
       end
 
       # Retrieves the security levels for a specific project.
@@ -119,7 +119,7 @@ module Rujira
           path "project/#{id_or_key}/securitylevel"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
     end
   end

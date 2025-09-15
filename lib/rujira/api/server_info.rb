@@ -20,7 +20,7 @@ module Rujira
         builder do
           path 'serverInfo'
         end
-        run
+        call
       end
     end
   end

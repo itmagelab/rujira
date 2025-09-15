@@ -21,7 +21,7 @@ module Rujira
         builder do
           path 'application-properties'
         end
-        run
+        call
       end
 
       alias get list
@@ -43,7 +43,7 @@ module Rujira
           path "application-properties/#{id}"
           instance_eval(&block) if block_given?
         end
-        run
+        call
       end
 
       # Retrieves advanced application settings.
@@ -58,7 +58,7 @@ module Rujira
         builder do
           path 'application-properties/advanced-settings'
         end
-        run
+        call
       end
     end
   end
