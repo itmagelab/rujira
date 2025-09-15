@@ -7,21 +7,15 @@ Dotenv.load
 
 client = Rujira::Client.new('http://localhost:8080', dispatchable: true)
 
-project_name = 'EXAMPLE2'
-myself = client.Myself.get
-
+project_name = 'TEST124'
+project_key = project_name
 name = client.Myself.get['name']
 
-begin
-  project = client.Project.create do
-    payload key: project_name.to_s,
-            name: project_name.to_s,
-            projectTypeKey: 'software',
-            lead: name
-  end
-rescue StandardError
-  projects = client.Project.list
-  project = projects.find { |p| p['name'] == project_name }
+project = client.Project.create do
+  payload key: project_key,
+          name: project_name.to_s,
+          projectTypeKey: 'software',
+          lead: name
 end
 
 client.Issue.create do
@@ -43,7 +37,7 @@ sprint = client.Sprint.create do
           goal: 'Finish core features for release 1.0',
           startDate: now,
           endDate: before,
-          autoStartStop: true
+          autoStartStop: false
 end
 
 client.Sprint.update sprint['id'] do

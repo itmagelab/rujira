@@ -94,7 +94,7 @@ module Rujira
                  "and body #{response.body}")
         end
       rescue StandardError => e
-        raise "Error: #{e.class} - #{e.message}"
+        @logger.error "Error: #{e.class} - #{e.message}"
       end
     end
 
