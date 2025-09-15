@@ -15,7 +15,7 @@ module Rujira
       # @return [Object] The API response after updating roles.
       #
       # @example Bulk update roles
-      #   client.Application_role.put_bulk do
+      #   client.ApplicationRole.put_bulk do
       #     payload [
       #       { key: "jira-software-users", groups: ["jira-users"] },
       #       { key: "jira-administrators", groups: ["admins"] }
@@ -37,11 +37,12 @@ module Rujira
       # @return [Object] The API response containing all application roles.
       #
       # @example List all application roles
-      #   client.Application_role.list
+      #   client.ApplicationRole.list
       #
-      def list
+      def list(&block)
         builder do
           path 'applicationrole'
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -52,11 +53,12 @@ module Rujira
       # @return [Object] The API response containing role details.
       #
       # @example Get a role
-      #   client.Application_role.get("jira-software-users")
+      #   client.ApplicationRole.get("jira-software-users")
       #
-      def get(key)
+      def get(key, &block)
         builder do
           path "applicationrole/#{key}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -68,7 +70,7 @@ module Rujira
       # @return [Object] The API response after updating the role.
       #
       # @example Update a role
-      #   client.Application_role.put("jira-software-users") do
+      #   client.ApplicationRole.put("jira-software-users") do
       #     payload groups: ["jira-users", "new-group"]
       #   end
       #

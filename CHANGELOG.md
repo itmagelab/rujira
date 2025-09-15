@@ -1,3 +1,13 @@
+## [0.5.1] - 2025-09-15
+
+### 🚜 Refactor
+
+- Added logger
+- Cleanup
+
+### 📚 Documentation
+
+- Updated a doc
 ## [0.5.0] - 2025-09-15
 
 ### 🚀 Features
@@ -72,17 +82,3 @@
 ### Reafactor
 
 - How to search sprints
-## [0.2.0] - 2025-09-11
-
-### 🚀 Features
-
-- Added new method for API
-
-### 📚 Documentation
-
-- Update README
-## [0.1.15] - 2025-09-11
-
-### 🚜 Refactor
-
-- Docs

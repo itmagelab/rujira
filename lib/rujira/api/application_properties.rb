@@ -3,23 +3,39 @@
 module Rujira
   module Api
     # Provides access to Jira application properties via the REST API.
-    # Allows listing, retrieving, updating, and accessing advanced settings.
+    # You can list all properties, filter them with query parameters,
+    # update specific properties, and access advanced settings.
     #
     # API reference:
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/application-properties
     #
     class ApplicationProperties < Common
-      # Retrieves all application properties.
+      # Retrieves application properties.
       #
+      # @param [Hash] params Optional query parameters:
+      #   - :key [String] Return property with a specific key.
+      #   - :permissionLevel [String] Restrict results by permission level (SYSADMIN, ADMIN, USER).
+      #   - :keyFilter [String] Return properties matching a wildcard filter (e.g. "jira.option*").
       # @yield [builder] Optional block to configure the request.
-      # @return [Object] The API response containing all properties.
+      # @return [Object] The API response containing properties.
       #
       # @example List all application properties
-      #   client.application_properties.list
+      #   client.ApplicationProperties.list
       #
-      def list
+      # @example Filter by key
+      #   client.ApplicationProperties.list do
+      #     params key: "jira.lf.date.format"
+      #   end
+      #
+      # @example Filter by permission level
+      #   client.ApplicationProperties.list do
+      #     params permissionLevel: "SYSADMIN"
+      #   end
+      #
+      def list(&block)
         builder do
           path 'application-properties'
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -33,7 +49,7 @@ module Rujira
       # @return [Object] The API response after updating the property.
       #
       # @example Update an application property
-      #   client.application_properties.set("jira.option.someFeature") do
+      #   client.ApplicationProperties.set("jira.option.allowattachments") do
       #     payload value: true
       #   end
       #
@@ -52,11 +68,12 @@ module Rujira
       # @return [Object] The API response containing advanced settings.
       #
       # @example Get advanced settings
-      #   client.application_properties.advanced_settings
+      #   client.ApplicationProperties.advanced_settings
       #
-      def advanced_settings
+      def advanced_settings(&block)
         builder do
           path 'application-properties/advanced-settings'
+          instance_eval(&block) if block_given?
         end
         call
       end

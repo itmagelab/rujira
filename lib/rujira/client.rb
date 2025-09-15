@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'logger'
+
 module Rujira
   # Main Jira API client.
   # Provides access to Jira resources via method_missing delegation to API classes.
@@ -9,7 +11,7 @@ module Rujira
   #   client.issue.get("TEST-123")
   #
   class Client
-    attr_reader :dispatchable
+    attr_reader :logger, :dispatchable
 
     # Initializes a new Jira client.
     #
@@ -19,11 +21,25 @@ module Rujira
     # @example Initialize client
     #   client = Rujira::Client.new("https://jira.example.com", debug: true)
     #
-    def initialize(url, debug: false, dispatchable: true)
+    def initialize(url, debug: false, dispatchable: true, log_level: 'error') # rubocop:disable Metrics/MethodLength
       @dispatchable = dispatchable
       @uri = URI(url)
       @debug = ENV.fetch('RUJIRA_DEBUG', debug.to_s) == 'true'
       @raise_error = false
+      @logger ||= Logger.new($stdout)
+
+      log_levels = {
+        'debug' => Logger::DEBUG,
+        'info' => Logger::INFO,
+        'warn' => Logger::WARN,
+        'error' => Logger::ERROR,
+        'fatal' => Logger::FATAL
+      }
+
+      @logger.level = log_levels.fetch(
+        ENV.fetch('LOG_LEVEL', log_level).downcase,
+        Logger::ERROR
+      )
     end
 
     # Dynamically instantiates the appropriate API resource class.
@@ -93,7 +109,7 @@ module Rujira
         builder.request :json
         builder.response :json
         builder.response :raise_error if @raise_error
-        builder.response :logger if @debug
+        builder.response :logger, @logger if @debug
       end
     end
 

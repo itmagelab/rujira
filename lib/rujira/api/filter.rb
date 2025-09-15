@@ -9,7 +9,7 @@ module Rujira
     # API reference:
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/filter
     #
-    class Filter < Common
+    class Filter < Common # rubocop:disable Metrics/ClassLength
       # Creates a new filter.
       #
       # @yield [builder] Block to configure the payload for the new filter.
@@ -52,12 +52,14 @@ module Rujira
       # Deletes a filter by ID.
       #
       # @param [String] id The filter ID.
+      # @yield [builder] Optional block to add query parameters.
       # @return [Object] The API response after deletion.
       #
-      def delete(id)
+      def delete(id, &block)
         builder do
           method :delete
           path "filter/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -65,11 +67,13 @@ module Rujira
       # Retrieves a filter by ID.
       #
       # @param [String] id The filter ID.
+      # @yield [builder] Optional block to add query parameters.
       # @return [Object] The API response containing filter details.
       #
-      def get(id)
+      def get(id, &block)
         builder do
           path "filter/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -77,11 +81,13 @@ module Rujira
       # Retrieves columns configuration of a filter.
       #
       # @param [String] id The filter ID.
+      # @yield [builder] Optional block to add query parameters.
       # @return [Object] The API response with columns configuration.
       #
-      def columns(id)
+      def columns(id, &block)
         builder do
           path "filter/#{id}/columns"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -91,11 +97,6 @@ module Rujira
       # @param [String] id The filter ID.
       # @yield [builder] Block to configure the payload for columns.
       # @return [Object] The API response after updating columns.
-      #
-      # @example Set columns for a filter
-      #   client.Filter.set_columns("10001") do
-      #     payload ["summary", "assignee", "status"]
-      #   end
       #
       def set_columns(id, &block)
         builder do
@@ -109,12 +110,14 @@ module Rujira
       # Resets columns of a filter to default.
       #
       # @param [String] id The filter ID.
+      # @yield [builder] Optional block to add query parameters.
       # @return [Object] The API response after resetting columns.
       #
-      def reset_columns(id)
+      def reset_columns(id, &block)
         builder do
           method :delete
           path "filter/#{id}/columns"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -122,11 +125,13 @@ module Rujira
       # Lists permissions of a filter.
       #
       # @param [String] id The filter ID.
+      # @yield [builder] Optional block to add query parameters.
       # @return [Object] The API response containing permissions.
       #
-      def list_permission(id)
+      def list_permission(id, &block)
         builder do
           path "filter/#{id}/permission"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -136,11 +141,6 @@ module Rujira
       # @param [String] id The filter ID.
       # @yield [builder] Block to configure the permission payload.
       # @return [Object] The API response after adding permission.
-      #
-      # @example Add permission to a filter
-      #   client.Filter.add_permission("10001") do
-      #     payload type: "group", groupname: "jira-users"
-      #   end
       #
       def add_permission(id, &block)
         builder do
@@ -155,11 +155,13 @@ module Rujira
       #
       # @param [String] id The filter ID.
       # @param [String] permission_id The permission ID.
+      # @yield [builder] Optional block to add query parameters.
       # @return [Object] The API response containing the permission details.
       #
-      def permission(id, permission_id)
+      def permission(id, permission_id, &block)
         builder do
           path "filter/#{id}/permission/#{permission_id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -168,23 +170,27 @@ module Rujira
       #
       # @param [String] id The filter ID.
       # @param [String] permission_id The permission ID.
+      # @yield [builder] Optional block to add query parameters.
       # @return [Object] The API response after deletion.
       #
-      def delete_permission(id, permission_id)
+      def delete_permission(id, permission_id, &block)
         builder do
           method :delete
           path "filter/#{id}/permission/#{permission_id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
 
       # Retrieves the default share scope of filters.
       #
+      # @yield [builder] Optional block to add query parameters.
       # @return [Object] The API response with default share scope.
       #
-      def default_share_scope
+      def default_share_scope(&block)
         builder do
           path 'filter/defaultShareScope'
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -193,11 +199,6 @@ module Rujira
       #
       # @yield [builder] Block to configure the payload.
       # @return [Object] The API response after updating default share scope.
-      #
-      # @example Set default share scope
-      #   client.Filter.set_default_share_scope do
-      #     payload type: "PROJECT", projectId: "10000"
-      #   end
       #
       def set_default_share_scope(&block)
         builder do
@@ -210,11 +211,13 @@ module Rujira
 
       # Retrieves favorite filters.
       #
+      # @yield [builder] Optional block to add query parameters.
       # @return [Object] The API response containing favorite filters.
       #
-      def favourite
+      def favourite(&block)
         builder do
           path 'filter/favourite'
+          instance_eval(&block) if block_given?
         end
         call
       end

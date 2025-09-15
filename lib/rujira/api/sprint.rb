@@ -53,7 +53,7 @@ module Rujira
       #
       def update(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
-        raise ArgumentError, 'block is required' unless block
+        raise ArgumentError, 'Block is required' unless block
 
         builder do
           path "sprint/#{id}"
@@ -77,7 +77,7 @@ module Rujira
       #
       def replace(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
-        raise ArgumentError, 'block is required' unless block
+        raise ArgumentError, 'Block is required' unless block
 
         builder do
           path "sprint/#{id}"
@@ -91,12 +91,17 @@ module Rujira
       # Retrieves details of a specific sprint.
       #
       # @param [Integer] id The sprint ID.
+      # @yield [builder] Optional block to configure the request.
       # @return [Object] The API response containing sprint details.
       #
-      def get(id)
+      # @example Get sprint details
+      #   client.Sprint.get(1)
+      #
+      def get(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           path "sprint/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -104,12 +109,17 @@ module Rujira
       # Retrieves all issues in a sprint.
       #
       # @param [Integer] id The sprint ID.
-      # @return [Object] The API response containing issues.
+      # @yield [builder] Optional block to configure the request.
+      # @return [Object] The API response containing sprint issues.
       #
-      def get_issue(id)
+      # @example Get issues in sprint
+      #   client.Sprint.get_issue(1)
+      #
+      def get_issue(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           path "sprint/#{id}/issue"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -117,13 +127,18 @@ module Rujira
       # Deletes a sprint.
       #
       # @param [Integer] id The sprint ID.
+      # @yield [builder] Optional block to configure the request.
       # @return [Object] The API response after deletion.
       #
-      def delete(id)
+      # @example Delete sprint
+      #   client.Sprint.delete(1)
+      #
+      def delete(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           method :delete
           path "sprint/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -131,12 +146,17 @@ module Rujira
       # Retrieves all properties of a sprint.
       #
       # @param [Integer] id The sprint ID.
+      # @yield [builder] Optional block to configure the request.
       # @return [Object] The API response containing sprint properties.
       #
-      def properties(id)
+      # @example Get sprint properties
+      #   client.Sprint.properties(1)
+      #
+      def properties(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           path "sprint/#{id}/properties"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -145,17 +165,19 @@ module Rujira
       #
       # @param [Integer] id The sprint ID.
       # @param [Array<Integer>] issues List of issue IDs to add to the sprint.
+      # @yield [builder] Optional block to configure the request.
       # @return [Object] The API response after adding issues.
       #
-      # @example Add issues to a sprint
+      # @example Add issues to sprint
       #   client.Sprint.issue(1, [101, 102])
       #
-      def issue(id, issues)
+      def issue(id, issues, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           method :post
           path "sprint/#{id}/issue"
           payload issues: issues
+          instance_eval(&block) if block_given?
         end
         call
       end

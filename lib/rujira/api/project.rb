@@ -3,6 +3,8 @@
 module Rujira
   module Api
     # Provides access to Jira projects via the REST API.
+    # Allows creating, updating, retrieving, listing, and deleting projects,
+    # as well as retrieving project security levels.
     #
     # API reference:
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/project
@@ -15,14 +17,13 @@ module Rujira
       #
       # @example Create a project
       #   client.Project.create do
-      #     payload {
+      #     payload({
       #       key: "TEST",
       #       name: "Test Project",
       #       projectTypeKey: "software",
       #       projectTemplateKey: "com.atlassian.jira-core-project-templates:jira-core-project-management"
-      #     }
+      #     })
       #   end
-      #
       def create(&block)
         builder do
           path 'project'
@@ -40,9 +41,8 @@ module Rujira
       #
       # @example Update a project
       #   client.Project.edit("TEST") do
-      #     payload { name: "Renamed Project" }
+      #     payload({ name: "Renamed Project" })
       #   end
-      #
       def edit(id_or_key, &block)
         abort 'Project ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
@@ -61,7 +61,6 @@ module Rujira
       #
       # @example Get a project
       #   client.Project.get("TEST")
-      #
       def get(id_or_key, &block)
         abort 'Project ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
@@ -78,7 +77,6 @@ module Rujira
       #
       # @example List projects
       #   client.Project.list
-      #
       def list(&block)
         builder do
           path 'project'
@@ -90,16 +88,17 @@ module Rujira
       # Deletes a project by ID or key.
       #
       # @param [String] id_or_key The project ID or key.
+      # @yield [builder] Optional block to configure additional request parameters.
       # @return [Object] The API response after deletion.
       #
       # @example Delete a project
       #   client.Project.delete("TEST")
-      #
-      def delete(id_or_key)
+      def delete(id_or_key, &block)
         abort 'Project ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           method :delete
           path "project/#{id_or_key}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -112,7 +111,6 @@ module Rujira
       #
       # @example Get project security levels
       #   client.Project.securitylevel("TEST")
-      #
       def securitylevel(id_or_key, &block)
         abort 'Project ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
