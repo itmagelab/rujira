@@ -17,9 +17,10 @@ module Rujira
       # @example List all application properties
       #   client.application_properties.list
       #
-      def list
+      def list(&block)
         builder do
           path 'application-properties'
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -54,9 +55,10 @@ module Rujira
       # @example Get advanced settings
       #   client.application_properties.advanced_settings
       #
-      def advanced_settings
+      def advanced_settings(&block)
         builder do
           path 'application-properties/advanced-settings'
+          instance_eval(&block) if block_given?
         end
         call
       end

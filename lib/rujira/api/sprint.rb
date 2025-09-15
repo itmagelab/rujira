@@ -93,10 +93,11 @@ module Rujira
       # @param [Integer] id The sprint ID.
       # @return [Object] The API response containing sprint details.
       #
-      def get(id)
+      def get(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           path "sprint/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -106,10 +107,11 @@ module Rujira
       # @param [Integer] id The sprint ID.
       # @return [Object] The API response containing issues.
       #
-      def get_issue(id)
+      def get_issue(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           path "sprint/#{id}/issue"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -119,11 +121,12 @@ module Rujira
       # @param [Integer] id The sprint ID.
       # @return [Object] The API response after deletion.
       #
-      def delete(id)
+      def delete(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           method :delete
           path "sprint/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -133,10 +136,11 @@ module Rujira
       # @param [Integer] id The sprint ID.
       # @return [Object] The API response containing sprint properties.
       #
-      def properties(id)
+      def properties(id, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           path "sprint/#{id}/properties"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -150,12 +154,13 @@ module Rujira
       # @example Add issues to a sprint
       #   client.Sprint.issue(1, [101, 102])
       #
-      def issue(id, issues)
+      def issue(id, issues, &block)
         abort 'Sprint ID is required' if id.to_s.strip.empty?
         builder do
           method :post
           path "sprint/#{id}/issue"
           payload issues: issues
+          instance_eval(&block) if block_given?
         end
         call
       end

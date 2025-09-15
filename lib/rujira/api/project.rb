@@ -95,11 +95,12 @@ module Rujira
       # @example Delete a project
       #   client.Project.delete("TEST")
       #
-      def delete(id_or_key)
+      def delete(id_or_key, &block)
         abort 'Project ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           method :delete
           path "project/#{id_or_key}"
+          instance_eval(&block) if block_given?
         end
         call
       end

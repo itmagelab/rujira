@@ -16,9 +16,10 @@ module Rujira
       # @example Get current user details
       #   client.Myself.get
       #
-      def get
+      def get(&block)
         builder do
           path 'myself'
+          instance_eval(&block) if block_given?
         end
         call
       end

@@ -17,10 +17,11 @@ module Rujira
       # @example List all permissions
       #   client.Permissions.list
       #
-      def list
+      def list(&block)
         builder do
           path 'permissions'
           method :get
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -33,10 +34,11 @@ module Rujira
       # @example List all permissions
       #   client.Permissions.my
       #
-      def my
+      def my(&block)
         builder do
           path 'mypermissions'
           method :get
+          instance_eval(&block) if block_given?
         end
         call
       end

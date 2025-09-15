@@ -9,7 +9,7 @@ module Rujira
     # API reference:
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/filter
     #
-    class Filter < Common
+    class Filter < Common # rubocop:disable Metrics/ClassLength
       # Creates a new filter.
       #
       # @yield [builder] Block to configure the payload for the new filter.
@@ -54,10 +54,11 @@ module Rujira
       # @param [String] id The filter ID.
       # @return [Object] The API response after deletion.
       #
-      def delete(id)
+      def delete(id, &block)
         builder do
           method :delete
           path "filter/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -67,9 +68,10 @@ module Rujira
       # @param [String] id The filter ID.
       # @return [Object] The API response containing filter details.
       #
-      def get(id)
+      def get(id, &block)
         builder do
           path "filter/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -79,9 +81,10 @@ module Rujira
       # @param [String] id The filter ID.
       # @return [Object] The API response with columns configuration.
       #
-      def columns(id)
+      def columns(id, &block)
         builder do
           path "filter/#{id}/columns"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -111,10 +114,11 @@ module Rujira
       # @param [String] id The filter ID.
       # @return [Object] The API response after resetting columns.
       #
-      def reset_columns(id)
+      def reset_columns(id, &block)
         builder do
           method :delete
           path "filter/#{id}/columns"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -124,9 +128,10 @@ module Rujira
       # @param [String] id The filter ID.
       # @return [Object] The API response containing permissions.
       #
-      def list_permission(id)
+      def list_permission(id, &block)
         builder do
           path "filter/#{id}/permission"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -157,9 +162,10 @@ module Rujira
       # @param [String] permission_id The permission ID.
       # @return [Object] The API response containing the permission details.
       #
-      def permission(id, permission_id)
+      def permission(id, permission_id, &block)
         builder do
           path "filter/#{id}/permission/#{permission_id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -170,10 +176,11 @@ module Rujira
       # @param [String] permission_id The permission ID.
       # @return [Object] The API response after deletion.
       #
-      def delete_permission(id, permission_id)
+      def delete_permission(id, permission_id, &block)
         builder do
           method :delete
           path "filter/#{id}/permission/#{permission_id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -182,9 +189,10 @@ module Rujira
       #
       # @return [Object] The API response with default share scope.
       #
-      def default_share_scope
+      def default_share_scope(&block)
         builder do
           path 'filter/defaultShareScope'
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -212,9 +220,10 @@ module Rujira
       #
       # @return [Object] The API response containing favorite filters.
       #
-      def favourite
+      def favourite(&block)
         builder do
           path 'filter/favourite'
+          instance_eval(&block) if block_given?
         end
         call
       end

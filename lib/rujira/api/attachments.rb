@@ -15,10 +15,11 @@ module Rujira
       # @example Get an attachment
       #   client.attachments.get("10001")
       #
-      def get(id)
+      def get(id, &block)
         abort 'Attachment ID is required' if id.to_s.strip.empty?
         builder do
           path "attachment/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -31,11 +32,12 @@ module Rujira
       # @example Delete an attachment
       #   client.attachments.delete("10001")
       #
-      def delete(id)
+      def delete(id, &block)
         abort 'Attachment ID is required' if id.to_s.strip.empty?
         builder do
           method :delete
           path "attachment/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -48,9 +50,10 @@ module Rujira
       # @example Get attachment metadata
       #   client.attachments.meta
       #
-      def meta
+      def meta(&block)
         builder do
           path 'attachment/meta'
+          instance_eval(&block) if block_given?
         end
         call
       end

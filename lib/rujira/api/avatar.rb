@@ -17,9 +17,10 @@ module Rujira
       # @example Get system avatars for projects
       #   client.Avatar.get("project")
       #
-      def get(type)
+      def get(type, &block)
         builder do
           path "avatar/#{type}/system"
+          instance_eval(&block) if block_given?
         end
         call
       end

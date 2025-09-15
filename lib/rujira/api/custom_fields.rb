@@ -17,9 +17,10 @@ module Rujira
       # @example Get all custom fields
       #   client.CustomFields.get
       #
-      def get
+      def get(&block)
         builder do
           path 'customFields'
+          instance_eval(&block) if block_given?
         end
         call
       end

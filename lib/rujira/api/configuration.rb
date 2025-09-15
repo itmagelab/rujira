@@ -16,9 +16,10 @@ module Rujira
       # @example Get Jira configuration
       #   client.Configuration.get
       #
-      def get
+      def get(&block)
         builder do
           path 'configuration'
+          instance_eval(&block) if block_given?
         end
         call
       end

@@ -127,11 +127,12 @@ module Rujira
       # @example Archive an issue
       #   client.Issue.archive("TEST-123")
       #
-      def archive(id_or_key)
+      def archive(id_or_key, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}/archive"
           method :put
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -143,10 +144,11 @@ module Rujira
       #
       # @example List archive information for an issue
       #   client.Issue.list_archive("TEST-123")
-      def list_archive(id_or_key)
+      def list_archive(id_or_key, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}/archive"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -162,11 +164,12 @@ module Rujira
       #     payload name: "john.doe"
       #   end
       #
-      def assignee(id_or_key)
+      def assignee(id_or_key, &block)
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}/assignee"
           method :put
+          instance_eval(&block) if block_given?
         end
         call
       end

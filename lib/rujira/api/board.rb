@@ -22,10 +22,11 @@ module Rujira
       # @param [Integer, String] id The board ID.
       # @return [Object] The API response containing board details.
       #
-      def get(id)
+      def get(id, &block)
         abort 'Board ID is required' if id.to_s.strip.empty?
         builder do
           path "board/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -34,9 +35,10 @@ module Rujira
       #
       # @return [Object] The API response containing a list of boards.
       #
-      def list
+      def list(&block)
         builder do
           path 'board'
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -46,10 +48,11 @@ module Rujira
       # @param [Integer, String] id The board ID.
       # @return [Object] The API response containing sprints.
       #
-      def sprint(id)
+      def sprint(id, &block)
         abort 'Board ID is required' if id.to_s.strip.empty?
         builder do
           path "board/#{id}/sprint"
+          instance_eval(&block) if block_given?
         end
         call
       end

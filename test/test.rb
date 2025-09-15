@@ -4,7 +4,7 @@ require 'test/unit'
 require 'dotenv'
 require_relative '../lib/rujira'
 
-class UnitTest < Test::Unit::TestCase
+class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
   Dotenv.load
 
   def random_name
@@ -15,7 +15,7 @@ class UnitTest < Test::Unit::TestCase
     %w[true 1 yes].include?(ENV[var]&.downcase)
   end
 
-  def test_issue_flow
+  def test_issue_flow # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     return unless env_var? 'RUJIRA_TEST'
 
     require 'date'

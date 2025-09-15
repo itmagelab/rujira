@@ -15,10 +15,11 @@ module Rujira
       # @example Get a dashboard by ID
       #   client.Dashboard.get(10001)
       #
-      def get(id)
+      def get(id, &block)
         abort 'Dashboard ID is required' if id.to_s.strip.empty?
         builder do
           path "dashboard/#{id}"
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -30,9 +31,10 @@ module Rujira
       # @example List dashboards
       #   client.Dashboard.list
       #
-      def list
+      def list(&block)
         builder do
           path 'dashboard'
+          instance_eval(&block) if block_given?
         end
         call
       end

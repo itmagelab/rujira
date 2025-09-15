@@ -39,9 +39,10 @@ module Rujira
       # @example List all application roles
       #   client.Application_role.list
       #
-      def list
+      def list(&block)
         builder do
           path 'applicationrole'
+          instance_eval(&block) if block_given?
         end
         call
       end
@@ -54,9 +55,10 @@ module Rujira
       # @example Get a role
       #   client.Application_role.get("jira-software-users")
       #
-      def get(key)
+      def get(key, &block)
         builder do
           path "applicationrole/#{key}"
+          instance_eval(&block) if block_given?
         end
         call
       end

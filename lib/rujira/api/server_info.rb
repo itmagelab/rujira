@@ -16,9 +16,10 @@ module Rujira
       # @example Get server info
       #   client.Server_info.get
       #
-      def get
+      def get(&block)
         builder do
           path 'serverInfo'
+          instance_eval(&block) if block_given?
         end
         call
       end

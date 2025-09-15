@@ -18,9 +18,10 @@ module Rujira
       #   client.Field.get
       #   client.Field.list
       #
-      def list
+      def list(&block)
         builder do
           path 'field'
+          instance_eval(&block) if block_given?
         end
         call
       end
