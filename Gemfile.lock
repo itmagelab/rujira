@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rujira (0.5.0)
+    rujira (0.5.1)
       faraday (~> 2.9)
       faraday-multipart (~> 1.0)
 
