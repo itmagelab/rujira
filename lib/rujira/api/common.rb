@@ -38,6 +38,7 @@ module Rujira
       #
       # @return [Object] The API response after dispatching the request.
       def call
+        @client.logger.debug "Call the method: #{caller_locations(1, 1)[0].label}"
         return @client.dispatch(@request) if @client.dispatchable
 
         self

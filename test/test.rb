@@ -147,17 +147,46 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     client.Filter.favourite
   end
 
-  def test_issue_flow_no_dispatch
+  def test_random # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     return unless env_var? 'RUJIRA_TEST'
 
     url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
     client = Rujira::Client.new(url, debug: true, dispatchable: false)
 
-    resources = [
-      client.Board.get(1),
-      client.Dashboard.list
+    require 'securerandom'
+
+    issue_summaries = Array.new(100) { "Task #{SecureRandom.hex(3)}" }
+    issue_types = %w[Bug Story Task]
+
+    commands = [
+      ->(issue_id) { client.Issue.get(issue_id) },
+      ->(issue_id) { client.Issue.comment(issue_id) { payload body: "Comment #{SecureRandom.hex(2)}" } },
+      ->(issue_id) { client.Issue.add_watchers(issue_id) { payload ["user_#{rand(1..10)}"] } },
+      ->(issue_id) { client.Issue.watcher(issue_id, "user_#{rand(1..10)}") },
+      ->(issue_id) { client.Issue.remove_watchers(issue_id, "user_#{rand(1..10)}") }
     ]
 
-    resources.map(&:commit)
+    operations = []
+
+    50.times do
+      summary = issue_summaries.sample
+      issue_type = issue_types.sample
+      new_issue = client.Issue.create do
+        payload({ fields: {
+                  summary: summary,
+                  issuetype: { name: issue_type },
+                  project: { key: 'TEST' }
+
+                } })
+      end
+
+      operations << new_issue
+    end
+
+    operations.map!(&:commit)
+
+    20.times do
+      commands.sample.call(operations.sample['id'])
+    end
   end
 end
