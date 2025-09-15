@@ -1,3 +1,8 @@
+## [0.5.0] - 2025-09-15
+
+### 🚀 Features
+
+- Dispatchable for client
 ## [0.4.0] - 2025-09-13
 
 ### 🚀 Features
@@ -81,5 +86,3 @@
 ### 🚜 Refactor
 
 - Docs
-- BUILDER
-- RAKE TASKS
