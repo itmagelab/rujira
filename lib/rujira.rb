@@ -7,7 +7,6 @@ require 'faraday'
 require 'faraday/multipart'
 require 'json'
 
-require_relative 'rujira/error'
 require_relative 'rujira/version'
 require_relative 'rujira/request'
 require_relative 'rujira/client'
