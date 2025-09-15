@@ -11,15 +11,18 @@ module Rujira
     class Search < Common
       # Executes a search query against Jira issues.
       #
-      # @yield [builder] Optional block to configure the request payload
-      #   (e.g., provide JQL, fields, pagination).
+      # @yield [builder] Optional block to configure the request payload,
+      #   such as JQL query, fields to return, pagination, and sorting.
       # @return [Object] The API response containing matching issues.
       #
       # @example Search issues with JQL
       #   client.Search.get do
-      #     payload jql: "project = TEST AND status = 'To Do'", maxResults: 10
+      #     payload({
+      #       jql: "project = TEST AND status = 'To Do'",
+      #       maxResults: 10,
+      #       fields: ["summary", "assignee", "status"]
+      #     })
       #   end
-      #
       def get(&block)
         builder do
           path 'search'

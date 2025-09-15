@@ -3,7 +3,7 @@
 module Rujira
   module Api
     # Provides access to Jira server information via the REST API.
-    # Retrieves details about the Jira server instance, including version and build info.
+    # Allows retrieving details about the Jira server instance, including version and build info.
     #
     # API reference:
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/serverInfo
@@ -11,10 +11,11 @@ module Rujira
     class ServerInfo < Common
       # Retrieves Jira server information.
       #
+      # @yield [builder] Optional block to configure additional request parameters.
       # @return [Object] The API response containing server details.
       #
-      # @example Get server info
-      #   client.Server_info.get
+      # @example Get Jira server information
+      #   client.ServerInfo.get
       #
       def get(&block)
         builder do

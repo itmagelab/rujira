@@ -11,12 +11,20 @@ module Rujira
     class Field < Common
       # Retrieves all fields.
       #
-      # @yield [builder] Optional block to configure the request.
+      # Optional query parameters can be passed in a block, for example:
+      # - filtering by field type or custom criteria (if supported by Jira API)
+      #
+      # @yield [builder] Optional block to configure query parameters.
       # @return [Object] The API response containing all fields.
       #
       # @example List all fields
       #   client.Field.get
       #   client.Field.list
+      #
+      # @example List all fields with custom params (if supported)
+      #   client.Field.list do
+      #     params type: "custom"
+      #   end
       #
       def list(&block)
         builder do
@@ -34,7 +42,8 @@ module Rujira
       #
       # @example Create a custom field
       #   client.Field.create do
-      #     payload name: "My Field", type: "com.atlassian.jira.plugin.system.customfieldtypes:textfield"
+      #     payload name: "My Field",
+      #             type: "com.atlassian.jira.plugin.system.customfieldtypes:textfield"
       #   end
       #
       def create(&block)

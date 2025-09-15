@@ -3,7 +3,8 @@
 module Rujira
   module Api
     # Provides access to the Jira "Myself" resource via the REST API.
-    # Allows retrieving details about the currently authenticated user.
+    # Allows retrieving and updating details about the currently authenticated user,
+    # including password changes.
     #
     # API reference:
     # https://docs.atlassian.com/software/jira/docs/api/REST/9.17.0/#api/2/myself
@@ -11,11 +12,10 @@ module Rujira
     class Myself < Common
       # Retrieves details of the currently authenticated user.
       #
+      # @yield [builder] Optional block to configure additional request parameters.
       # @return [Object] The API response containing user details.
-      #
       # @example Get current user details
       #   client.Myself.get
-      #
       def get(&block)
         builder do
           path 'myself'
@@ -28,7 +28,6 @@ module Rujira
       #
       # @yield [builder] Block to configure the payload or additional request parameters.
       # @return [Object] The API response after updating the user profile.
-      #
       # @example Update user profile
       #   client.Myself.update do
       #     payload({ displayName: "New Name", emailAddress: "new@example.com" })
@@ -44,12 +43,11 @@ module Rujira
 
       # Changes the current user's password.
       #
-      # @yield [builder] Block to configure the payload for the password change.
+      # @yield [builder] Block to configure the payload for password change.
       # @return [Object] The API response after changing the password.
-      #
       # @example Change user password
       #   client.Myself.password do
-      #     payload({ password: "newpassword123" })
+      #     payload({ currentPassword: "oldpass", password: "newpass123" })
       #   end
       def password(&block)
         builder do

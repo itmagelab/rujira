@@ -12,6 +12,7 @@ module Rujira
       # Retrieves all system avatars of a given type.
       #
       # @param [String] type The type of avatar (e.g., "project", "user").
+      # @yield [builder] Optional block to configure the request.
       # @return [Object] The API response containing system avatars.
       #
       # @example Get system avatars for projects
@@ -53,7 +54,7 @@ module Rujira
       #
       # @example Crop a temporary avatar
       #   client.Avatar.crop("project") do
-      #     payload { x: 0, y: 0, width: 48, height: 48 }
+      #     payload x: 0, y: 0, width: 48, height: 48
       #   end
       #
       def crop(type, &block)
