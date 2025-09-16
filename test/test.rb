@@ -25,7 +25,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
 
     project = random_name
     url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
-    client = Rujira::Client.new(url, debug: true)
+    client = Rujira::Client.new(url, debug: true, dispatchable: true)
 
     client.ServerInfo.get
     name = client.Myself.get['name']

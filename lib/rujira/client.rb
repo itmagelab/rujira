@@ -13,6 +13,8 @@ module Rujira
   class Client
     attr_reader :logger, :dispatchable
 
+    SUPPORTED_METHODS = %i[get delete head post put patch].freeze
+
     # Initializes a new Jira client.
     #
     # @param [String] url Base URL of the Jira instance.
@@ -68,23 +70,27 @@ module Rujira
       Rujira::Api.const_defined?(method_name.to_s) || super
     end
 
+    def build_options(request)
+      {
+        url: @uri,
+        headers: request.headers,
+        params: request.params
+      }
+    end
+
     # Executes the configured request.
     #
     # @return [Object] The API response body if successful
     # @raise [RuntimeError] If the request fails or method is unsupported
     #
     def dispatch(request) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-      raise "method #{request.method} not supported" unless %i[get delete head post put patch].include?(request.method)
+      raise "method #{request.method} not supported" unless SUPPORTED_METHODS.include?(request.method)
 
       begin
         args = [request.path]
         args << request.payload if %i[post put patch].include?(request.method)
 
-        options = {
-          url: @uri,
-          headers: request.headers,
-          params: request.params
-        }
+        options = build_options(request)
         response = connection(options, request.authorization).public_send(request.method, *args)
 
         if response.success?
@@ -95,6 +101,7 @@ module Rujira
         end
       rescue StandardError => e
         @logger.error "Error: #{e.class} - #{e.message}"
+        raise
       end
     end
 
