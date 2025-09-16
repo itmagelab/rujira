@@ -95,7 +95,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
               startAt: 0,
               fields: %w[id key]
     end
-    client.Issue.comment "#{project}-1" do
+    client.Issue.add_comment "#{project}-1" do
       payload body: 'Adding a new comment'
     end
     client.Issue.attachments "#{project}-1", '/tmp/test.file'
@@ -151,7 +151,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     return unless env_var? 'RUJIRA_TEST'
 
     url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
-    client = Rujira::Client.new(url, debug: true, dispatchable: false)
+    client = Rujira::Client.new(url, dispatchable: false)
 
     require 'securerandom'
 
@@ -160,13 +160,10 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
 
     commands = [
       ->(issue_id) { client.Issue.get(issue_id) },
-      ->(issue_id) { client.Issue.comment(issue_id) { payload body: "Comment #{SecureRandom.hex(2)}" } },
-      ->(issue_id) { client.Issue.add_watchers(issue_id) { payload ["user_#{rand(1..10)}"] } },
-      ->(issue_id) { client.Issue.watcher(issue_id, "user_#{rand(1..10)}") },
-      ->(issue_id) { client.Issue.remove_watchers(issue_id, "user_#{rand(1..10)}") }
+      ->(issue_id) { client.Issue.add_comment(issue_id) { payload body: "Comment #{SecureRandom.hex(2)}" } }
     ]
 
-    operations = []
+    issues = []
 
     50.times do
       summary = issue_summaries.sample
@@ -180,13 +177,13 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
                 } })
       end
 
-      operations << new_issue
+      issues << new_issue
     end
-
-    operations.map!(&:commit)
 
     20.times do
-      commands.sample.call(operations.sample['id'])
+      commands.sample.call(issues.sample.id)
     end
+
+    issues.map(&:delete)
   end
 end

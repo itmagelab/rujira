@@ -13,6 +13,7 @@ module Rujira
       def initialize(client)
         # Store the passed client object in an instance variable for later use
         @client = client
+        @metadata ||= {}
         @request = Request.new.builder do
           # Set the Bearer token for authorization
           bearer @token
@@ -41,11 +42,25 @@ module Rujira
         @client.logger.debug "Call the method: #{caller_locations(1, 1)[0].label}"
         return @client.dispatch(@request) if @client.dispatchable
 
-        self
+        to_obj
       end
 
       def commit
         @client.dispatch(@request)
+      end
+
+      def to_obj
+        response = @client.dispatch(@request)
+
+        return response unless response.is_a?(Hash)
+
+        response.merge!(@metadata)
+        resource_class_name = self.class.name.sub('Api', 'Resource')
+        Object.const_get(resource_class_name).new(@client, **response)
+      end
+
+      def owned_by(id_or_key)
+        @metadata.merge!({ parent: id_or_key })
       end
     end
   end

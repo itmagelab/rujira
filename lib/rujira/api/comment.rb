@@ -19,10 +19,32 @@ module Rujira
       #   end
       #
       def create(id_or_key, &block)
+        owned_by id_or_key
+
         abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}/comment"
           method :post
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      # Deletes a comment from an issue.
+      #
+      # @param [String] id_or_key The issue ID or key.
+      # @param [String] id The comment ID.
+      # @yield [builder] Optional block to configure additional request parameters.
+      # @return [Object] The API response after deleting the comment.
+      #
+      # @example Delete a comment
+      #   client.Issue.delete_comment("TEST-123", "10001")
+      #
+      def delete(id_or_key, id, &block)
+        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
+        builder do
+          path "issue/#{id_or_key}/comment/#{id}"
+          method :delete
           instance_eval(&block) if block_given?
         end
         call
