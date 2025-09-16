@@ -42,27 +42,6 @@ module Rujira
           call
         end
 
-        # Adds a new comment to an issue.
-        #
-        # @param [String] id_or_key The issue ID or key.
-        # @yield [builder] Block to configure the payload for the new comment.
-        # @return [Object] The API response containing the created comment.
-        #
-        # @example Add a comment
-        #   client.Issue.add_comment("TEST-123") do
-        #     payload body: "New comment text"
-        #   end
-        #
-        def add_comment(id_or_key, &block)
-          abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
-          builder do
-            path "issue/#{id_or_key}/comment"
-            method :post
-            instance_eval(&block) if block_given?
-          end
-          call
-        end
-
         # Retrieves a specific comment by its ID.
         #
         # @param [String] id_or_key The issue ID or key.
@@ -173,7 +152,7 @@ module Rujira
         #     payload body: "This is a comment"
         #   end
         #
-        def comment(id_or_key, &block)
+        def add_comment(id_or_key, &block)
           abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
           @client.Comment.create id_or_key, &block
         end
