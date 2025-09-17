@@ -1,3 +1,14 @@
+## [0.6.0] - 2025-09-17
+
+### 🚀 Features
+
+- Added addapter method
+- Commitable style
+- Response object added
+
+### 🚜 Refactor
+
+- Changes for a client
 ## [0.5.1] - 2025-09-15
 
 ### 🚜 Refactor
@@ -67,18 +78,3 @@
 
 - Use ENV for URL getting
 - Added some docs
-## [0.3.0] - 2025-09-13
-
-### 🚀 Features
-
-- Added client supports
-
-### 🚜 Refactor
-
-- Updates tasks
-- Use params
-- Added examples
-
-### Reafactor
-
-- How to search sprints

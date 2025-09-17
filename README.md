@@ -16,7 +16,7 @@
 Add to your `Gemfile`:
 
 ```ruby
-gem 'rujira', '~> 0.1.0'
+gem 'rujira', '~> 0.6.0'
 ```
 
 Or install directly:
