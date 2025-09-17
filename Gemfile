@@ -16,3 +16,7 @@ gem 'faraday-multipart', '~> 1.0'
 gem 'dotenv', '~> 3.1'
 
 gem 'rubocop', '~> 1.80'
+
+gem 'faraday-typhoeus', '~> 1.1'
+
+gem "async-http-faraday", "~> 0.22.1"

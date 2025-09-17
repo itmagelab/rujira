@@ -43,6 +43,22 @@ module Rujira
         ENV.fetch('LOG_LEVEL', log_level).downcase,
         Logger::ERROR
       )
+
+      @adapter = adapter
+    end
+
+    def adapter # rubocop:disable Metrics/MethodLength
+      case ENV.fetch('RUJIRA_ADAPTER', nil)
+      when 'typhoeus'
+        @logger.debug 'Using Typhoeus adapter'
+        require 'faraday/typhoeus'
+        :typhoeus
+      when 'async'
+        require 'async/http/faraday'
+        :async_http
+      else
+        Faraday.default_adapter
+      end
     end
 
     # Dynamically instantiates the appropriate API resource class.
@@ -112,6 +128,7 @@ module Rujira
     #
     def connection(options, authorization)
       Faraday.new(options) do |builder|
+        builder.adapter @adapter
         builder.request :authorization, *authorization if authorization
         builder.request :multipart, flat_encode: true
         builder.request :json
