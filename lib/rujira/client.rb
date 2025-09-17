@@ -11,7 +11,7 @@ module Rujira
   #   client.issue.get("TEST-123")
   #
   class Client
-    attr_reader :logger, :dispatchable
+    attr_reader :dispatchable, :logger, :commitable
 
     SUPPORTED_METHODS = %i[get delete head post put patch].freeze
 
@@ -23,8 +23,9 @@ module Rujira
     # @example Initialize client
     #   client = Rujira::Client.new("https://jira.example.com", debug: true)
     #
-    def initialize(url, debug: false, dispatchable: true, log_level: 'error') # rubocop:disable Metrics/MethodLength
+    def initialize(url, debug: false, dispatchable: true, commitable: false, log_level: 'error') # rubocop:disable Metrics/MethodLength
       @dispatchable = dispatchable
+      @commitable = commitable
       @uri = URI(url)
       @debug = ENV.fetch('RUJIRA_DEBUG', debug.to_s) == 'true'
       @raise_error = false

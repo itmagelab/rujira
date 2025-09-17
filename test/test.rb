@@ -186,4 +186,22 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
 
     issues.map(&:delete)
   end
+
+  def test_commit # rubocop:disable Metrics/MethodLength
+    return unless env_var? 'RUJIRA_TEST'
+
+    project = random_name
+    url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
+    client = Rujira::Client.new(url, debug: true, dispatchable: false, commitable: true)
+
+    name = client.Myself.get.commit['name']
+
+    issue = client.Project.create do
+      payload key: project.to_s,
+              name: project.to_s,
+              projectTypeKey: 'software',
+              lead: name
+    end
+    issue.commit
+  end
 end

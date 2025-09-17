@@ -41,6 +41,7 @@ module Rujira
       def call
         @client.logger.debug "Call the method: #{caller_locations(1, 1)[0].label}"
         return @client.dispatch(@request) if @client.dispatchable
+        return self if @client.commitable
 
         to_obj
       end
@@ -50,7 +51,7 @@ module Rujira
       end
 
       def to_obj
-        response = @client.dispatch(@request)
+        response = commit
 
         return response unless response.is_a?(Hash)
 
