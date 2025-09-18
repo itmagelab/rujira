@@ -106,6 +106,14 @@ module Rujira
       @authorization = :basic, username, password
     end
 
+    # Disables any authentication for subsequent requests.
+    #
+    # @return [void]
+    #
+    def disable_auth
+      @authorization = nil
+    end
+
     # Gets or sets the request path (appended to rest_base_path).
     #
     # @param [String, nil] path The relative path to set.
@@ -127,6 +135,15 @@ module Rujira
       return @payload if payload.nil?
 
       @payload = payload
+    end
+
+    # Extends the current payload by merging the given hash into it.
+    #
+    # @param [Hash, nil] payload Optional hash to merge into the current payload.
+    def extend_payload(payload = nil)
+      return @payload if payload.nil?
+
+      @payload.merge!(payload)
     end
   end
 end
