@@ -20,3 +20,7 @@ gem 'rubocop', '~> 1.80'
 gem 'faraday-typhoeus', '~> 1.1'
 
 gem "async-http-faraday", "~> 0.22.1"
+
+gem "rspec", "~> 3.13"
+
+gem "webmock-rspec-helper", "~> 0.0.3"
