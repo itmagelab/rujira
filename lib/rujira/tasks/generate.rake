@@ -14,6 +14,13 @@ module Rujira
         generate
       end
 
+      def methods_with_params(klass)
+        klass.instance_methods(false).to_h do |m|
+          um = klass.instance_method(m)
+          [m, um.parameters]
+        end
+      end
+
       def client
         url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
         @client ||= Rujira::Client.new(url, debug: false)
@@ -158,6 +165,13 @@ module Rujira
 
               result = client.Issue.attachments options[:issue_id], @options[:file]
               puts JSON.pretty_generate(result)
+            end
+
+            desc 'TEST'
+            task :ttt do
+              Rujira::Api.constants.map { |c| Rujira::Api.const_get(c) }.select { |c| c.is_a?(Class) }.each do |c|
+                pp methods_with_params(c)
+              end
             end
           end
         end
