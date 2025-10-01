@@ -53,6 +53,18 @@ module Rujira
               result = client.Project.list
               puts JSON.pretty_generate(result)
             end
+
+            desc 'Create project'
+            task :create do |t|
+              options = fetch_options(%w[KEY NAME TYPE LEAD], t.name)
+              result = client.Project.create do
+                payload key: options[:key],
+                        name: options[:name],
+                        projectTypeKey: options[:type],
+                        lead: options[:lead]
+              end
+              puts JSON.pretty_generate(result)
+            end
           end
 
           namespace :dashboard do
@@ -110,12 +122,12 @@ module Rujira
           namespace :issue do
             desc 'Create a issue'
             task :create do |t|
-              options = fetch_options(%w[PROJECT SUMMARY DESCRIPTION ISSUETYPE], t.name)
+              options = fetch_options(%w[PROJECT_KEY SUMMARY DESCRIPTION ISSUETYPE], t.name)
               abort 'ISSUETYPE must start with a capital letter' unless options[:issuetype].match?(/\A[A-Z]/)
 
               result = client.Issue.create do
                 payload fields: {
-                  project: { key: options[:project] },
+                  project: { key: options[:project_key] },
                   summary: options[:summary],
                   issuetype: { name: options[:issuetype] },
                   description: options[:description]
