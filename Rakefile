@@ -29,5 +29,5 @@ task :cleanup do
   url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
   client = Rujira::Client.new(url, dispatchable: false)
   projects = client.Project.list
-  projects.map
+  projects.map(&:delete)
 end

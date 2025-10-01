@@ -15,7 +15,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     %w[true 1 yes].include?(ENV[var]&.downcase)
   end
 
-  def test_issue_flow # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+  def test_dispatch_flow_usage # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     return unless env_var? 'RUJIRA_TEST'
 
     require 'date'
@@ -121,7 +121,6 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
         params deleteSubtasks: true
       end
     end
-    client.Project.delete project.to_s
 
     client.Dashboard.list
     client.Dashboard.get 10_000
@@ -148,9 +147,10 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
               editable: false
     end
     client.Filter.favourite
+    client.Project.delete project.to_s
   end
 
-  def test_random # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
+  def test_random_for_obj # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     return unless env_var? 'RUJIRA_TEST'
 
     url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
@@ -159,7 +159,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     project = random_name
     name = client.Myself.get.name
 
-    client.Project.create do
+    project = client.Project.create do
       payload key: project.to_s,
               name: project.to_s,
               projectTypeKey: 'software',
@@ -185,7 +185,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
         payload({ fields: {
                   summary: summary,
                   issuetype: { name: issue_type },
-                  project: { key: project.to_s }
+                  project: { key: project.key }
 
                 } })
       end
@@ -199,10 +199,10 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
 
     issues.map(&:delete)
 
-    client.Project.delete project.to_s
+    project.delete
   end
 
-  def test_commit # rubocop:disable Metrics/MethodLength
+  def test_commit_style_usage # rubocop:disable Metrics/MethodLength
     return unless env_var? 'RUJIRA_TEST'
 
     project = random_name
@@ -211,12 +211,13 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
 
     name = client.Myself.get.commit['name']
 
-    issue = client.Project.create do
+    project = client.Project.create do
       payload key: project.to_s,
               name: project.to_s,
               projectTypeKey: 'software',
               lead: name
     end
-    issue.commit
+    project = project.commit
+    client.Project.delete(project['key']).commit
   end
 end

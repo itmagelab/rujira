@@ -6,6 +6,8 @@ module Rujira
     # Provides access to project attributes and operations such as deletion.
     #
     class Project < Common
+      attr_reader :url, :id, :key
+
       # Initializes a Project resource with data from the Jira API response.
       #
       # @param [Object] client The HTTP client used for API communication.
