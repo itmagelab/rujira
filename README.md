@@ -1,5 +1,7 @@
 # RUJIRA
 
+[![Ruby](https://github.com/itmagelab/rujira/actions/workflows/ruby.yml/badge.svg)](https://github.com/itmagelab/rujira/actions/workflows/ruby.yml)
+
 **RUJIRA** is a Ruby gem for easy interaction with the Jira API. It provides a simple and flexible interface to work with Jira resources and includes Rake tasks for convenient command-line operations.
 
 ---

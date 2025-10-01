@@ -8,7 +8,7 @@ require 'json'
 module Rujira
   module Tasks
     # TODO
-    class Jira
+    class Jira # rubocop:disable Metrics/ClassLength
       include Rake::DSL if defined?(Rake::DSL)
       def initialize
         generate
@@ -34,7 +34,7 @@ module Rujira
       end
 
       def generate # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-        namespace :jira do
+        namespace :jira do # rubocop:disable Metrics/BlockLength
           desc 'Test connection by getting username'
           task :whoami do
             result = client.Myself.get
@@ -119,7 +119,7 @@ module Rujira
             end
           end
 
-          namespace :issue do
+          namespace :issue do # rubocop:disable Metrics/BlockLength
             desc 'Create a issue'
             task :create do |t|
               options = fetch_options(%w[PROJECT_KEY SUMMARY DESCRIPTION ISSUETYPE], t.name)
