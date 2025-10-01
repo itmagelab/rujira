@@ -53,8 +53,13 @@ module Rujira
       def to_obj
         response = commit
 
+        return response.map { |el| process(el) } if response.is_a?(Array) && response.all? { |el| el.is_a?(Hash) }
         return response unless response.is_a?(Hash)
 
+        process response
+      end
+
+      def process(response)
         response.merge!(@metadata)
         resource_class_name = self.class.name.sub('Api', 'Resource')
         Object.const_get(resource_class_name).new(@client, **response)
