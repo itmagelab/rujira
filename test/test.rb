@@ -52,12 +52,15 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
       params updateHistory: true
     end
 
-    client.Board.list
-    client.Board.get 1
+    boards = client.Board.list
+    board = boards['values'].find { |b| b['type'] == 'scrum' }
+    board_id = board['id']
+
+    client.Board.get board_id
 
     sprint = client.Sprint.create do
       payload name: 'Bot Sprint',
-              originBoardId: 1,
+              originBoardId: board_id,
               goal: 'Finish core features for release 1.0',
               autoStartStop: false
     end
@@ -66,7 +69,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     client.Sprint.replace sprint['id'] do
       payload state: 'future',
               name: 'Bot Sprint',
-              originBoardId: 1,
+              originBoardId: board_id,
               goal: 'Finish core features for release 1.0',
               startDate: now,
               endDate: before,
@@ -109,7 +112,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
               }
     end
 
-    sprints = client.Board.sprint 1
+    sprints = client.Board.sprint board_id
     sprints['values'].each do |sprint|
       client.Sprint.delete sprint['id']
     end
@@ -153,10 +156,20 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
     client = Rujira::Client.new(url, dispatchable: false)
 
+    project = random_name
+    name = client.Myself.get.name
+
+    client.Project.create do
+      payload key: project.to_s,
+              name: project.to_s,
+              projectTypeKey: 'software',
+              lead: name
+    end
+
     require 'securerandom'
 
     issue_summaries = Array.new(100) { "Task #{SecureRandom.hex(3)}" }
-    issue_types = %w[Bug Story Task]
+    issue_types = %w[Task]
 
     commands = [
       ->(issue_id) { client.Issue.get(issue_id) },
@@ -172,7 +185,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
         payload({ fields: {
                   summary: summary,
                   issuetype: { name: issue_type },
-                  project: { key: 'TEST' }
+                  project: { key: project.to_s }
 
                 } })
       end
@@ -185,6 +198,8 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     end
 
     issues.map(&:delete)
+
+    client.Project.delete project.to_s
   end
 
   def test_commit # rubocop:disable Metrics/MethodLength
