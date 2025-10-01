@@ -1,3 +1,16 @@
+## [0.7.0] - 2025-10-01
+
+### 🚀 Features
+
+- Added project as obj
+
+### 🚜 Refactor
+
+- Tuning for tests
+
+### 📚 Documentation
+
+- Updated commentaries for resources
 ## [0.6.0] - 2025-09-17
 
 ### 🚀 Features
@@ -73,8 +86,3 @@
 - Cleanup data method
 - Abort if id is nil #2
 - Abort if id is nil
-
-### 📚 Documentation
-
-- Use ENV for URL getting
-- Added some docs
