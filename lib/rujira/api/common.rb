@@ -46,10 +46,18 @@ module Rujira
         to_obj
       end
 
+      # Executes the configured request via the client's dispatch mechanism.
+      #
+      # @return [Object] The raw API response from the dispatched request.
       def commit
         @client.dispatch(@request)
       end
 
+      # Converts the API response into structured Ruby objects.
+      # If the response is an array of hashes, maps each element through `process`.
+      # If it's a single hash, processes it directly. Otherwise, returns as-is.
+      #
+      # @return [Object] Processed response as one or more resource objects, or original response.
       def to_obj
         response = commit
 
@@ -59,12 +67,23 @@ module Rujira
         process response
       end
 
+      # Processes a single response hash by merging metadata and instantiating
+      # the corresponding Resource object based on the current class name.
+      #
+      # @param [Hash] response The API response hash to process.
+      # @return [Object] An instance of the corresponding Resource class.
+      # @raise [NameError] If the corresponding Resource class does not exist.
       def process(response)
         response.merge!(@metadata)
         resource_class_name = self.class.name.sub('Api', 'Resource')
         Object.const_get(resource_class_name).new(@client, **response)
       end
 
+      # Sets ownership context for the resource by storing a parent ID or key
+      # in metadata, which may be used during object instantiation.
+      #
+      # @param [String, Integer] id_or_key The ID or key of the parent resource.
+      # @return [Hash] The updated metadata hash with the parent set.
       def owned_by(id_or_key)
         @metadata.merge!({ parent: id_or_key })
       end
