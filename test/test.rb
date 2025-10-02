@@ -147,6 +147,12 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
               editable: false
     end
     client.Filter.favourite
+    client.Board.backlog 2
+    client.Board.configuration 2
+    client.Board.project 2
+    client.Board.settings 2
+    client.Board.properties 2
+
     client.Project.delete project.to_s
   end
 
@@ -202,7 +208,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     project.delete
   end
 
-  def test_commit_style_usage # rubocop:disable Metrics/MethodLength
+  def test_commit_style_usage # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
     return unless env_var? 'RUJIRA_TEST'
 
     project = random_name
