@@ -8,7 +8,7 @@ module Rujira
     # API reference:
     # https://docs.atlassian.com/jira-software/REST/9.17.0/#agile/1.0/board
     #
-    class Board < Common
+    class Board < Common # rubocop:disable Metrics/ClassLength
       # Initializes a new Board API client.
       #
       # @param [Object] client The HTTP client instance used to perform requests.
@@ -58,6 +58,145 @@ module Rujira
       def list(&block)
         builder do
           path 'board'
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def create(&block)
+        builder do
+          method :post
+          path 'board'
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def delete(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          method :delete
+          path "board/#{id}"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def backlog(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/backlog"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def configuration(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/configuration"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def issue(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/issue"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def epic(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/epic"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def epic_issues(id, epic_id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/epic/#{epic_id}/issue"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def epic_none_issues(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/epic/none/issue"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def project(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/project"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def settings(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/settings/refined-velocity"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def set_settings(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          method :put
+          path "board/#{id}/settings/refined-velocity"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def properties(id, &block)
+        abort 'Board ID is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/properties"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def set_properties(id, property_key, &block)
+        abort 'board id is required' if id.to_s.strip.empty?
+        builder do
+          method :put
+          path "board/#{id}/properties/#{property_key}"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def get_properties(id, property_key, &block)
+        abort 'board id is required' if id.to_s.strip.empty?
+        builder do
+          path "board/#{id}/properties/#{property_key}"
+          instance_eval(&block) if block_given?
+        end
+        call
+      end
+
+      def delete_properties(id, property_key, &block)
+        abort 'board id is required' if id.to_s.strip.empty?
+        builder do
+          method :delete
+          path "board/#{id}/properties/#{property_key}"
           instance_eval(&block) if block_given?
         end
         call

@@ -4,6 +4,8 @@
 
 **RUJIRA** is a Ruby gem for easy interaction with the Jira API. It provides a simple and flexible interface to work with Jira resources and includes Rake tasks for convenient command-line operations.
 
+This project was created as an alternative to <https://github.com/sumoheavy/jira-ruby>, offering a more user-friendly and intuitive interface. It lets you work with requests as objects or hash arrays, provides flexibility in choosing a connection adapter, and makes the codebase easier to maintain.
+
 ---
 
 ## Features
@@ -18,7 +20,7 @@
 Add to your `Gemfile`:
 
 ```ruby
-gem 'rujira', '~> 0.6.0'
+gem 'rujira', '~> 0.7.0'
 ```
 
 Or install directly:
