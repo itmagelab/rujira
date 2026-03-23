@@ -25,6 +25,18 @@ module Rujira
         @name = args['name']
         @email = args['emailAddress']
       end
+
+      def create_software_project(**args)
+        key = args[:key]
+        project_name = args[:name]
+        name = @name
+        @client.Project.create do
+          payload key: key,
+                  name: project_name,
+                  projectTypeKey: 'software',
+                  lead: name
+        end
+      end
     end
   end
 end

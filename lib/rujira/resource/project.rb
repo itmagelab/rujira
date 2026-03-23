@@ -30,6 +30,19 @@ module Rujira
       def delete
         @client.Project.delete(@id)
       end
+
+      def add_task(**args)
+        key = @key
+        @client.Issue.create do
+          payload fields: {
+            project: { key: key },
+            summary: args[:summary],
+            description: args[:description],
+            issuetype: { name: 'Task' }
+          }
+          params updateHistory: true
+        end
+      end
     end
   end
 end
