@@ -2,7 +2,7 @@
 
 module Rujira
   module Resource
-    class Common
+    class Common # rubocop:disable Style/Documentation
       def initialize(client, **_args)
         @client = client
       end

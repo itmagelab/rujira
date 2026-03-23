@@ -61,7 +61,7 @@ module Rujira
       def to_obj
         response = commit
 
-        return response.map { |el| process(el) } if response.is_a?(Array) && response.all? { |el| el.is_a?(Hash) }
+        return response.map { |el| process(el) } if response.is_a?(Array) && response.all?(Hash)
         return response unless response.is_a?(Hash)
 
         process response
