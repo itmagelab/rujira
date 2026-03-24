@@ -47,6 +47,10 @@ module Rujira
         @client.logger.debug "Deleting issue #{@key}"
         @client.Issue.delete(@id)
       end
+
+      def attach_file(path)
+        @client.Issue.attachments @key, path
+      end
     end
   end
 end
