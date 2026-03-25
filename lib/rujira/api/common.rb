@@ -41,7 +41,7 @@ module Rujira
       def call
         @client.logger.debug "Call the method: #{caller_locations(1, 1)[0].label}"
         return @client.dispatch(@request) if @client.dispatchable
-        return self if @client.commitable
+        return self if @client.lazy
 
         to_obj
       end
@@ -52,6 +52,7 @@ module Rujira
       def commit
         @client.dispatch(@request)
       end
+      alias execute commit
 
       # Converts the API response into structured Ruby objects.
       # If the response is an array of hashes, maps each element through `process`.
@@ -59,7 +60,7 @@ module Rujira
       #
       # @return [Object] Processed response as one or more resource objects, or original response.
       def to_obj
-        response = commit
+        response = execute
 
         return response.map { |el| process(el) } if response.is_a?(Array) && response.all?(Hash)
         return response unless response.is_a?(Hash)

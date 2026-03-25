@@ -209,7 +209,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
 
     project = random_name
     url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
-    client = Rujira::Client.new(url, debug: true, dispatchable: false, commitable: true)
+    client = Rujira::Client.new(url, debug: true, dispatchable: false, lazy: true)
 
     name = client.Myself.get.commit['name']
 
@@ -219,8 +219,8 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
               projectTypeKey: 'software',
               lead: name
     end
-    project = project.commit
-    client.Project.delete(project['key']).commit
+    project = project.execute
+    client.Project.delete(project['key']).execute
   end
 
   def test_use_as_obj_for_all # rubocop:disable Metrics/MethodLength
