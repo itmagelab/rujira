@@ -1,11 +1,19 @@
-## [0.7.0] - 2025-10-01
+## [0.7.1] - 2026-03-25
 
 ### 🚀 Features
 
+- Use patch changes log
+- Added exception raising for obj
+- Added attach file alias
+- Added api for task creation
 - Added project as obj
 
 ### 🚜 Refactor
 
+- Rename commitable to lazy
+- Linter issues
+- Added new methods for agile boards
+- Added new task
 - Tuning for tests
 
 ### 📚 Documentation
@@ -61,28 +69,3 @@
 - Split issue #3
 - Split issue #2
 - Split issue
-## [0.3.3] - 2025-09-13
-
-### 📚 Documentation
-
-- Added comments from ai #4
-- Added comments from ai #3
-- Added comments from ai #2
-- Added comments from ai
-## [0.3.2] - 2025-09-13
-
-### 🚜 Refactor
-
-- Remove configuration
-
-### 📚 Documentation
-
-- Updated inline description
-## [0.3.1] - 2025-09-13
-
-### 🚜 Refactor
-
-- Fix for headers setter
-- Cleanup data method
-- Abort if id is nil #2
-- Abort if id is nil
