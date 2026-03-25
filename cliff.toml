@@ -92,3 +92,6 @@ sort_commits = "newest"
 recurse_submodules = false
 
 limit_commits = 50
+
+[bump]
+bump_type = "patch"
