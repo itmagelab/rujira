@@ -13,7 +13,7 @@ services:
 
   db:
     image: postgres
-    mem_limit: 128mb  
+    mem_limit: 128mb
     restart: always
     shm_size: 128mb
     environment:
