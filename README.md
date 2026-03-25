@@ -60,6 +60,35 @@ task.add_comment 'Bot added a comment as obj #1'
 task.attach_file '/tmp/upload.file'
 ```
 
+Demonstrates the full lifecycle of a Jira user: creation, retrieval, update, deactivation, and deletion using the Rujira client.
+
+```ruby
+url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
+client = Rujira::Client.new(url, dispatchable: false)
+
+username = random_name
+me = client.Myself.get
+
+user = client.User.create do
+  payload({
+            name: username,
+            password: username,
+            emailAddress: "#{username}@username",
+            displayName: "#{username} created be #{me.name}",
+            applicationKeys: ['jira-core']
+          })
+end
+
+user = client.User.get user.key
+
+user.update do
+  payload emailAddress: 'root@test'
+end
+
+user.deactivate!
+user.delete
+```
+
 Alternatively, we can work with the API directly, as with a regular request dispatcher; in this form, most operations are available.
 
 ```ruby
