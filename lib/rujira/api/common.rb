@@ -76,7 +76,12 @@ module Rujira
       def process(response)
         response.merge!(@metadata)
         resource_class_name = self.class.name.sub('Api', 'Resource')
-        Object.const_get(resource_class_name).new(@client, **response)
+        begin
+          Object.const_get(resource_class_name).new(@client, **response)
+        rescue NameError
+          raise "Resource class '#{resource_class_name}' not found. " \
+                'Please ensure the class exists or use dispatchable mode.'
+        end
       end
 
       # Sets ownership context for the resource by storing a parent ID or key
