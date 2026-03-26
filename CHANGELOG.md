@@ -1,3 +1,8 @@
+## [0.7.2] - 2026-03-26
+
+### 🚀 Features
+
+- Added user creation
 ## [0.7.1] - 2026-03-25
 
 ### 🚀 Features
@@ -55,12 +60,6 @@
 - Extend Avatar, Configuration, CustomFields, Field
 - Extend Attachments
 - Added ApplicationRole
-- Added ApplicationProperties
-- Added permissions api
-
-### 🐛 Bug Fixes
-
-- Fix for tasks
 
 ### 🚜 Refactor
 
