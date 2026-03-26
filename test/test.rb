@@ -250,13 +250,11 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     me = client.Myself.get
 
     user = client.User.create do
-      payload({
-                name: username,
-                password: username,
-                emailAddress: "#{username}@username",
-                displayName: "#{username} created be #{me.name}",
-                applicationKeys: ['jira-core']
-              })
+      body name: username,
+           password: username,
+           emailAddress: "#{username}@username",
+           displayName: "#{username} created be #{me.name}",
+           applicationKeys: ['jira-core']
     end
 
     user = client.User.get user.key
