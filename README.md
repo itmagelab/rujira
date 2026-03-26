@@ -251,7 +251,9 @@ rake jira:dashboard:list          # Get list of dashboards
 rake jira:issue:attach            # Example usage attaching in issue
 rake jira:issue:create            # Create a issue
 rake jira:issue:delete            # Delete issue
+rake jira:issue:generate_link     # Generate a Jira link for creating a new issue
 rake jira:issue:search            # Search issue by fields
+rake jira:project:create          # Create project
 rake jira:project:list            # Get list of projects
 rake jira:server_info             # Test connection by getting server information
 rake jira:sprint:properties:list  # Get sprint properties
@@ -263,6 +265,34 @@ rake jira:issue:create PROJECT=ITMG SUMMARY='The short summary information' \
       DESCRIPTION='The base description of task' ISSUETYPE='Task'
 rake jira:issue:search JQL='project = ITMG'
 rake jira:issue:attach FILE='upload.png' ISSUE_ID='ITMG-1'
+```
+
+### Generate a Jira Issue Creation Link
+
+The `generate_link` task interactively collects input (project, summary, description, and issue type) and generates a ready-to-use Jira URL with pre-filled fields for creating a new issue.
+
+It opens your default editor for entering the description and then outputs a link that can be opened in a browser.
+
+#### Usage
+
+```
+rake jira::issue::generate_link
+```
+
+#### Example session
+
+```
+Project key (e.g., ABC): TEST
+Summary (short description): Fix login bug
+Opening editor for description...
+Issue type (Bug/Task/Story): Bug
+```
+
+#### Output
+
+```
+Generated issue creation link:
+https://your-jira-instance/secure/CreateIssueDetails!init.jspa?pid=10000&summary=Fix+login+bug&description=Steps+to+reproduce...&reporter=john.doe&issuetype=1
 ```
 
 ## Development runs
