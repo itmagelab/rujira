@@ -48,7 +48,7 @@ By default, we can use an object-oriented approach, but this method does not cov
 
 ```ruby
 url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
-client = Rujira::Client.new(url, dispatchable: false)
+client = Rujira::Client.new(url, wrap_responses: true)
 
 project = random_name
 me = client.Myself.get
@@ -64,7 +64,7 @@ Demonstrates the full lifecycle of a Jira user: creation, retrieval, update, dea
 
 ```ruby
 url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
-client = Rujira::Client.new(url, dispatchable: false)
+client = Rujira::Client.new(url, wrap_responses: true)
 
 username = random_name
 me = client.Myself.get
@@ -93,7 +93,7 @@ This function demonstrates that the library supports executing requests in paral
 
 ```ruby
 url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
-client = Rujira::Client.new(url, debug: true, dispatchable: false, lazy: true)
+client = Rujira::Client.new(url, debug: true, wrap_responses: false, lazy: true)
 
 me = client.Myself.get.execute
 

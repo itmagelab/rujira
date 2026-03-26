@@ -37,9 +37,9 @@ module Rujira
         @client ||= Rujira::Client.new(url, debug: false)
       end
 
-      def client_dispatcher
+      def client_wrapped
         url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
-        @client_dispatcher ||= Rujira::Client.new(url, debug: false, dispatchable: false)
+        @client_wrapped ||= Rujira::Client.new(url, debug: false, wrap_responses: true)
       end
 
       def fetch_options(params, name)
@@ -163,13 +163,13 @@ module Rujira
             task :generate_link do
               require 'cgi'
 
-              me = client_dispatcher.Myself.get
+              me = client_wrapped.Myself.get
               server_info = client.ServerInfo.get
               base_url = server_info['baseUrl']
 
               print 'Project key (e.g., ABC): '
               project_key = $stdin.gets.chomp
-              project = client_dispatcher.Project.get(project_key)
+              project = client_wrapped.Project.get(project_key)
 
               print 'Summary (short description): '
               summary = $stdin.gets.chomp
@@ -179,7 +179,7 @@ module Rujira
 
               print 'Issue type (Task/Bug/Story): '
               issue_type_name = $stdin.gets.chomp
-              issue_type = client_dispatcher.IssueType.get_by_name issue_type_name
+              issue_type = client_wrapped.IssueType.get_by_name issue_type_name
 
               encoded_summary = CGI.escape(summary)
               encoded_description = CGI.escape(description)

@@ -40,7 +40,7 @@ module Rujira
       # @return [Object] The API response after dispatching the request.
       def call
         @client.logger.debug "Call the method: #{caller_locations(1, 1)[0].label}"
-        return @client.dispatch(@request) if @client.dispatchable
+        return @client.dispatch(@request) unless @client.wrap_responses
         return self if @client.lazy
 
         to_obj
@@ -81,7 +81,7 @@ module Rujira
           Object.const_get(resource_class_name).new(@client, **response)
         rescue NameError
           raise "Resource class '#{resource_class_name}' not found. " \
-                'Please ensure the class exists or use dispatchable mode.'
+                'Please ensure the class exists or use wrap_responses mode.'
         end
       end
 
