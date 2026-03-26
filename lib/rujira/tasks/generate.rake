@@ -14,6 +14,24 @@ module Rujira
         generate
       end
 
+      def open_editor(initial_text = '')
+        require 'tempfile'
+
+        editor = ENV['EDITOR'] || 'vi'
+
+        file = Tempfile.new(['jira_description', '.txt'])
+        file.write(initial_text)
+        file.flush
+        file.close
+
+        system("#{editor} #{file.path}")
+
+        content = File.read(file.path)
+        file.unlink
+
+        content
+      end
+
       def client
         url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
         @client ||= Rujira::Client.new(url, debug: false)
@@ -145,6 +163,7 @@ module Rujira
             task :generate_link do
               require 'cgi'
 
+              me = client_dispatcher.Myself.get
               server_info = client.ServerInfo.get
               base_url = server_info['baseUrl']
 
@@ -155,8 +174,8 @@ module Rujira
               print 'Summary (short description): '
               summary = $stdin.gets.chomp
 
-              print 'Description: '
-              description = $stdin.gets.chomp
+              puts 'Opening editor for description...'
+              description = open_editor
 
               print 'Issue type (Task/Bug/Story): '
               issue_type_name = $stdin.gets.chomp
@@ -169,6 +188,7 @@ module Rujira
                          "?pid=#{project.id}" \
                          "&summary=#{encoded_summary}" \
                          "&description=#{encoded_description}" \
+                         "&reporter=#{me.name}" \
                          "&issuetype=#{issue_type.id}"
 
               puts "\nGenerated issue creation link:"
