@@ -177,9 +177,13 @@ module Rujira
               puts 'Opening editor for description...'
               description = open_editor
 
-              print 'Issue type (Task/Bug/Story): '
+              issue_types = client_wrapped.IssueType.get
+              names = issue_types.map(&:name).join('/')
+              print "Issue type (#{names}): "
               issue_type_name = $stdin.gets.chomp
-              issue_type = client_wrapped.IssueType.get_by_name issue_type_name
+              issue_type = issue_types.find do |i|
+                i.name.downcase == issue_type_name.downcase
+              end
 
               encoded_summary = CGI.escape(summary)
               encoded_description = CGI.escape(description)
