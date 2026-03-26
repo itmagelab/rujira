@@ -239,4 +239,33 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     task.add_comment 'Bot added a comment as obj #1'
     task.attach_file '/tmp/upload.file'
   end
+
+  def test_create_user # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
+    return unless env_var? 'RUJIRA_TEST'
+
+    url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
+    client = Rujira::Client.new(url, dispatchable: false)
+
+    username = random_name
+    me = client.Myself.get
+
+    user = client.User.create do
+      payload({
+                name: username,
+                password: username,
+                emailAddress: "#{username}@username",
+                displayName: "#{username} created be #{me.name}",
+                applicationKeys: ['jira-core']
+              })
+    end
+
+    user = client.User.get user.key
+
+    user.update do
+      payload emailAddress: 'root@test'
+    end
+
+    user.deactivate!
+    user.delete
+  end
 end

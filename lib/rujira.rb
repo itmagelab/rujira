@@ -34,6 +34,8 @@ require_relative 'rujira/api/configuration'
 require_relative 'rujira/api/custom_fields'
 require_relative 'rujira/api/field'
 require_relative 'rujira/api/filter'
+require_relative 'rujira/api/user'
+require_relative 'rujira/resource/user'
 
 # Main Rujira module.
 # Serves as the namespace for the Jira SDK.
