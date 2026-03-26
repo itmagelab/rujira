@@ -19,6 +19,11 @@ module Rujira
         @client ||= Rujira::Client.new(url, debug: false)
       end
 
+      def client_dispatcher
+        url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
+        @client_dispatcher ||= Rujira::Client.new(url, debug: false, dispatchable: false)
+      end
+
       def fetch_options(params, name)
         help = params.map { |k| "#{k}=<VALUE>" }.join(' ')
         options = params.to_h do |k|
@@ -134,6 +139,40 @@ module Rujira
                 }
               end
               puts JSON.pretty_generate(result)
+            end
+
+            desc 'Generate a Jira link for creating a new issue'
+            task :generate_link do
+              require 'cgi'
+
+              server_info = client.ServerInfo.get
+              base_url = server_info['baseUrl']
+
+              print 'Project key (e.g., ABC): '
+              project_key = $stdin.gets.chomp
+              project = client_dispatcher.Project.get(project_key)
+
+              print 'Summary (short description): '
+              summary = $stdin.gets.chomp
+
+              print 'Description: '
+              description = $stdin.gets.chomp
+
+              print 'Issue type (Task/Bug/Story): '
+              issue_type_name = $stdin.gets.chomp
+              issue_type = client_dispatcher.IssueType.get_by_name issue_type_name
+
+              encoded_summary = CGI.escape(summary)
+              encoded_description = CGI.escape(description)
+
+              jira_url = "#{base_url}/secure/CreateIssueDetails!init.jspa" \
+                         "?pid=#{project.id}" \
+                         "&summary=#{encoded_summary}" \
+                         "&description=#{encoded_description}" \
+                         "&issuetype=#{issue_type.id}"
+
+              puts "\nGenerated issue creation link:"
+              puts jira_url
             end
 
             desc 'Search issue by fields'
