@@ -8,56 +8,18 @@ require 'json'
 module Rujira
   module Tasks
     # TODO
-    class Jira # rubocop:disable Metrics/ClassLength
+    class Jira
       include Rake::DSL if defined?(Rake::DSL)
+      require_relative 'utils'
+
       def initialize
         generate
       end
 
-      def open_editor(initial_text = '')
-        require 'tempfile'
-
-        editor = ENV['EDITOR'] || 'vi'
-
-        file = Tempfile.new(['jira_description', '.txt'])
-        file.write(initial_text)
-        file.flush
-        file.close
-
-        system("#{editor} #{file.path}")
-
-        content = File.read(file.path)
-        file.unlink
-
-        content
-      end
-
-      def client
-        url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
-        @client ||= Rujira::Client.new(url, debug: false)
-      end
-
-      def client_wrapped
-        url = ENV.fetch('RUJIRA_URL', 'http://localhost:8080')
-        @client_wrapped ||= Rujira::Client.new(url, debug: false, wrap_responses: true)
-      end
-
-      def fetch_options(params, name)
-        help = params.map { |k| "#{k}=<VALUE>" }.join(' ')
-        options = params.to_h do |k|
-          [k.downcase.to_sym, ENV.fetch(k, nil)]
-        end
-        missing = options.select { |_, v| v.nil? }.keys
-        unless missing.empty?
-          abort "❌ ERROR: The following required environment variables are missing: #{missing.join(', ').upcase}\n" \
-                "✅ USAGE: rake #{name} #{help}"
-        end
-
-        options
-      end
-
       def generate # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
         namespace :jira do # rubocop:disable Metrics/BlockLength
+          require_relative 'issue'
+
           desc 'Test connection by getting username'
           task :whoami do
             result = client.Myself.get
@@ -139,88 +101,6 @@ module Rujira
                 result = client.Sprint.properties options[:board_id]
                 puts JSON.pretty_generate(result)
               end
-            end
-          end
-
-          namespace :issue do # rubocop:disable Metrics/BlockLength
-            desc 'Create a issue'
-            task :create do |t|
-              options = fetch_options(%w[PROJECT_KEY SUMMARY DESCRIPTION ISSUETYPE], t.name)
-              abort 'ISSUETYPE must start with a capital letter' unless options[:issuetype].match?(/\A[A-Z]/)
-
-              result = client.Issue.create do
-                payload fields: {
-                  project: { key: options[:project_key] },
-                  summary: options[:summary],
-                  issuetype: { name: options[:issuetype] },
-                  description: options[:description]
-                }
-              end
-              puts JSON.pretty_generate(result)
-            end
-
-            desc 'Generate a Jira link for creating a new issue'
-            task :generate_link do
-              require 'cgi'
-
-              me = client_wrapped.Myself.get
-              server_info = client.ServerInfo.get
-              base_url = server_info['baseUrl']
-
-              print 'Project key (e.g., ABC): '
-              project_key = $stdin.gets.chomp
-              project = client_wrapped.Project.get(project_key)
-
-              print 'Summary (short description): '
-              summary = $stdin.gets.chomp
-
-              puts 'Opening editor for description...'
-              description = open_editor
-
-              issue_types = client_wrapped.IssueType.get
-              names = issue_types.map(&:name).join('/')
-              print "Issue type (#{names}): "
-              issue_type_name = $stdin.gets.chomp
-              issue_type = issue_types.find do |i|
-                i.name.downcase == issue_type_name.downcase
-              end
-
-              encoded_summary = CGI.escape(summary)
-              encoded_description = CGI.escape(description)
-
-              jira_url = "#{base_url}/secure/CreateIssueDetails!init.jspa" \
-                         "?pid=#{project.id}" \
-                         "&summary=#{encoded_summary}" \
-                         "&description=#{encoded_description}" \
-                         "&reporter=#{me.name}" \
-                         "&issuetype=#{issue_type.id}"
-
-              puts "\nGenerated issue creation link:"
-              puts jira_url
-            end
-
-            desc 'Search issue by fields'
-            task :search do |t|
-              options = fetch_options(%w[JQL], t.name)
-              result = client.Search.get do
-                data jql: options[:jql]
-              end
-              result['issues'].each { |i| puts JSON.pretty_generate(i) }
-            end
-
-            desc 'Delete issue'
-            task :delete do |t|
-              options = fetch_options(%w[ISSUE_ID], t.name)
-
-              client.Issue.del options[:issue_id]
-            end
-
-            desc 'Example usage attaching in issue'
-            task :attach do |t|
-              options = fetch_options(%w[FILE ISSUE_ID], t.name)
-
-              result = client.Issue.attachments options[:issue_id], @options[:file]
-              puts JSON.pretty_generate(result)
             end
           end
         end

@@ -137,6 +137,7 @@ module Rujira
       @payload = payload
     end
     alias body payload
+    alias data payload
 
     # Extends the current payload by merging the given hash into it.
     #
