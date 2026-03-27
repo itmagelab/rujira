@@ -1,3 +1,22 @@
+## [0.7.3] - 2026-03-27
+
+### 🚀 Features
+
+- Added priority API
+- Added issue_type API and link generator
+
+### 🚜 Refactor
+
+- Create utils libs
+- Added list of issue types
+- Rename dispatchable to wrap_responses
+- Use editor for enter description
+- Added alias for payload
+
+### 📚 Documentation
+
+- Added short description for link generator
+- Added example test for parallel usage
 ## [0.7.2] - 2026-03-26
 
 ### 🚀 Features
@@ -51,20 +70,3 @@
 
 - Dispatchable for client
 ## [0.4.0] - 2025-09-13
-
-### 🚀 Features
-
-- Extend Issue #2
-- Extend Issue
-- Added Filter
-- Extend Avatar, Configuration, CustomFields, Field
-- Extend Attachments
-- Added ApplicationRole
-
-### 🚜 Refactor
-
-- Dont raising for faraday
-- Cleanup attachments
-- Split issue #3
-- Split issue #2
-- Split issue
