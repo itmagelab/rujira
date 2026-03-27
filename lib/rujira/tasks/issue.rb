@@ -36,7 +36,11 @@ namespace :issue do # rubocop:disable Metrics/BlockLength
     description = open_editor
 
     issue_types = client_wrapped.IssueType.get
-    names = issue_types.map(&:name).join('/')
+    names = if issue_types.size > 5
+              "#{issue_types.first(5).map(&:name).join('/')}/..."
+            else
+              issue_types.map(&:name).join('/')
+            end
     print "Issue type (#{names}): "
     issue_type_name = $stdin.gets.chomp
     issue_type = issue_types.find do |i|
