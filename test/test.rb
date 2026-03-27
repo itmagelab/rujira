@@ -25,8 +25,6 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     before = now + 30
 
     project = random_name
-    url = ENV.fetch('RUJIRA_TEST_URL', 'http://localhost:8080')
-    client = Rujira::Client.new(url, debug: true)
 
     client.ServerInfo.get
     name = client.Myself.get['name']
@@ -155,8 +153,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
   def test_random_for_obj # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
     return unless env_var? 'RUJIRA_TEST'
 
-    url = ENV.fetch('RUJIRA_TEST_URL', 'http://localhost:8080')
-    client = Rujira::Client.new(url, wrap_responses: true)
+    client = client_wrapped
 
     project = random_name
     name = client.Myself.get.name
@@ -257,8 +254,7 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     return unless env_var? 'RUJIRA_TEST'
 
     File.new('/tmp/upload.file', 'w')
-    url = ENV.fetch('RUJIRA_TEST_URL', 'http://localhost:8080')
-    client = Rujira::Client.new(url, wrap_responses: true)
+    client = client_wrapped
 
     project = random_name
     me = client.Myself.get
@@ -270,11 +266,10 @@ class UnitTest < Test::Unit::TestCase # rubocop:disable Metrics/ClassLength
     task.attach_file '/tmp/upload.file'
   end
 
-  def test_create_user # rubocop:disable Metrics/MethodLength,Metrics/AbcSize
+  def test_create_user # rubocop:disable Metrics/MethodLength
     return unless env_var? 'RUJIRA_TEST'
 
-    url = ENV.fetch('RUJIRA_TEST_URL', 'http://localhost:8080')
-    client = Rujira::Client.new(url, wrap_responses: true)
+    client = client_wrapped
 
     username = random_name
     me = client.Myself.get
