@@ -42,6 +42,28 @@ RUJIRA_DEBUG=true
 LOG_LEVEL=error
 ```
 
+### Authentication
+
+The bearer token is taken from `RUJIRA_TOKEN` or can be passed to the client directly:
+
+```ruby
+client = Rujira::Client.new(url, token: ENV.fetch('RUJIRA_TOKEN'))
+```
+
+Credentials can be replaced or disabled for a single request:
+
+```ruby
+client.Project.list { basic 'user', 'password' }
+client.Project.list { disable_auth }
+```
+
+### Errors
+
+All errors of the library inherit from `Rujira::Error`:
+
+* `Rujira::ValidationError` - required arguments are missing. It replaces the former `abort` call that terminated the host process.
+* `Rujira::HTTPError` - Jira answered with an error status. It carries `status` and `body`.
+
 ### Example of usage
 
 By default, we can use an object-oriented approach, but this method does not cover all API capabilities.

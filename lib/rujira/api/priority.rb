@@ -17,7 +17,7 @@ module Rujira
 
       def get_by_name(name, &block)
         priorities = get(&block)
-        priorities.find { |type| type.name == name }
+        priorities.find { |type| field(type, 'name') == name }
       end
     end
   end

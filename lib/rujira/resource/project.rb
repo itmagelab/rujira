@@ -31,6 +31,14 @@ module Rujira
         @client.Project.delete(@id)
       end
 
+      # Reloads the project from Jira.
+      #
+      # @return [Project] The refreshed resource.
+      #
+      def reload!
+        update_from(@client.Project.get(@key))
+      end
+
       def add_task(**args)
         key = @key
         @client.Issue.create do

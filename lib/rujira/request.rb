@@ -1,21 +1,27 @@
 # frozen_string_literal: true
 
-require 'fileutils'
-
 module Rujira
   # Represents an HTTP request configuration for Jira API calls.
   # Used internally by Rujira::Client to build requests with headers, params, payloads, and authorization.
   #
+  # A request is a short lived object: every API call creates its own instance,
+  # so parameters, headers and payloads never leak between calls.
+  #
   class Request
-    # @return [Array, nil] Authorization information, e.g., Bearer token or basic auth credentials
+    # Authorization scheme used for token based authentication.
+    BEARER = :bearer
+    # Authorization scheme used for username/password authentication.
+    BASIC = :basic
+
+    # @return [Array, nil, false] Authorization information.
+    #   * `nil` - authorization was not configured, the client default is used.
+    #   * `false` - authorization was explicitly disabled.
+    #   * `[BEARER, token]` or `[BASIC, username, password]` - explicit credentials.
     attr_reader :authorization
-    # @return [Hash] Additional options for the request (currently unused)
-    attr_reader :options
 
     # Initializes a new request object with default values.
     #
     def initialize
-      @token = ENV['RUJIRA_TOKEN'] if ENV.include?('RUJIRA_TOKEN')
       @method = :get
       @params = {}
       @headers = {}
@@ -78,7 +84,7 @@ module Rujira
 
     # Gets or sets the HTTP method for the request.
     #
-    # @param [Symbol, nil] method Optional HTTP method (:get, :post, etc.)
+    # @param [Symbol, nil] method Optional HTTP method (:get, :post, etc.).
     # @return [Symbol] The current method.
     #
     def method(method = nil)
@@ -87,31 +93,31 @@ module Rujira
       @method = method
     end
 
-    # Sets Bearer token authorization.
+    # Sets Bearer token authorization for this request only.
     #
-    # @param [String] token The token to use for authorization.
+    # @param [String, #call] token The token to use for authorization.
     # @return [void]
     #
     def bearer(token)
-      @authorization = 'Bearer', -> { token }
+      @authorization = [BEARER, token]
     end
 
-    # Sets basic authentication.
+    # Sets basic authentication for this request only.
     #
     # @param [String] username The username.
     # @param [String] password The password.
     # @return [void]
     #
     def basic(username, password)
-      @authorization = :basic, username, password
+      @authorization = [BASIC, username, password]
     end
 
-    # Disables any authentication for subsequent requests.
+    # Disables any authentication for this request only.
     #
     # @return [void]
     #
     def disable_auth
-      @authorization = nil
+      @authorization = false
     end
 
     # Gets or sets the request path (appended to rest_base_path).
@@ -142,10 +148,12 @@ module Rujira
     # Extends the current payload by merging the given hash into it.
     #
     # @param [Hash, nil] payload Optional hash to merge into the current payload.
+    # @return [Hash, nil] The updated payload.
+    #
     def extend_payload(payload = nil)
       return @payload if payload.nil?
 
-      @payload.merge!(payload)
+      @payload = (@payload || {}).merge(payload)
     end
   end
 end

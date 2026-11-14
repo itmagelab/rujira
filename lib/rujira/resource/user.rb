@@ -36,6 +36,14 @@ module Rujira
         @client.User.delete(@key)
       end
 
+      # Reloads the user from Jira.
+      #
+      # @return [User] The refreshed resource.
+      #
+      def reload!
+        update_from(@client.User.get(@key))
+      end
+
       def update(&block)
         @client.User.update(@key) do
           instance_eval(&block) if block_given?
