@@ -179,16 +179,14 @@ module Rujira
       # @yield [builder] Optional block to configure request.
       # @return [Object] API response after attachment.
       def create_attachments(id_or_key, path, &block)
-        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
-        client = @client
-        builder do
-          path "issue/#{id_or_key}/attachments"
-          method :post
-          headers 'X-Atlassian-Token': 'no-check'
-          payload file: client.file(path)
-          instance_eval(&block) if block_given?
-        end
-        call
+        required!(id_or_key, 'Issue ID or KEY is required')
+        request(
+          path: "issue/#{id_or_key}/attachments",
+          method: :post,
+          headers: { 'X-Atlassian-Token': 'no-check' },
+          payload: { file: @client.file(path) },
+          &block
+        )
       end
       alias attachments create_attachments
 

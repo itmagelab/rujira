@@ -19,9 +19,9 @@ module Rujira
       #   end
       #
       def create(id_or_key, &block)
+        required!(id_or_key, 'Issue ID or KEY is required')
         owned_by id_or_key
 
-        abort 'Issue ID or KEY is required' if id_or_key.to_s.strip.empty?
         builder do
           path "issue/#{id_or_key}/comment"
           method :post

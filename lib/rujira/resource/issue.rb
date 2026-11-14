@@ -48,6 +48,14 @@ module Rujira
         @client.Issue.delete(@id)
       end
 
+      # Reloads the issue from Jira.
+      #
+      # @return [Issue] The refreshed resource.
+      #
+      def reload!
+        update_from(@client.Issue.get(@key))
+      end
+
       def attach_file(path)
         @client.Issue.attachments @key, path
       end

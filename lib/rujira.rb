@@ -8,6 +8,7 @@ require 'faraday/multipart'
 require 'json'
 
 require_relative 'rujira/version'
+require_relative 'rujira/errors'
 require_relative 'rujira/request'
 require_relative 'rujira/client'
 require_relative 'rujira/api/common'
@@ -46,11 +47,7 @@ require_relative 'rujira/resource/priority'
 #
 # Provides utility methods and custom error handling.
 #
+# The error classes are defined in Rujira::Errors and loaded above.
+#
 module Rujira
-  # Custom error class for Rujira SDK
-  #
-  # @example
-  #   raise Rujira::Error, "Something went wrong"
-  #
-  class Error < StandardError; end
 end

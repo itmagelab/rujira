@@ -17,7 +17,7 @@ module Rujira
 
       def get_by_name(name, &block)
         issue_types = get(&block)
-        issue_types.find { |type| type.name == name }
+        issue_types.find { |type| field(type, 'name') == name }
       end
     end
   end

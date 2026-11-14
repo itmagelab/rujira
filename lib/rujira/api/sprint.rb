@@ -9,15 +9,12 @@ module Rujira
     # https://docs.atlassian.com/jira-software/REST/9.17.0/#agile/1.0/sprint
     #
     class Sprint < Common
-      # Initializes a new Sprint API client.
+      # Base REST path of the Agile API.
       #
-      # @param [Object] client The HTTP client instance used to perform requests.
+      # @return [String] The base path used by every sprint request.
       #
-      def initialize(client)
-        super
-        builder do
-          rest_base 'rest/agile/1.0'
-        end
+      def rest_base
+        'rest/agile/1.0'
       end
 
       # Creates a new sprint.

@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
+require 'base64'
+require 'fileutils'
 require 'logger'
+require 'uri'
 
 module Rujira
   # Main Jira API client.
@@ -8,42 +11,50 @@ module Rujira
   #
   # Example:
   #   client = Rujira::Client.new("https://jira.example.com")
-  #   client.issue.get("TEST-123")
+  #   client.Issue.get("TEST-123")
   #
   class Client
-    attr_reader :wrap_responses, :logger, :lazy
+    attr_reader :wrap_responses, :logger, :lazy, :token
 
     SUPPORTED_METHODS = %i[get delete head post put patch].freeze
+
+    LOG_LEVELS = {
+      'debug' => Logger::DEBUG,
+      'info' => Logger::INFO,
+      'warn' => Logger::WARN,
+      'error' => Logger::ERROR,
+      'fatal' => Logger::FATAL
+    }.freeze
 
     # Initializes a new Jira client.
     #
     # @param [String] url Base URL of the Jira instance.
     # @param [Boolean] debug Whether to enable debug logging. Can also be set via ENV['RUJIRA_DEBUG'].
+    # @param [Boolean] wrap_responses Whether API responses are wrapped into resource objects.
+    # @param [Boolean] lazy Whether API calls return the request object instead of a response.
+    # @param [String] log_level Minimal log level, can also be set via ENV['LOG_LEVEL'].
+    # @param [String, nil] token Bearer token, by default ENV['RUJIRA_TOKEN'] is used.
+    # @param [Logger, nil] logger Custom logger, by default a logger writing to stdout is used.
     #
     # @example Initialize client
     #   client = Rujira::Client.new("https://jira.example.com", debug: true)
     #
-    def initialize(url, debug: false, wrap_responses: false, lazy: false, log_level: 'error') # rubocop:disable Metrics/MethodLength
+    def initialize(url, debug: false, wrap_responses: false, lazy: false, log_level: 'error', token: nil, logger: nil) # rubocop:disable Metrics/MethodLength
       @wrap_responses = wrap_responses
       @lazy = lazy
       @uri = URI(url)
       @debug = ENV.fetch('RUJIRA_DEBUG', debug.to_s) == 'true'
       @raise_error = false
-      @logger ||= Logger.new($stdout)
+      @logger = logger || Logger.new($stdout)
 
-      log_levels = {
-        'debug' => Logger::DEBUG,
-        'info' => Logger::INFO,
-        'warn' => Logger::WARN,
-        'error' => Logger::ERROR,
-        'fatal' => Logger::FATAL
-      }
+      unless logger
+        @logger.level = LOG_LEVELS.fetch(
+          ENV.fetch('LOG_LEVEL', log_level).downcase,
+          Logger::ERROR
+        )
+      end
 
-      @logger.level = log_levels.fetch(
-        ENV.fetch('LOG_LEVEL', log_level).downcase,
-        Logger::ERROR
-      )
-
+      @token = token || ENV['RUJIRA_TOKEN']
       @adapter = adapter
     end
 
@@ -63,18 +74,20 @@ module Rujira
 
     # Dynamically instantiates the appropriate API resource class.
     #
-    # @param [Symbol] method_name Name of the API resource (e.g., :issue, :project)
-    # @param [...] args Arguments passed to the resource class constructor
+    # Both `client.Issue` and `client.issue` styles are supported.
+    #
+    # @param [Symbol] method_name Name of the API resource (e.g., :Issue, :Project)
     # @return [Object] An instance of the corresponding API resource class
     #
     # @example Access an API resource
-    #   client.issue.get("TEST-123")
+    #   client.Issue.get("TEST-123")
     #
-    def method_missing(method_name)
-      resource_class = Rujira::Api.const_get(method_name.to_s)
+    def method_missing(method_name, *args, &block)
+      resource_class = api_class_for(method_name)
+      return super unless resource_class
+      return super unless args.empty? && block.nil?
+
       resource_class.new(self)
-    rescue NameError
-      super
     end
 
     # Checks if a resource class exists for method_missing.
@@ -84,38 +97,37 @@ module Rujira
     # @return [Boolean] true if the resource exists, false otherwise
     #
     def respond_to_missing?(method_name, include_private = false)
-      Rujira::Api.const_defined?(method_name.to_s) || super
-    end
-
-    def build_options(request)
-      {
-        url: @uri,
-        headers: request.headers,
-        params: request.params
-      }
+      !api_class_for(method_name).nil? || super
     end
 
     # Executes the configured request.
     #
     # @return [Object] The API response body if successful
-    # @raise [RuntimeError] If the request fails or method is unsupported
+    # @raise [Rujira::HTTPError] If the request fails
+    # @raise [Rujira::Error] If the request method is unsupported
     #
-    def dispatch(request) # rubocop:disable Metrics/AbcSize,Metrics/MethodLength
-      raise "method #{request.method} not supported" unless SUPPORTED_METHODS.include?(request.method)
+    def dispatch(request) # rubocop:disable Metrics/AbcSize
+      raise Rujira::Error, "method #{request.method} not supported" unless SUPPORTED_METHODS.include?(request.method)
 
       begin
         args = [request.path]
         args << request.payload if %i[post put patch].include?(request.method)
 
-        options = build_options(request)
-        response = connection(options, request.authorization).public_send(request.method, *args)
-
-        if response.success?
-          response.body
-        else
-          (raise "Request failed with status #{response.status} " \
-                 "and body #{response.body}")
+        response = connection.public_send(request.method, *args) do |req|
+          req.params.merge!(request.params) unless request.params.empty?
+          req.headers.merge!(request.headers) unless request.headers.empty?
+          header = authorization_header(request)
+          req.headers['Authorization'] = header if header
         end
+
+        return response.body if response.success?
+
+        raise HTTPError.new(
+          "Request failed with status #{response.status} and body #{response.body}",
+          status: response.status,
+          body: response.body,
+          response: response
+        )
       rescue StandardError => e
         @logger.error "Error: #{e.class} - #{e.message}"
         raise
@@ -124,12 +136,14 @@ module Rujira
 
     # Builds the Faraday connection for HTTP requests.
     #
+    # The connection is created once and reused for every request, so
+    # keep-alive connections are not dropped between calls.
+    #
     # @return [Faraday::Connection] Configured Faraday connection
     #
-    def connection(options, authorization)
-      Faraday.new(options) do |builder|
+    def connection
+      @connection ||= Faraday.new(url: @uri) do |builder|
         builder.adapter @adapter
-        builder.request :authorization, *authorization if authorization
         builder.request :multipart, flat_encode: true
         builder.request :json
         builder.response :json
@@ -162,6 +176,52 @@ module Rujira
       end
       FileUtils.mkdir_p(File.dirname(cache_path))
       File.write(cache_path, res.body)
+    end
+
+    private
+
+    # Looks up an API class by its name, ignoring case and underscores.
+    #
+    # @param [Symbol, String] method_name Name of the API resource
+    # @return [Class, nil] The API class or nil when nothing matches
+    #
+    def api_class_for(method_name)
+      target = method_name.to_s.delete('_').downcase
+      return nil if target.empty?
+
+      const = Rujira::Api.constants(false).find { |name| name.to_s.delete('_').downcase == target }
+      const && Rujira::Api.const_get(const)
+    end
+
+    # Builds the Authorization header for the request.
+    #
+    # Request level credentials win over the client level token.
+    #
+    # @param [Request] request The request being executed
+    # @return [String, nil] Header value or nil when no credentials are used
+    #
+    def authorization_header(request)
+      auth = request.authorization
+      auth = [Request::BEARER, @token] if auth.nil? && @token
+      return nil if auth.nil? || auth == false
+
+      type, *credentials = auth
+      case type
+      when Request::BEARER
+        "Bearer #{resolve_credential(credentials.first)}"
+      when Request::BASIC
+        username, password = credentials
+        "Basic #{Base64.strict_encode64("#{resolve_credential(username)}:#{resolve_credential(password)}")}"
+      end
+    end
+
+    # Resolves a credential that may be a callable.
+    #
+    # @param [Object] value Credential value or callable returning it
+    # @return [Object] The resolved value
+    #
+    def resolve_credential(value)
+      value.respond_to?(:call) ? value.call : value
     end
   end
 end
